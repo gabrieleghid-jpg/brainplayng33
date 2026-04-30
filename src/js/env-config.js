@@ -17,6 +17,7 @@ const ENV = {
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...', // ← sostituisci
 
   // URL del backend locale (o produzione)
+  // Lascia vuoto se usi il proxy di frontend-server.js
   BACKEND_URL: '',
 
   // Impostazioni app

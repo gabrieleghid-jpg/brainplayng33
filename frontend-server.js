@@ -51,7 +51,8 @@ function proxyApi(request, response) {
     port: targetUrl.port,
     path: `${targetUrl.pathname}${targetUrl.search}`,
     method: request.method,
-    headers
+    headers,
+    timeout: 60000 // 60 secondi per le chiamate AI
   }, (proxyResponse) => {
     response.writeHead(proxyResponse.statusCode || 502, proxyResponse.headers);
     proxyResponse.pipe(response);
@@ -60,6 +61,12 @@ function proxyApi(request, response) {
   proxyRequest.on('error', () => {
     response.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
     response.end(JSON.stringify({ error: 'Backend non raggiungibile.' }));
+  });
+
+  proxyRequest.on('timeout', () => {
+    proxyRequest.destroy();
+    response.writeHead(504, { 'Content-Type': 'application/json; charset=utf-8' });
+    response.end(JSON.stringify({ error: 'Il backend ha impiegato troppo tempo a rispondere.' }));
   });
 
   request.pipe(proxyRequest);
@@ -90,6 +97,6 @@ const server = http.createServer((request, response) => {
   });
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`BrainPlayng frontend disponibile su http://127.0.0.1:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`BrainPlayng frontend disponibile su http://localhost:${PORT}`);
 });
