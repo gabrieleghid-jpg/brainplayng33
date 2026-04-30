@@ -1,0 +1,13 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cresta punk rossa -->
+  <path d="M 110 70 L 150 30 L 190 70 L 185 90 L 150 80 L 115 90 Z" fill="#ff0000"/>
+  <path d="M 100 75 L 150 35 L 200 75 L 195 95 L 150 85 L 105 95 Z" fill="#dc143c"/>
+  <!-- Punta centrale -->
+  <path d="M 145 25 L 150 20 L 155 25 L 150 30 Z" fill="#ffff00"/>
+  <circle cx="150" cy="22" r="3" fill="#ff0000"/>
+  <!-- Lati punk -->
+  <rect x="120" y="60" width="8" height="40" fill="#ff0000" transform="rotate(-10 124 80)"/>
+  <rect x="172" y="60" width="8" height="40" fill="#ff0000" transform="rotate(10 176 80)"/>
+  <!-- Base cresta -->
+  <path d="M 125 85 Q 150 75 175 85 L 175 100 Q 150 90 125 100 Z" fill="#8b0000"/>
+</svg>

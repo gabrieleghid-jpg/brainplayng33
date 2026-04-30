@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrainPlayng - Riassunti AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/dashboard.css" />
+  <style>
+    :root {
+      --primary: #4f46e5; --primary-light: #818cf8;
+      --bg: #f5f7ff; --panel: rgba(255,255,255,0.92);
+      --text: #111827; --muted: #6b7280; --border: #e5e7eb;
+      --success: #10b981; --error: #ef4444; --radius: 14px;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); margin:0; padding:0; }
+    .page-wrapper { max-width:900px; margin:0 auto; padding:2rem 1.5rem; }
+    .page-title  { font-size:1.8rem; font-weight:700; margin-bottom:.3rem; }
+    .page-subtitle { color:var(--muted); margin-bottom:2rem; font-size:.95rem; }
+    .card {
+      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+      padding:1.5rem; margin-bottom:1.5rem; box-shadow:0 2px 12px rgba(79,70,229,.06);
+    }
+    label { display:block; font-weight:600; margin-bottom:.5rem; font-size:.9rem; }
+    textarea {
+      width:100%; min-height:180px; padding:1rem; border:1.5px solid var(--border);
+      border-radius:10px; font-family:inherit; font-size:.95rem; resize:vertical;
+      background:#fff; color:var(--text); box-sizing:border-box; transition:border-color .2s;
+    }
+    textarea:focus { outline:none; border-color:var(--primary); }
+    .options-row { display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap; }
+    .select-group { flex:1; min-width:160px; }
+    select {
+      width:100%; padding:.6rem .9rem; border:1.5px solid var(--border); border-radius:8px;
+      font-family:inherit; font-size:.9rem; background:#fff; color:var(--text); cursor:pointer;
+    }
+    .btn-genera {
+      margin-top:1.2rem; width:100%; padding:.9rem 1.5rem;
+      background:var(--primary); color:#fff; border:none; border-radius:10px;
+      font-size:1rem; font-weight:600; cursor:pointer; transition:opacity .2s;
+      display:flex; align-items:center; justify-content:center; gap:.5rem;
+    }
+    .btn-genera:hover { opacity:.88; }
+    .btn-genera:disabled { opacity:.5; cursor:not-allowed; }
+    .spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .result-section { display:none; }
+    .result-section.visible { display:block; }
+    .riassunto-box {
+      background:#f9fafb; border:1px solid var(--border); border-radius:10px;
+      padding:1.2rem; line-height:1.7; font-size:.97rem; white-space:pre-wrap;
+    }
+    .parole-chiave { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+    .tag { background:#ede9fe; color:var(--primary); border-radius:20px; padding:.25rem .85rem; font-size:.82rem; font-weight:600; }
+    .copy-btn {
+      margin-top:.8rem; padding:.5rem 1.1rem; background:transparent;
+      border:1.5px solid var(--primary); color:var(--primary); border-radius:8px;
+      font-size:.85rem; font-weight:600; cursor:pointer; transition:background .15s;
+    }
+    .copy-btn:hover { background:#ede9fe; }
+    .api-notice { background:#fffbeb; border:1px solid #fcd34d; border-radius:10px; padding:1rem 1.2rem; font-size:.85rem; color:#92400e; margin-bottom:1rem; display:none; }
+    .api-notice.visible { display:block; }
+    .error-box { background:#fef2f2; border:1px solid #fca5a5; border-radius:10px; padding:1rem 1.2rem; color:var(--error); font-size:.9rem; display:none; }
+    .error-box.visible { display:block; }
+  </style>
+</head>
+<body>
+
+<script src="../js/env-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js"></script>
+
+<div class="page-wrapper">
+  <h1 class="page-title">🧠 Riassunti AI</h1>
+  <p class="page-subtitle">Incolla il tuo testo e lascia che Claude AI lo trasformi in un riassunto chiaro.</p>
+
+  <div class="api-notice" id="apiNotice">
+    ⚠️ Backend non raggiungibile. Avvia il server con <code>cd backend && npm start</code> e
+    verifica che <code>ANTHROPIC_API_KEY</code> sia nel file <code>.env</code>.
+  </div>
+
+  <div class="card">
+    <label for="inputTesto">📄 Testo da riassumere</label>
+    <textarea id="inputTesto" placeholder="Incolla qui il testo (minimo 50 caratteri)..."></textarea>
+
+    <div class="options-row">
+      <div class="select-group">
+        <label for="selectLingua">Lingua output</label>
+        <select id="selectLingua">
+          <option value="italiano">🇮🇹 Italiano</option>
+          <option value="inglese">🇬🇧 Inglese</option>
+          <option value="spagnolo">🇪🇸 Spagnolo</option>
+        </select>
+      </div>
+      <div class="select-group">
+        <label for="selectStile">Stile</label>
+        <select id="selectStile">
+          <option value="scolastico">📚 Scolastico</option>
+          <option value="semplice">🌟 Semplice</option>
+          <option value="accademico">🎓 Accademico</option>
+          <option value="bullet points">📋 Bullet points</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-genera" id="btnGenera" onclick="generaRiassunto()">
+      <span id="btnTesto">✨ Genera Riassunto con AI</span>
+      <span class="spinner" id="spinner" style="display:none"></span>
+    </button>
+  </div>
+
+  <div class="result-section card" id="resultSection">
+    <div class="error-box" id="errorBox"></div>
+    <div id="resultContent" style="display:none">
+      <label>📝 Riassunto</label>
+      <div class="riassunto-box" id="riassuntoBox"></div>
+      <button class="copy-btn" onclick="copiaRiassunto(event)">📋 Copia testo</button>
+      <div style="margin-top:1.2rem">
+        <label>🏷️ Parole chiave</label>
+        <div class="parole-chiave" id="paroleChiave"></div>
+      </div>
+      <div id="titoloBox" style="margin-top:1rem;font-size:.9rem;color:var(--muted)"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function generaRiassunto() {
+  const testo  = document.getElementById('inputTesto').value.trim();
+  const lingua = document.getElementById('selectLingua').value;
+  const stile  = document.getElementById('selectStile').value;
+
+  if (testo.length < 50) { alert('Testo troppo breve (minimo 50 caratteri).'); return; }
+
+  const btn = document.getElementById('btnGenera');
+  btn.disabled = true;
+  document.getElementById('btnTesto').textContent = 'Elaborazione...';
+  document.getElementById('spinner').style.display = 'inline-block';
+  document.getElementById('resultSection').classList.add('visible');
+  document.getElementById('errorBox').classList.remove('visible');
+  document.getElementById('resultContent').style.display = 'none';
+  document.getElementById('apiNotice').classList.remove('visible');
+
+  try {
+    // Chiama il backend Node.js → che usa Claude API
+    const data = await apiFetch('/api/riassunti/genera', {
+      method: 'POST',
+      body: JSON.stringify({ testo, lingua, stile })
+    });
+
+    document.getElementById('riassuntoBox').textContent = data.riassunto;
+    document.getElementById('resultContent').style.display = 'block';
+
+    const pkContainer = document.getElementById('paroleChiave');
+    pkContainer.innerHTML = '';
+    (data.paroleChiave || []).forEach(pk => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = pk;
+      pkContainer.appendChild(tag);
+    });
+
+    if (data.titoloProposto) {
+      document.getElementById('titoloBox').textContent = `💡 Titolo proposto: "${data.titoloProposto}"`;
+    }
+  } catch (err) {
+    document.getElementById('errorBox').textContent = '❌ ' + err.message;
+    document.getElementById('errorBox').classList.add('visible');
+    document.getElementById('apiNotice').classList.add('visible');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('btnTesto').textContent = '✨ Genera Riassunto con AI';
+    document.getElementById('spinner').style.display = 'none';
+  }
+}
+
+function copiaRiassunto(event) {
+  const testo = document.getElementById('riassuntoBox').textContent;
+  navigator.clipboard.writeText(testo).then(() => {
+    event.target.textContent = '✅ Copiato!';
+    setTimeout(() => event.target.textContent = '📋 Copia testo', 2000);
+  });
+}
+</script>
+</body>
+</html>
+

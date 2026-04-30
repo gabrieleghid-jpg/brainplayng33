@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Studio - BrainPlay</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="../styles/avatar-game.css">
+    <link rel="stylesheet" href="../styles/dashboard.css">
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-container"></div>
+
+    <div class="page-shell">
+        <!-- Sidebar Component -->
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <!-- Page Header -->
+            <section class="page-header">
+                <h1 class="page-title">🎭 Avatar Studio</h1>
+                <p class="page-subtitle">Crea e personalizza il tuo avatar unico con strumenti avanzati</p>
+            </section>
+
+            <!-- Avatar Container -->
+            <div class="avatar-container">
+                <!-- Avatar Preview Component -->
+                <div id="avatar-preview-container"></div>
+                
+                <!-- Avatar Controls Component -->
+                <div id="avatar-controls-container"></div>
+                
+                <!-- Avatar Gallery Component -->
+                <div id="avatar-gallery-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/env-config.js"></script>
+    <script src="../js/modules/auth.js"></script>
+    <script src="../js/modules/credits.js"></script>
+    <script src="../js/modules/notifications.js"></script>
+    <script src="../js/utils/utils.js"></script>
+    <script src="../js/modules/avatar-renderer.js"></script>
+    <script src="../js/modules/avatar-storage.js"></script>
+    <script src="../js/modules/avatar-storage.js"></script>
+    <script src="../js/animated-avatar.js"></script>
+    <script src="../js/theme-manager.js"></script>
+    <script src="../js/sidebar.js"></script>
+
+    <script>
+        // Avatar Studio Controller
+        class AvatarStudioController {
+            constructor() {
+                this.renderer = null;
+                this.gallery = null;
+                this.storage = null;
+                this.init();
+            }
+
+            init() {
+                if (!AuthModule.checkAuthentication()) return;
+                
+                this.loadComponents();
+                this.setupEventListeners();
+                this.initializeSystems();
+            }
+
+            async loadComponents() {
+                try {
+                    // Load header
+                    const headerResponse = await fetch('../components/header.html');
+                    const headerHtml = await headerResponse.text();
+                    document.getElementById('header-container').innerHTML = headerHtml;
+                    document.getElementById('pageTitle').textContent = 'Avatar Studio - BrainPlay';
+
+                    // Load sidebar
+                    const sidebarResponse = await fetch('../components/sidebar.html');
+                    const sidebarHtml = await sidebarResponse.text();
+                    document.getElementById('sidebar-container').innerHTML = sidebarHtml;
+
+                    // Load avatar components
+                    const previewResponse = await fetch('../components/avatar-preview.html');
+                    const previewHtml = await previewResponse.text();
+                    document.getElementById('avatar-preview-container').innerHTML = previewHtml;
+
+                    const controlsResponse = await fetch('../components/avatar-controls.html');
+                    const controlsHtml = await controlsResponse.text();
+                    document.getElementById('avatar-controls-container').innerHTML = controlsHtml;
+
+                    const galleryResponse = await fetch('../components/avatar-gallery.html');
+                    const galleryHtml = await galleryResponse.text();
+                    document.getElementById('avatar-gallery-container').innerHTML = galleryHtml;
+
+                    // Load footer
+                    const footerResponse = await fetch('../components/footer.html');
+                    const footerHtml = await footerResponse.text();
+                    document.getElementById('footer-container').innerHTML = footerHtml;
+
+                } catch (error) {
+                    console.error('Error loading components:', error);
+                    NotificationsModule.showError('Errore nel caricamento dei componenti');
+                    
+                    // Fallback: mostra contenuto di base
+                    this.showFallbackContent();
+                }
+            }
+
+            showFallbackContent() {
+                document.getElementById('avatar-preview-container').innerHTML = `
+                    <div class="avatar-preview-section">
+                        <h3>⚠️ Errore Caricamento Componenti</h3>
+                        <p>Impossibile caricare i componenti dell'Avatar Studio. Ricarica la pagina.</p>
+                        <button onclick="location.reload()" class="btn-primary">🔄 Ricarica</button>
+                    </div>
+                `;
+            }
+
+            setupEventListeners() {
+                // Wait for components to load, then setup listeners
+                setTimeout(() => {
+                    this.setupAvatarControls();
+                    this.setupPreviewControls();
+                    
+                    if (window.sidebarManager) {
+                        window.sidebarManager.updateUserInfo();
+                    }
+                }, 100);
+            }
+
+            setupAvatarControls() {
+                // Color buttons
+                document.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const color = e.target.dataset.color;
+                        const type = e.target.dataset.type;
+                        
+                        // Update selected state
+                        document.querySelectorAll(`.color-btn[data-type="${type}"]`).forEach(b => {
+                            b.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                        
+                        // Apply color
+                        if (this.renderer) {
+                            this.renderer.applyColor(type, color);
+                        }
+                    });
+                });
+
+                // Hair style buttons
+                document.querySelectorAll('.hair-style-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const style = e.target.dataset.style;
+                        
+                        // Update selected state
+                        document.querySelectorAll('.hair-style-btn').forEach(b => {
+                            b.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                        
+                        // Apply style
+                        if (this.renderer) {
+                            this.renderer.applyHairStyle(style);
+                        }
+                    });
+                });
+
+                // Accessory buttons
+                document.querySelectorAll('.accessory-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const accessory = e.target.dataset.accessory;
+                        
+                        // Toggle selected state
+                        e.target.classList.toggle('selected');
+                        
+                        // Apply accessory
+                        if (this.renderer) {
+                            this.renderer.toggleAccessory(accessory);
+                        }
+                    });
+                });
+
+                // Save button
+                const saveBtn = document.getElementById('saveAvatarBtn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', () => this.saveAvatar());
+                }
+            }
+
+            setupPreviewControls() {
+                // Randomize button
+                const randomizeBtn = document.getElementById('randomizeBtn');
+                if (randomizeBtn) {
+                    randomizeBtn.addEventListener('click', () => this.randomizeAvatar());
+                }
+
+                // Reset button
+                const resetBtn = document.getElementById('resetBtn');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => this.resetAvatar());
+                }
+            }
+
+            initializeSystems() {
+                // Initialize avatar renderer
+                this.renderer = new AvatarRenderer();
+                
+                // Initialize storage
+                this.storage = new AvatarStorage();
+                
+                // Initialize gallery
+                this.gallery = new AvatarGallery();
+                
+                // Initialize credits system
+                CreditsModule.initializeCredits(100);
+                
+                // Load saved avatar data
+                this.loadSavedAvatar();
+                
+                // Update credits display
+                CreditsModule.updateCreditDisplay();
+                
+                // Update avatar info display
+                this.updateAvatarInfo();
+                
+                // Initialize theme
+                if (window.themeManager) {
+                    window.themeManager.loadTheme();
+                }
+            }
+
+            updateAvatarInfo() {
+                const creditsElement = document.getElementById('avatarCredits');
+                const levelElement = document.getElementById('avatarLevel');
+                const accessoriesElement = document.getElementById('avatarAccessories');
+                
+                if (creditsElement) {
+                    creditsElement.textContent = CreditsModule.getCrediti();
+                }
+                
+                if (levelElement && window.mascotteGrowth) {
+                    const levelInfo = window.mascotteGrowth.getCurrentLevelInfo();
+                    levelElement.textContent = levelInfo.level;
+                }
+                
+                if (accessoriesElement && this.renderer) {
+                    const avatarData = this.renderer.getAvatarData();
+                    accessoriesElement.textContent = avatarData.accessories.length;
+                }
+            }
+
+            loadSavedAvatar() {
+                const savedData = this.storage.loadAvatarData();
+                if (savedData && this.renderer) {
+                    this.renderer.loadAvatarData(savedData);
+                    this.updateUIFromData(savedData);
+                }
+            }
+
+            updateUIFromData(data) {
+                // Update color buttons
+                Object.keys(data.colors).forEach(type => {
+                    const color = data.colors[type];
+                    const btn = document.querySelector(`.color-btn[data-type="${type}"][data-color="${color}"]`);
+                    if (btn) {
+                        btn.classList.add('selected');
+                    }
+                });
+
+                // Update hair style button
+                const styleBtn = document.querySelector(`.hair-style-btn[data-style="${data.style}"]`);
+                if (styleBtn) {
+                    styleBtn.classList.add('selected');
+                }
+
+                // Update accessory buttons
+                if (data.accessories && Array.isArray(data.accessories)) {
+                    data.accessories.forEach(accessory => {
+                        const btn = document.querySelector(`.accessory-btn[data-accessory="${accessory}"]`);
+                        if (btn) {
+                            btn.classList.add('selected');
+                        }
+                    });
+                }
+            }
+
+            saveAvatar() {
+                if (!this.renderer) {
+                    NotificationsModule.showError('Renderer non inizializzato');
+                    return;
+                }
+
+                const avatarData = this.renderer.getAvatarData();
+                const success = this.storage.saveAvatarData(avatarData);
+                
+                if (success) {
+                    NotificationsModule.showSuccess('Avatar salvato con successo!');
+                    
+                    // Award credits for saving avatar with new system
+                    CreditsModule.earnCrediti(5, 'Salvataggio Avatar');
+                } else {
+                    NotificationsModule.showError('Errore nel salvataggio dell\'avatar');
+                }
+            }
+
+            randomizeAvatar() {
+                if (!this.renderer) {
+                    NotificationsModule.showError('Renderer non inizializzato');
+                    return;
+                }
+
+                const randomData = this.renderer.randomize();
+                this.updateUIFromData(randomData);
+                
+                NotificationsModule.showInfo('Avatar randomizzato!');
+                
+                // Award credits for randomizing with new system
+                CreditsModule.earnCrediti(2, 'Randomizza Avatar');
+            }
+
+            resetAvatar() {
+                if (!this.renderer) {
+                    NotificationsModule.showError('Renderer non inizializzato');
+                    return;
+                }
+
+                this.renderer.reset();
+                
+                // Clear all selected states
+                document.querySelectorAll('.color-btn, .hair-style-btn, .accessory-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                NotificationsModule.showInfo('Avatar resettato!');
+            }
+
+            // Public methods for external access
+            getCurrentAvatarData() {
+                return this.renderer ? this.renderer.getAvatarData() : null;
+            }
+
+            refreshGallery() {
+                if (this.gallery) {
+                    this.gallery.refresh();
+                }
+            }
+        }
+
+        // Initialize avatar studio
+        document.addEventListener('DOMContentLoaded', () => {
+            window.avatarStudioController = new AvatarStudioController();
+        });
+
+        // Global functions for external calls
+        window.saveAvatar = function() {
+            if (window.avatarStudioController) {
+                window.avatarStudioController.saveAvatar();
+            }
+        };
+
+        window.randomizeAvatar = function() {
+            if (window.avatarStudioController) {
+                window.avatarStudioController.randomizeAvatar();
+            }
+        };
+
+        window.resetAvatar = function() {
+            if (window.avatarStudioController) {
+                window.avatarStudioController.resetAvatar();
+            }
+        };
+
+        console.log('Avatar Studio modular loaded!');
+    </script>
+</body>
+</html>
+

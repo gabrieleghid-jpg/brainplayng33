@@ -1,0 +1,32 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Occhiali cyberpunk futuristici -->
+  <path d="M 100 85 Q 130 75 160 85 L 160 105 Q 130 115 100 105 Z" fill="#1a1a1a"/>
+  <path d="M 140 85 Q 170 75 200 85 L 200 105 Q 170 115 140 105 Z" fill="#1a1a1a"/>
+  <!-- Lenti cybernetiche -->
+  <path d="M 105 88 Q 130 78 155 88 L 155 102 Q 130 112 105 102 Z" fill="#00ffff" opacity="0.3"/>
+  <path d="M 145 88 Q 170 78 195 88 L 195 102 Q 170 112 145 102 Z" fill="#00ffff" opacity="0.3"/>
+  <!-- LED luminosi -->
+  <circle cx="130" cy="95" r="3" fill="#00ff00"/>
+  <circle cx="170" cy="95" r="3" fill="#00ff00"/>
+  <circle cx="130" cy="95" r="2" fill="#00ff00"/>
+  <circle cx="170" cy="95" r="2" fill="#00ff00"/>
+  <!-- Ponte naso tecnologico -->
+  <rect x="145" y="90" width="10" height="6" fill="#2c2c2c"/>
+  <rect x="147" y="92" width="6" height="2" fill="#00ffff"/>
+  <!-- Aste futuristiche -->
+  <rect x="80" y="93" width="25" height="4" fill="#2c2c2c"/>
+  <rect x="195" y="93" width="25" height="4" fill="#2c2c2c"/>
+  <!-- Cavioli luminosi -->
+  <path d="M 105 88 L 80 85" stroke="#ff00ff" stroke-width="1"/>
+  <path d="M 105 102 L 80 105" stroke="#ff00ff" stroke-width="1"/>
+  <path d="M 195 88 L 220 85" stroke="#ff00ff" stroke-width="1"/>
+  <path d="M 195 102 L 220 105" stroke="#ff00ff" stroke-width="1"/>
+  <!-- Display digitale -->
+  <rect x="125" y="93" width="10" height="4" fill="#000000"/>
+  <text x="130" y="96" font-family="monospace" font-size="3" fill="#00ff00" text-anchor="middle">HUD</text>
+  <rect x="165" y="93" width="10" height="4" fill="#000000"/>
+  <text x="170" y="96" font-family="monospace" font-size="3" fill="#00ff00" text-anchor="middle">AI</text>
+  <!-- Riflessi digitali -->
+  <ellipse cx="120" cy="90" rx="6" ry="4" fill="#00ffff" opacity="0.5"/>
+  <ellipse cx="180" cy="90" rx="6" ry="4" fill="#00ffff" opacity="0.5"/>
+</svg>

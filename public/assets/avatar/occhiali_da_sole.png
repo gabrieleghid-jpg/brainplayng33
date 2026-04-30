@@ -1,0 +1,22 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Occhiali da sole scuri -->
+  <path d="M 100 85 Q 130 75 160 85 L 160 105 Q 130 115 100 105 Z" fill="#1a1a1a"/>
+  <path d="M 140 85 Q 170 75 200 85 L 200 105 Q 170 115 140 105 Z" fill="#1a1a1a"/>
+  <!-- Lenti scure -->
+  <path d="M 105 88 Q 130 78 155 88 L 155 102 Q 130 112 105 102 Z" fill="#333333" opacity="0.8"/>
+  <path d="M 145 88 Q 170 78 195 88 L 195 102 Q 170 112 145 102 Z" fill="#333333" opacity="0.8"/>
+  <!-- Ponte naso -->
+  <rect x="145" y="92" width="10" height="6" fill="#1a1a1a"/>
+  <rect x="147" y="94" width="6" height="2" fill="#0d0d0d"/>
+  <!-- Aste -->
+  <rect x="80" y="93" width="25" height="4" fill="#1a1a1a"/>
+  <rect x="195" y="93" width="25" height="4" fill="#1a1a1a"/>
+  <!-- Dettagli metallici -->
+  <rect x="78" y="92" width="29" height="6" fill="#2c2c2c"/>
+  <rect x="193" y="92" width="29" height="6" fill="#2c2c2c"/>
+  <!-- Riflessi scuri -->
+  <ellipse cx="120" cy="90" rx="6" ry="4" fill="#000000" opacity="0.3"/>
+  <ellipse cx="180" cy="90" rx="6" ry="4" fill="#000000" opacity="0.3"/>
+  <!-- Logo sulla lente destra -->
+  <text x="180" y="95" font-family="Arial" font-size="8" font-weight="bold" fill="#666" text-anchor="middle">VS</text>
+</svg>

@@ -1,0 +1,14 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cappello da cowboy marrone -->
+  <path d="M 100 70 Q 150 50 200 70 L 195 85 L 190 95 Q 150 85 110 95 L 105 85 Z" fill="#8b4513"/>
+  <path d="M 95 75 Q 150 55 205 75 L 200 90 L 195 100 Q 150 90 105 100 L 100 90 Z" fill="#a0522d"/>
+  <!-- Bordo -->
+  <rect x="85" y="85" width="130" height="8" fill="#654321"/>
+  <rect x="80" y="88" width="140" height="5" fill="#8b4513"/>
+  <!-- Decorazioni -->
+  <circle cx="150" cy="75" r="8" fill="#ffd700"/>
+  <circle cx="150" cy="75" r="5" fill="#ff6347"/>
+  <!-- Stelle laterali -->
+  <path d="M 115 75 L 117 79 L 121 79 L 118 81 L 119 85 L 115 82 L 111 85 L 112 81 L 109 79 L 113 79 Z" fill="#ffd700"/>
+  <path d="M 185 75 L 187 79 L 191 79 L 188 81 L 189 85 L 185 82 L 181 85 L 182 81 L 179 79 L 183 79 Z" fill="#ffd700"/>
+</svg>

@@ -1,0 +1,836 @@
+/* ========================================
+   GRIGLIA - Muro delle Idee stile Pinterest
+   ======================================== */
+
+.upload-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.drop-zone {
+  border: 2px dashed var(--accent);
+  border-radius: calc(var(--radius) - 10px);
+  padding: 2.5rem;
+  text-align: center;
+  background: rgba(79, 70, 229, 0.04);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.drop-zone:hover {
+  border-color: var(--accent);
+  background: rgba(79, 70, 229, 0.08);
+  transform: translateY(-2px);
+}
+
+.drop-zone.dragover {
+  border-color: var(--accent);
+  background: rgba(79, 70, 229, 0.12);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12);
+}
+
+
+.upload-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent), #6366f1);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+}
+
+#fileInput {
+  display: none;
+}
+
+.schema-ai-btn {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(79, 70, 229, 0.06);
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.schema-ai-btn:hover {
+  background: rgba(79, 70, 229, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+}
+
+.drop-zone.dragover .upload-btn {
+  pointer-events: auto;
+}
+
+.schemi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
+  padding: 30px;
+}
+
+.schema-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.schema-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 32px 64px rgba(79, 70, 229, 0.12);
+}
+
+.schema-card.uploading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.schema-card-image {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(59, 130, 246, 0.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--accent);
+  overflow: hidden;
+  position: relative;
+}
+
+.schema-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.schema-card-content {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.schema-card-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.schema-card-meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+  margin-top: auto;
+}
+
+.schema-card-meta span {
+  display: inline-block;
+  background: rgba(79, 70, 229, 0.08);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ========================================
+   FLASHCARD-SCHEMI (Concetti Interattivi)
+   ======================================== */
+
+.flashcard-schema {
+  background: var(--panel);
+  border: 2px solid var(--accent-soft);
+  border-radius: calc(var(--radius) - 4px);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.flashcard-schema:hover {
+  border-color: var(--accent);
+  box-shadow: 0 16px 40px rgba(79, 70, 229, 0.12);
+  transform: scale(1.02);
+}
+
+.flashcard-schema.active {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(59, 130, 246, 0.04));
+}
+
+.flashcard-central {
+  position: relative;
+  z-index: 2;
+}
+
+.flashcard-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.flashcard-concept {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+  max-width: 100%;
+}
+
+.flashcard-hint {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  background: rgba(79, 70, 229, 0.08);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  opacity: 0;
+  animation: fadeInUp 0.4s ease 0.5s forwards;
+}
+
+.flashcard-connections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  opacity: 0;
+  transform: scale(0.8);
+  display: none;
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.flashcard-schema.active .flashcard-connections {
+  opacity: 1;
+  transform: scale(1);
+  display: grid;
+  pointer-events: auto;
+}
+
+.connection-item {
+  background: rgba(79, 70, 229, 0.08);
+  border: 1px solid rgba(79, 70, 229, 0.16);
+  border-radius: 16px;
+  padding: 1rem;
+  text-align: center;
+  animation: popIn 0.5s ease backwards;
+}
+
+.connection-item:nth-child(1) { animation-delay: 0.2s; }
+.connection-item:nth-child(2) { animation-delay: 0.3s; }
+.connection-item:nth-child(3) { animation-delay: 0.4s; }
+.connection-item:nth-child(4) { animation-delay: 0.5s; }
+.connection-item:nth-child(5) { animation-delay: 0.6s; }
+.connection-item:nth-child(6) { animation-delay: 0.7s; }
+
+.connection-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.connection-label {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ========================================
+   MODAL - Galleria Schemi (Muro + Flashcard)
+   ======================================== */
+
+.schemi-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+  overflow-y: auto;
+}
+
+.schemi-modal.active {
+  display: flex;
+}
+
+.schemi-modal-content {
+  background: var(--panel);
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 48px 96px rgba(0, 0, 0, 0.2);
+}
+
+.schemi-modal-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 1;
+}
+
+.schemi-modal-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.schemi-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  line-height: 1;
+}
+
+.schemi-modal-close:hover {
+  background: rgba(79, 70, 229, 0.08);
+  transform: scale(1.1);
+}
+
+.schemi-modal-body {
+  padding: 2rem;
+}
+
+/* ========================================
+   SPINNER - Animazione di caricamento
+   ======================================== */
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(79, 70, 229, 0.1);
+  border-top: 4px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-text {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* ========================================
+   SCHEMA GENERATO - Area con schema AI
+   ======================================== */
+
+.schema-view {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 10px);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.schema-view h3 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.schema-content {
+  background: rgba(79, 70, 229, 0.04);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.schema-content p {
+  margin: 0 0 1rem;
+}
+
+.schema-content p:last-child {
+  margin-bottom: 0;
+}
+
+.schema-content strong {
+  color: var(--accent);
+}
+
+/* ========================================
+   QUIZ RAPIDO - Domande a scelta multipla
+   ======================================== */
+
+.quiz-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 10px);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.quiz-section h3 {
+  margin: 0 0 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.quiz-question {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.quiz-question:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.question-title {
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 1rem;
+  font-size: 1rem;
+}
+
+.question-number {
+  display: inline-block;
+  background: rgba(79, 70, 229, 0.12);
+  color: var(--accent);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.quiz-options {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quiz-option {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.quiz-option:hover {
+  border-color: var(--accent);
+  background: rgba(79, 70, 229, 0.04);
+}
+
+.quiz-option.selected {
+  border-color: var(--accent);
+  background: rgba(79, 70, 229, 0.08);
+  font-weight: 500;
+}
+
+.quiz-option.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.quiz-option.incorrect {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.option-label {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(79, 70, 229, 0.12);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.quiz-option.selected .option-label {
+  background: var(--accent);
+  color: white;
+}
+
+/* ========================================
+   ANIMAZIONI - Transizioni e Keyframes
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animazioni specifiche per le card espanse */
+.expanded-content-container {
+  animation: slideInUp 0.5s ease;
+}
+
+.flashcard-section {
+  animation: fadeInUp 0.6s ease 0.1s both;
+}
+
+.quiz-section {
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+.content-separator {
+  animation: fadeInUp 0.4s ease 0.25s both;
+}
+
+/* Miglioramenti per le card espanse */
+.schema-card {
+  transition: all 0.3s ease;
+}
+
+.schema-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 32px 64px rgba(79, 70, 229, 0.12);
+}
+
+/* Layout migliorato per griglia quando ci sono card espanse */
+.schemi-grid {
+  transition: all 0.3s ease;
+}
+
+/* ========================================
+   CAMPO DI INPUT TITOLO E MIGLIORAMENTI CARD
+   ======================================== */
+
+.schema-title-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.schema-title-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-strong);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.schema-title-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.schema-title-input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.schema-title-edit-btn {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-strong);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.schema-title-edit-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(79, 70, 229, 0.04);
+}
+
+/* Miglioramenti per il pulsante di generazione */
+.schema-ai-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent), #6366f1);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.schema-ai-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+}
+
+.schema-ai-btn:active {
+  transform: translateY(0);
+}
+
+/* Miglioramenti per le immagini delle card */
+.schema-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ========================================
+   MODAL A SCHERMO INTERO - Generatore Flashcard
+   ======================================== */
+
+.generator-modal-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.generator-modal-content {
+  border: 1px solid var(--border);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   ANIMAZIONI AGGIUNTIVE
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   RESPONSIVO
+   ======================================== */
+
+@media (max-width: 768px) {
+  .generator-modal-content {
+    max-width: 95vw !important;
+    max-height: 95vh !important;
+  }
+
+  .schemi-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .schema-card-image {
+    height: 120px;
+    font-size: 2rem;
+  }
+
+  .schema-card-content {
+    padding: 1rem;
+  }
+
+  .flashcard-schema {
+    padding: 1.5rem;
+    min-height: 220px;
+  }
+
+  .flashcard-concept {
+    font-size: 1.5rem;
+  }
+
+  .flashcard-connections {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  .schema-modal-content {
+    max-width: 95vw;
+  }
+
+  .detail-row {
+    grid-template-columns: 100px 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .generator-modal-overlay {
+    padding: 1rem;
+  }
+
+  .generator-modal-content {
+    max-width: 100vw !important;
+  }
+
+  .schemi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .flashcard-schema {
+    padding: 1.2rem;
+  }
+
+  .flashcard-connections {
+    grid-template-columns: 1fr;
+  }
+
+  .schema-modal-body {
+    padding: 1.5rem;
+  }
+
+  .schema-modal-actions {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>brainplaying — Home</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/dashboard.css" />
+  <style>
+    /* Hero Section Migliorata */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+    }
+    
+    .hero-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.1;
+    }
+    
+    .hero-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(255,255,255,0.2) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Stili per rendere bianche le scritte sulla hero section */
+    .hero-section .hero-subtitle {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .hero-section .stat-number {
+      color: white !important;
+    }
+
+    .hero-section .stat-label {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .cta-button {
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .cta-button.primary {
+      background: white;
+      color: #667eea;
+    }
+    
+    .cta-button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .cta-button.secondary {
+      background: transparent;
+      color: white;
+      border-color: white;
+    }
+    
+    .cta-button.secondary:hover {
+      background: white;
+      color: #667eea;
+      transform: translateY(-2px);
+    }
+    
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    /* Sezioni Migliorate */
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .section-description {
+      color: #666;
+      font-size: 16px;
+      max-width: 600px;
+      margin: 10px auto 0;
+      opacity: 0.8;
+    }
+    
+    /* Tool Cards Migliorate */
+    .tool-card {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    /* Animazioni per le sezioni */
+    .main-section {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .main-section:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .main-section:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .cta-button {
+        width: 200px;
+        text-align: center;
+      }
+      
+      .hero-stats {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <header class="nav">
+    <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <a href="home.html" class="brand">
+      <span class="brand-icon">🧠</span>
+      <span>brainplaying</span>
+    </a>
+    <div class="nav-actions">
+      <button class="nav-link" type="button">Home</button>
+      <a href="schemi-analysis.html" class="nav-link">Generatore Schemi</a>
+            <a href="profile.html" class="profile-button">
+        <span class="profile-avatar profile-avatar-small" id="navAvatar">BP</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">🌙</button>
+    </div>
+  </header>
+
+  <div class="page-shell">
+    <main class="main-content">
+
+      <!-- Hero Section Migliorata -->
+      <section class="hero-section">
+        <div class="hero-background">
+          <div class="hero-particles"></div>
+        </div>
+        <div class="hero-content">
+          <div class="hero-badge">🚀 Test Git attivo</div>
+          <h1 class="hero-title">brainplaying</h1>
+          <p class="hero-subtitle">La piattaforma di studio intelligente che trasforma il tuo apprendimento</p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-icon">🎯</div>
+              <span class="stat-number">85%</span>
+              <span class="stat-label">Focus migliorato</span>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">⚡</div>
+              <span class="stat-number">2.5x</span>
+              <span class="stat-label">Apprendimento veloce</span>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">👥</div>
+              <span class="stat-number">1000+</span>
+              <span class="stat-label">Studenti attivi</span>
+            </div>
+          </div>
+          <div class="hero-cta">
+            <a href="#apprendimento" class="cta-button primary">Inizia a Studiare</a>
+            <a href="#giochi" class="cta-button secondary">Gioca e Impara</a>
+          </div>
+          <p id="guestNotice" class="guest-note" style="display: none;"></p>
+        </div>
+      </section>
+
+      <!-- Sezione Apprendimento -->
+      <section id="apprendimento" class="main-section">
+        <div class="section-header">
+          <h2 class="section-title">📚 Apprendimento</h2>
+          <p class="section-description">Strumenti intelligenti per massimizzare il tuo studio</p>
+        </div>
+        
+        <div class="tools-grid">
+          <!-- Riassunti AI -->
+          <a href="riassunti.html" class="tool-card primary">
+            <div class="tool-icon">AI</div>
+            <h3>Riassunti Intelligenti</h3>
+            <p>Genera riassunti automatici con ricerca Google e AI per qualsiasi argomento</p>
+            <div class="tool-badge">Potente</div>
+          </a>
+
+          <!-- Generatore Schemi -->
+          <a href="schemi-analysis.html" class="tool-card">
+            <div class="tool-icon">S</div>
+            <h3>Generatore Schemi</h3>
+            <p>Crea schemi visivi e mappe concettuali per studiare in modo efficace</p>
+            <div class="tool-badge">Visuale</div>
+          </a>
+
+          <!-- Classifica -->
+          <a href="classifica.html" class="tool-card">
+            <div class="tool-icon">C</div>
+            <h3>Classifica</h3>
+            <p>Confronta i tuoi progressi con altri studenti e motìvati a migliorare</p>
+            <div class="tool-badge">Competitivo</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Sezione Giochi -->
+      <section id="giochi" class="main-section">
+        <div class="section-header">
+          <h2 class="section-title">🎮 Giochi</h2>
+          <p class="section-description">Allena la mente mentre ti diverti con i nostri giochi educativi</p>
+        </div>
+        
+        <div class="tools-grid">
+          <!-- Minigiochi -->
+          <a href="minigiochi.html" class="tool-card">
+            <div class="tool-icon">G</div>
+            <h3>Minigiochi</h3>
+            <p>Allena la mente con Wordle, Sudoku e altri giochi educativi</p>
+            <div class="tool-badge">Interattivo</div>
+          </a>
+
+          <!-- Quiz Game -->
+          <a href="quiz.html" class="tool-card">
+            <div class="tool-icon">Q</div>
+            <h3>Quiz Game</h3>
+            <p>Metti alla prova le tue conoscenze con quiz su diverse materie</p>
+            <div class="tool-badge">Sfida</div>
+          </a>
+
+          <!-- Battle Learning -->
+          <a href="battle-game.html" class="tool-card primary">
+            <div class="tool-icon">⚔️</div>
+            <h3>Battle Learning</h3>
+            <p>Combatti contro concetti didattici in un'avventura stile Slay the Spire</p>
+            <div class="tool-badge">Epico</div>
+          </a>
+
+                  </div>
+      </section>
+
+      <!-- Sezione Personalizzazione -->
+      <section id="personalizzazione" class="main-section">
+        <div class="section-header">
+          <h2 class="section-title">🎨 Personalizzazione</h2>
+          <p class="section-description">Crea la tua esperienza unica con avatar personalizzati e temi esclusivi</p>
+        </div>
+        
+        <div class="tools-grid">
+          <!-- Avatar Studio -->
+          <a href="avatar-game.html" class="tool-card primary">
+            <div class="tool-icon">🎮</div>
+            <h3>Avatar Studio</h3>
+            <p>Crea il tuo avatar stile videogioco con Image Layering e oggetti reali</p>
+            <div class="tool-badge">NUOVO</div>
+          </a>
+
+          
+          <!-- Negozio -->
+          <a href="negozio.html" class="tool-card">
+            <div class="tool-icon">🛍️</div>
+            <h3>Negozio</h3>
+            <p>Usa i tuoi crediti per acquistare accessori e power-up esclusivi</p>
+            <div class="tool-badge">Shopping</div>
+          </a>
+
+          <!-- Profilo -->
+          <a href="profile.html" class="tool-card">
+            <div class="tool-icon">P</div>
+            <h3>Profilo</h3>
+            <p>Gestisci il tuo account e visualizza i tuoi progressi</p>
+            <div class="tool-badge">Account</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Sezione Profilo Utente -->
+      <section class="profile-section">
+        <h2 class="section-title">Il Tuo Progresso</h2>
+        
+        <div class="profile-grid">
+          <!-- Avatar e Livello -->
+          <div class="profile-card">
+            <div class="avatar-section">
+              <div class="avatar-container">
+                <div class="avatar-base">??</div>
+                <div class="level-badge">Lv.1</div>
+              </div>
+              <div class="avatar-info">
+                <h3>Tuo Profilo</h3>
+                <p id="creditiDisplay" class="credits">0 crediti</p>
+              </div>
+            </div>
+            <div class="progress-section">
+              <div class="progress-header">
+                <span>Prossimo Livello</span>
+                <span>10 / 100</span>
+              </div>
+              <div class="progress-bar">
+                <div id="progressBar" class="progress-fill" style="width: 10%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Statistiche Giornaliere -->
+          <div class="stats-card">
+            <h3>Oggi</h3>
+            <div class="daily-stats">
+              <div class="daily-stat">
+                <span class="daily-value">45min</span>
+                <span class="daily-label">Tempo di studio</span>
+              </div>
+              <div class="daily-stat">
+                <span class="daily-value">3</span>
+                <span class="daily-label">Sessioni</span>
+              </div>
+              <div class="daily-stat">
+                <span class="daily-value">85%</span>
+                <span class="daily-label">Obiettivo raggiunto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Semplificato -->
+      <footer class="home-footer">
+        <p>&copy; 2026 brainplaying · Creato per concentrazione ed efficienza.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Minigame Modal -->
+  <div id="minigameModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Minigiochi per Allenare la Mente</h2>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="minigame-grid">
+          <div class="minigame-item" data-game="sudoku">
+            <div class="minigame-icon">🧠</div>
+            <h3>Sudoku</h3>
+            <p>Risolvi il puzzle numerico per allenare la logica e la concentrazione</p>
+            <button class="play-button">Gioca</button>
+          </div>
+          <div class="minigame-item" data-game="wordle">
+            <div class="minigame-icon">📖</div>
+            <h3>Wordle</h3>
+            <p>Indovina la parola segreta in 6 tentativi per allenare il vocabolario</p>
+            <button class="play-button">Gioca</button>
+          </div>
+          <div class="minigame-item" data-game="math">
+            <div class="minigame-icon">➕</div>
+            <h3>Calcolo Veloce</h3>
+            <p>Risolvi operazioni matematiche sotto tempo</p>
+            <button class="play-button">Gioca</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Container -->
+  <div id="gameContainer" class="game-container" style="display: none;">
+    <div class="game-header">
+      <button class="back-button" id="backToMenu">&larr; Torna ai minigiochi</button>
+      <div class="game-info">
+        <span id="gameTitle">Memory Cards</span>
+        <div class="game-stats">
+          <span id="gameScore">Punteggio: 0</span>
+          <span id="gameTimer">Tempo: 0:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="game-area" id="gameArea">
+      <!-- Game content will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script src="../js/env-config.js"></script>
+  <script src="../js/modules/auth.js"></script>
+  <script src="../js/animated-avatar.js"></script>
+  <script>
+    if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
+      window.location.href = 'index.html';
+    }
+
+    // SISTEMA CREDITI AVATAR
+    const STORAGE_CREDITI_KEY = 'bp_crediti';
+    const STORAGE_ACCESSORI_KEY = 'bp_accessori';
+    
+    // Inizializza crediti se non esistono
+    function initCrediti() {
+      if (!localStorage.getItem(STORAGE_CREDITI_KEY)) {
+        localStorage.setItem(STORAGE_CREDITI_KEY, '0');
+      }
+    }
+    
+    // Array degli accessori disponibili
+    const accessoriDisponibili = [
+      { id: 'cappello', nome: 'Cappello', prezzo: 50, svg: '<path d="M25 10 L35 10 L35 5 L25 5 Z" fill="#FF6B6B"/><path d="M20 10 L40 10 L35 5 L25 5 Z" fill="#FF6B6B"/>' },
+      { id: 'occhiali', nome: 'Occhiali', prezzo: 30, svg: '<circle cx="22" cy="18" r="8" fill="none" stroke="#4A90E2" stroke-width="2"/><circle cx="38" cy="18" r="8" fill="none" stroke="#4A90E2" stroke-width="2"/><path d="M30 18 L30 18" stroke="#4A90E2" stroke-width="2"/>' },
+      { id: 'mantello', nome: 'Mantello', prezzo: 80, svg: '<path d="M15 25 L45 25 L40 50 L20 50 Z" fill="#9B59B6" opacity="0.8"/><path d="M15 25 L45 25 L45 30 L15 30 Z" fill="#8E44AD"/>' },
+      { id: 'corona', nome: 'Corona', prezzo: 100, svg: '<path d="M20 15 L25 5 L30 12 L35 5 L40 15 L35 20 L25 20 Z" fill="#FFD700"/><circle cx="25" cy="10" r="2" fill="#FFF"/><circle cx="35" cy="10" r="2" fill="#FFF"/><circle cx="30" cy="15" r="2" fill="#FFF"/>' },
+      { id: 'sciarpa', nome: 'Sciarpa', prezzo: 40, svg: '<path d="M15 28 L45 28 L45 35 L15 35 Z" fill="#E74C3C"/><path d="M15 31 L45 31 L45 32 L15 32 Z" fill="#C0392B"/>' },
+      { id: 'cuffia', nome: 'Cuffia', prezzo: 35, svg: '<ellipse cx="30" cy="12" rx="12" ry="8" fill="#34495E"/><path d="M18 12 L42 12" stroke="#2C3E50" stroke-width="1"/>' }
+    ];
+    
+    // Inizializza accessori acquistati
+    function initAccessori() {
+      if (!localStorage.getItem(STORAGE_ACCESSORI_KEY)) {
+        localStorage.setItem(STORAGE_ACCESSORI_KEY, JSON.stringify([]));
+      }
+    }
+    
+    // Ottieni accessori acquistati
+    function getAccessoriAcquistati() {
+      return JSON.parse(localStorage.getItem(STORAGE_ACCESSORI_KEY) || '[]');
+    }
+    
+    // Controlla se un accessorio è acquistato
+    function isAccessorioAcquistato(accessorioId) {
+      return getAccessoriAcquistati().includes(accessorioId);
+    }
+    
+    // Acquista accessorio
+    function acquistaAccessorio(accessorioId, prezzo) {
+      const crediti = getCrediti();
+      if (crediti >= prezzo) {
+        // Sottrai crediti
+        const nuoviCrediti = crediti - prezzo;
+        localStorage.setItem(STORAGE_CREDITI_KEY, nuoviCrediti.toString());
+        
+        // Aggiungi accessorio
+        const accessori = getAccessoriAcquistati();
+        if (!accessori.includes(accessorioId)) {
+          accessori.push(accessorioId);
+          localStorage.setItem(STORAGE_ACCESSORI_KEY, JSON.stringify(accessori));
+        }
+        
+        updateAvatarDisplay();
+        renderShopAvatar();
+        showCreditNotification(-prezzo);
+        return true;
+      }
+      return false;
+    }
+    
+    // Ottieni crediti attuali
+    function getCrediti() {
+      return parseInt(localStorage.getItem(STORAGE_CREDITI_KEY) || '0');
+    }
+    
+    // Aggiungi crediti
+    function aggiungiCrediti(importo) {
+      const attuali = getCrediti();
+      const nuovi = attuali + importo;
+      localStorage.setItem(STORAGE_CREDITI_KEY, nuovi.toString());
+      updateAvatarDisplay();
+      
+      // Mostra notifica
+      showCreditNotification(importo);
+    }
+    
+    // Mostra notifica crediti
+    function showCreditNotification(importo) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      notification.textContent = `+${importo} crediti!`;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 2000);
+    }
+    
+    // Aggiorna display avatar
+    function updateAvatarDisplay() {
+      const creditiElement = document.getElementById('creditiDisplay');
+      const progressBar = document.getElementById('progressBar');
+      const crediti = getCrediti();
+      
+      if (creditiElement) {
+        creditiElement.textContent = crediti + ' crediti';
+      }
+      
+      // Aggiorna barra di progresso (ogni 100 crediti = nuovo livello)
+      if (progressBar) {
+        const progress = (crediti % 100);
+        progressBar.style.width = progress + '%';
+        
+        // Aggiorna testo progresso
+        const progressText = progressBar.parentElement?.nextElementSibling;
+        if (progressText) {
+          progressText.textContent = `${progress} / 100 crediti`;
+        }
+      }
+    }
+    
+    // Renderizza Shop Avatar
+    function renderShopAvatar() {
+      const shopContent = document.getElementById('shopAvatarContent');
+      if (!shopContent) return;
+      
+      const crediti = getCrediti();
+      const accessoriAcquistati = getAccessoriAcquistati();
+      
+      let shopHTML = '<div style="display: grid; gap: 0.5rem;">';
+      
+      accessoriDisponibili.forEach(accessorio => {
+        const isAcquistato = accessoriAcquistati.includes(accessorio.id);
+        const puoAcquistare = crediti >= accessorio.prezzo && !isAcquistato;
+        
+        shopHTML += `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: ${isAcquistato ? 'rgba(76, 175, 80, 0.1)' : 'rgba(79, 70, 229, 0.05)'}; border-radius: 12px; border: 1px solid ${isAcquistato ? '#4CAF50' : 'var(--border)'};">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <svg width="40" height="40" viewBox="0 0 60 60" style="fill: none;">
+                  ${accessorio.svg}
+                </svg>
+              </div>
+              <div>
+                <div style="font-weight: 600; color: var(--text); font-size: 0.9rem;">${accessorio.nome}</div>
+                <div style="color: ${isAcquistato ? '#4CAF50' : 'var(--accent)'}; font-size: 0.8rem; font-weight: 500;">
+                  ${isAcquistato ? '?? Acquistato' : `${accessorio.prezzo} crediti`}
+                </div>
+              </div>
+            </div>
+            ${!isAcquistato ? `
+              <button 
+                onclick="handleAcquista('${accessorio.id}', ${accessorio.prezzo})"
+                style="
+                  padding: 0.4rem 0.8rem;
+                  border: none;
+                  border-radius: 8px;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  cursor: ${puoAcquistare ? 'pointer' : 'not-allowed'};
+                  background: ${puoAcquistare ? 'linear-gradient(135deg, var(--accent), #818cf8)' : 'rgba(156, 163, 175, 0.3)'};
+                  color: ${puoAcquistare ? 'white' : '#9CA3AF'};
+                  transition: all 0.2s ease;
+                "
+                ${!puoAcquistare ? 'disabled' : ''}
+              >
+                ${puoAcquistare ? 'Acquista' : crediti < accessorio.prezzo ? 'Crediti insufficienti' : 'Già tuo'}
+              </button>
+            ` : `
+              <div style="color: #4CAF50; font-size: 0.8rem; font-weight: 600;">??</div>
+            `}
+          </div>
+        `;
+      });
+      
+      shopHTML += '</div>';
+      shopContent.innerHTML = shopHTML;
+    }
+    
+    // Renderizza accessori sull'avatar
+    function renderAvatarAccessori() {
+      const avatarAccessori = document.getElementById('avatarAccessori');
+      if (!avatarAccessori) return;
+      
+      const accessoriAcquistati = getAccessoriAcquistati();
+      let accessoriHTML = '';
+      
+      accessoriAcquistati.forEach(accessorioId => {
+        const accessorio = accessoriDisponibili.find(a => a.id === accessorioId);
+        if (accessorio) {
+          accessoriHTML += `
+            <svg width="60" height="60" viewBox="0 0 60 60" style="position: absolute; z-index: 2;">
+              ${accessorio.svg}
+            </svg>
+          `;
+        }
+      });
+      
+      avatarAccessori.innerHTML = accessoriHTML;
+    }
+    
+    // Gestione acquisto accessorio
+    function handleAcquista(accessorioId, prezzo) {
+      if (acquistaAccessorio(accessorioId, prezzo)) {
+        renderAvatarAccessori();
+      } else {
+        // Mostra messaggio di errore
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          color: white;
+          padding: 1rem 1.5rem;
+          border-radius: 12px;
+          font-weight: 600;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+          z-index: 10000;
+          animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = 'Crediti insufficienti!';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => notification.remove(), 300);
+        }, 2000);
+      }
+    }
+    
+    // Inizializza
+    initCrediti();
+    initAccessori();
+    updateAvatarDisplay();
+    renderShopAvatar();
+    renderAvatarAccessori();
+
+    // HAMBURGER MENU
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.body;
+
+    if (hamburgerBtn && sidebar) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('active');
+        body.classList.toggle('menu-open');
+      });
+
+      // Chiudi il menu quando clicchi sull'overlay
+      body.addEventListener('click', (e) => {
+        if (body.classList.contains('menu-open') && !sidebar.contains(e.target) && e.target !== hamburgerBtn) {
+          sidebar.classList.remove('active');
+          body.classList.remove('menu-open');
+        }
+      });
+
+      // Chiudi il menu quando clicchi su un elemento della sidebar
+      sidebar.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+          sidebar.classList.remove('active');
+          body.classList.remove('menu-open');
+        }
+      });
+    } else if (hamburgerBtn) {
+      hamburgerBtn.style.display = 'none';
+    }
+
+    const themeToggle = document.getElementById('themeToggle');
+    const navAvatar = document.getElementById('navAvatar');
+    const guestNotice = document.getElementById('guestNotice');
+    const heroButton = document.querySelector('.cta-button.primary');
+    const secondaryButton = document.querySelector('.cta-button.secondary');
+
+    const userData = window.AuthModule?.getUserData?.() || {};
+    const user = {
+      username: userData.username || sessionStorage.getItem('username') || localStorage.getItem('bp_username') || 'Studente',
+      profileImage: userData.profileImage || sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '',
+      role: userData.role || sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user'
+    };
+
+    function getInitials(name) {
+      return name
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join('');
+    }
+
+    function updateProfileUI() {
+      if (navAvatar) {
+        if (user.profileImage) {
+          navAvatar.style.backgroundImage = `url(${user.profileImage})`;
+          navAvatar.textContent = '';
+        } else {
+          navAvatar.style.backgroundImage = '';
+          navAvatar.textContent = getInitials(user.username);
+        }
+      }
+    }
+
+    function updateGuestMode() {
+      const role = sessionStorage.getItem('role') || 'user';
+      if (role === 'guest') {
+        if (guestNotice) {
+          guestNotice.style.display = 'block';
+          guestNotice.textContent = 'Sei connesso come ospite: alcune funzionalità sono limitate e le modifiche al profilo non saranno salvate.';
+        }
+        if (heroButton) {
+          heroButton.disabled = true;
+          heroButton.textContent = 'Non disponibile per ospiti';
+        }
+        if (secondaryButton) {
+          secondaryButton.disabled = true;
+          secondaryButton.textContent = 'Area riservata agli utenti';
+        }
+      }
+    }
+
+    function updateGuestMode() {
+      if (user.role === 'guest') {
+        if (guestNotice) {
+          guestNotice.style.display = 'block';
+          guestNotice.textContent = 'Sei connesso come ospite: alcune funzionalita sono limitate e le modifiche al profilo non saranno salvate.';
+        }
+        if (heroButton) {
+          heroButton.setAttribute('aria-disabled', 'true');
+          heroButton.addEventListener('click', (event) => event.preventDefault());
+          heroButton.textContent = 'Accesso ospite attivo';
+        }
+        if (secondaryButton) {
+          secondaryButton.textContent = 'Esplora il sito';
+        }
+      }
+    }
+
+    updateProfileUI();
+    updateGuestMode();
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+      themeToggle.textContent = '☀️'; // Sole per tema scuro
+    } else {
+      themeToggle.textContent = '🌙'; // Luna per tema chiaro
+    }
+    themeToggle.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙'; // Cambia icona dinamicamente
+      themeToggle.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
+    });
+
+    // MINIGAME FUNCTIONALITY
+    const minigameCard = document.getElementById('minigameCard');
+    const minigameModal = document.getElementById('minigameModal');
+    const closeModal = document.getElementById('closeModal');
+    const gameContainer = document.getElementById('gameContainer');
+    const backToMenu = document.getElementById('backToMenu');
+    const gameArea = document.getElementById('gameArea');
+    const gameTitle = document.getElementById('gameTitle');
+    const gameScore = document.getElementById('gameScore');
+    const gameTimer = document.getElementById('gameTimer');
+
+    let currentGame = null;
+    let gameInterval = null;
+    let gameState = {};
+    let wonGames = JSON.parse(localStorage.getItem('wonGames') || '{}');
+
+    // Open minigame modal
+    if (minigameCard && minigameModal) {
+      minigameCard.addEventListener('click', (event) => {
+        event.preventDefault();
+        updateMinigameIcons();
+        minigameModal.classList.add('active');
+      });
+    }
+
+    // Close modal
+    if (closeModal && minigameModal) {
+      closeModal.addEventListener('click', () => {
+        minigameModal.classList.remove('active');
+      });
+    }
+
+    // Close modal on overlay click
+    if (minigameModal) {
+      minigameModal.addEventListener('click', (e) => {
+        if (e.target === minigameModal) {
+          minigameModal.classList.remove('active');
+        }
+      });
+    }
+
+    // Back to menu from game
+    if (backToMenu && gameContainer && minigameModal) {
+      backToMenu.addEventListener('click', () => {
+        stopGame();
+        gameContainer.style.display = 'none';
+        minigameModal.classList.add('active');
+      });
+    }
+
+    // Game selection
+    document.querySelectorAll('.minigame-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const gameType = item.dataset.game;
+        startGame(gameType);
+      });
+    });
+
+    function startGame(gameType) {
+      currentGame = gameType;
+      minigameModal.classList.remove('active');
+      gameContainer.style.display = 'flex';
+      
+      // Reset game state
+      gameState = {
+        score: 0,
+        time: 0,
+        moves: 0,
+        ...getGameInitialState(gameType)
+      };
+      
+      updateGameUI();
+      startTimer();
+      
+      switch(gameType) {
+        case 'sudoku':
+          initSudokuGame();
+          break;
+        case 'wordle':
+          initWordleGame();
+          break;
+        case 'math':
+          initMathGame();
+          break;
+        default:
+          gameArea.innerHTML = '<p>Gioco in sviluppo...</p>';
+      }
+    }
+
+    function stopGame() {
+      if (gameInterval) {
+        clearInterval(gameInterval);
+        gameInterval = null;
+      }
+      currentGame = null;
+      gameState = {};
+    }
+
+    function startTimer() {
+      gameState.time = 0;
+      gameInterval = setInterval(() => {
+        gameState.time++;
+        const minutes = Math.floor(gameState.time / 60);
+        const seconds = gameState.time % 60;
+        gameTimer.textContent = `Tempo: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function updateGameUI() {
+      gameScore.textContent = `Punteggio: ${gameState.score}`;
+      
+      const gameTitles = {
+        sudoku: 'Sudoku',
+        wordle: 'Wordle',
+        sequence: 'Sequence Memory',
+        math: 'Calcolo Veloce',
+        word: 'Word Puzzle',
+        reaction: 'Reaction Time'
+      };
+      
+      gameTitle.textContent = gameTitles[currentGame] || 'Minigioco';
+    }
+
+    function getGameInitialState(gameType) {
+      const states = {
+        sudoku: { grid: [], solution: [], selectedCell: null, difficulty: 'easy' },
+        wordle: { targetWord: '', currentGuess: '', guesses: [], gameOver: false },
+        sequence: { sequence: [], userSequence: [], level: 1 },
+        math: { currentProblem: null, correctAnswers: 0 },
+        word: { currentWord: null, foundWords: [] },
+        reaction: { startTime: null, reactions: [] }
+      };
+      return states[gameType] || {};
+    }
+
+    // Sudoku Game Implementation
+    function initSudokuGame() {
+      const puzzle = generateSudokuPuzzle();
+      gameState.grid = puzzle.grid;
+      gameState.solution = puzzle.solution;
+      gameState.selectedCell = null;
+      
+      const container = document.createElement('div');
+      container.style.textAlign = 'center';
+      
+      const title = document.createElement('h3');
+      title.textContent = 'Sudoku - Riempi la griglia';
+      title.style.marginBottom = '1rem';
+      
+      const grid = document.createElement('div');
+      grid.className = 'sudoku-grid';
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(9, 1fr)';
+      grid.style.gap = '2px';
+      grid.style.maxWidth = '450px';
+      grid.style.margin = '0 auto';
+      grid.style.padding = '10px';
+      grid.style.background = 'var(--border)';
+      grid.style.borderRadius = '12px';
+      
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'sudoku-cell';
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.style.width = '40px';
+          cell.style.height = '40px';
+          cell.style.display = 'flex';
+          cell.style.alignItems = 'center';
+          cell.style.justifyContent = 'center';
+          cell.style.fontSize = '18px';
+          cell.style.fontWeight = 'bold';
+          cell.style.border = '1px solid var(--border)';
+          cell.style.background = 'var(--panel-strong)';
+          cell.style.color = 'var(--text)';
+          cell.style.cursor = 'pointer';
+          cell.style.borderRadius = '4px';
+          
+          // Add thicker borders for 3x3 sections
+          if (i % 3 === 0 && i !== 0) cell.style.borderTop = '2px solid var(--accent)';
+          if (j % 3 === 0 && j !== 0) cell.style.borderLeft = '2px solid var(--accent)';
+          
+          const value = gameState.grid[i][j];
+          if (value !== 0) {
+            cell.textContent = value;
+            cell.style.background = 'var(--input-bg)';
+            cell.style.cursor = 'default';
+            cell.style.color = 'var(--accent)';
+          }
+          
+          cell.addEventListener('click', () => selectSudokuCell(cell));
+          grid.appendChild(cell);
+        }
+      }
+      
+      const numberPad = document.createElement('div');
+      numberPad.style.display = 'grid';
+      numberPad.style.gridTemplateColumns = 'repeat(5, 1fr)';
+      numberPad.style.gap = '8px';
+      numberPad.style.maxWidth = '300px';
+      numberPad.style.margin = '20px auto 0';
+      
+      for (let i = 1; i <= 9; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = 'number-btn';
+        btn.style.padding = '12px';
+        btn.style.fontSize = '16px';
+        btn.style.fontWeight = 'bold';
+        btn.style.border = '2px solid var(--border)';
+        btn.style.borderRadius = '8px';
+        btn.style.background = 'var(--panel-strong)';
+        btn.style.color = 'var(--text)';
+        btn.style.cursor = 'pointer';
+        btn.style.transition = 'all 0.2s';
+        btn.addEventListener('click', () => placeSudokuNumber(i));
+        btn.addEventListener('mouseenter', () => {
+          btn.style.background = 'var(--accent-soft)';
+          btn.style.borderColor = 'var(--accent)';
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.background = 'var(--panel-strong)';
+          btn.style.borderColor = 'var(--border)';
+        });
+        numberPad.appendChild(btn);
+      }
+      
+      const clearBtn = document.createElement('button');
+      clearBtn.textContent = 'Cancella';
+      clearBtn.style.padding = '12px';
+      clearBtn.style.fontSize = '14px';
+      clearBtn.style.border = '2px solid var(--border)';
+      clearBtn.style.borderRadius = '8px';
+      clearBtn.style.background = 'rgba(255, 59, 48, 0.1)';
+      clearBtn.style.color = 'rgb(255, 59, 48)';
+      clearBtn.style.cursor = 'pointer';
+      clearBtn.style.transition = 'all 0.2s';
+      clearBtn.addEventListener('click', () => clearSudokuCell());
+      clearBtn.addEventListener('mouseenter', () => {
+        clearBtn.style.background = 'rgba(255, 59, 48, 0.2)';
+      });
+      clearBtn.addEventListener('mouseleave', () => {
+        clearBtn.style.background = 'rgba(255, 59, 48, 0.1)';
+      });
+      numberPad.appendChild(clearBtn);
+      
+      container.appendChild(title);
+      container.appendChild(grid);
+      container.appendChild(numberPad);
+      
+      gameArea.innerHTML = '';
+      gameArea.appendChild(container);
+    }
+
+    function generateSudokuPuzzle() {
+      // Simple sudoku puzzle (easy difficulty)
+      const solution = [
+        [5,3,4,6,7,8,9,1,2],
+        [6,7,2,1,9,5,3,4,8],
+        [1,9,8,3,4,2,5,6,7],
+        [8,5,9,7,6,1,4,2,3],
+        [4,2,6,8,5,3,7,9,1],
+        [7,1,3,9,2,4,8,5,6],
+        [9,6,1,5,3,7,2,8,4],
+        [2,8,7,4,1,9,6,3,5],
+        [3,4,5,2,8,6,1,7,9]
+      ];
+      
+      // Create puzzle by removing some numbers
+      const grid = solution.map(row => [...row]);
+      const cellsToRemove = 40; // Easy difficulty
+      
+      let removed = 0;
+      while (removed < cellsToRemove) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+        if (grid[row][col] !== 0) {
+          grid[row][col] = 0;
+          removed++;
+        }
+      }
+      
+      return { grid, solution };
+    }
+
+    function selectSudokuCell(cell) {
+      if (cell.textContent && cell.style.color === 'var(--accent)') return; // Can't select fixed cells
+      
+      // Deselect previous cell
+      if (gameState.selectedCell) {
+        gameState.selectedCell.style.background = 'var(--panel-strong)';
+      }
+      
+      gameState.selectedCell = cell;
+      cell.style.background = 'var(--accent-soft)';
+    }
+
+    function placeSudokuNumber(number) {
+      if (!gameState.selectedCell) return;
+      
+      const row = parseInt(gameState.selectedCell.dataset.row);
+      const col = parseInt(gameState.selectedCell.dataset.col);
+      
+      // Check if the number is valid
+      if (isValidSudokuMove(row, col, number)) {
+        gameState.selectedCell.textContent = number;
+        gameState.selectedCell.style.color = 'var(--text)';
+        gameState.grid[row][col] = number;
+        gameState.score += 5;
+        updateGameUI();
+        
+        // Check if puzzle is complete
+        if (isSudokuComplete()) {
+          gameState.score += 100;
+          updateGameUI();
+          endGame(true);
+        }
+      } else {
+        // Invalid move - shake animation
+        gameState.selectedCell.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          gameState.selectedCell.style.animation = '';
+        }, 500);
+        gameState.score = Math.max(0, gameState.score - 2);
+        updateGameUI();
+      }
+    }
+
+    function clearSudokuCell() {
+      if (!gameState.selectedCell) return;
+      
+      const row = parseInt(gameState.selectedCell.dataset.row);
+      const col = parseInt(gameState.selectedCell.dataset.col);
+      
+      if (gameState.selectedCell.style.color !== 'var(--accent)') {
+        gameState.selectedCell.textContent = '';
+        gameState.grid[row][col] = 0;
+      }
+    }
+
+    function isValidSudokuMove(row, col, number) {
+      // Check row
+      for (let x = 0; x < 9; x++) {
+        if (x !== col && gameState.grid[row][x] === number) return false;
+      }
+      
+      // Check column
+      for (let x = 0; x < 9; x++) {
+        if (x !== row && gameState.grid[x][col] === number) return false;
+      }
+      
+      // Check 3x3 box
+      const boxRow = Math.floor(row / 3) * 3;
+      const boxCol = Math.floor(col / 3) * 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if ((boxRow + i !== row || boxCol + j !== col) && 
+              gameState.grid[boxRow + i][boxCol + j] === number) {
+            return false;
+          }
+        }
+      }
+      
+      return true;
+    }
+
+    function isSudokuComplete() {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (gameState.grid[i][j] === 0 || gameState.grid[i][j] !== gameState.solution[i][j]) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    // Wordle Game Implementation
+    function initWordleGame() {
+      const wordList = [
+        'NOTTE', 'GATTO', 'LIBRO', 'PIZZA', 'AMICI', 'FIORE', 
+       'PORTA', 'MAMMA', 'NONNO', 
+       'TRENO', 'BARCA', 'PONTE', 'PAESE', 'FIUME',
+         'VENTO', 'CIANO', 'ROSSO',
+        'LIMONE', 'ARANCIA', 'BIRRA', 'VINO', 'CAFFE', 'SALTO', 'BALLO', 'CANTO', 'CUCINA', 'FORNO', 'PIATTO', 'FRIGO',
+        'BOCCA', 'MAREE', 'GIOCO', 'SPORT', 'LETTO', 'CAMICE', 'OCCHIO', 'MANO', 'DITO', 'GAMBA', 'CUORE', 'TESTA', 'GINE', 'RENE', 'LUNEDI', 'SABATO', 'MESE', 'ANNO', 'AMORE', 'ODIO', 'PAURA', 'GIOIA', 'RABBIA', 'SORPRE', 'PACE', 'GUERRA', 'PROGET', 'CLIENT', 'COMPIT', 'ESAME', 'BANCO', 'PREZZO', 'SALDO', 'DOLCE', 'CINEMA', 'FILM', 'ATTORE', 'REGIST', 'CANZONE', 'PIANO', 'DISCO', 'RADIO', 'TAVOLO', 'MONTE', 'VALLE', 'COLLE', 'FRUTTA', 'MELA', 'PERA', 'CILIEG', 'ZUCCHER', 'FORMAG', 'SALUME', 'PROSCI', 'POLLO', 'MANZO', 'VITELL', 'PASTA', 'CARNE', 'UOVA', 'PATATA', 'POMODO', 'INSALA', 'CEBOLL', 'CAROTA', 'AGLIO', 'BASILI', 'ROSMAR', 'ORIGAN', 'PEPERO', 'CUCINA', 'FRIGOR', 'LAVARE', 'ASCIUG', 'STIRAR', 'PASTO', 'SCEND', 'SALIR', 'ENTRA', 'ESCI', 'APRI', 'CHIUD', 'SCRIV', 'LEGGI', 'PARLA', 'SENTI', 'VEDER', 'UDIRE', 'SAPER', 'VIVER', 'MORIR', 'DORMI', 'MANGI', 'BERE', 'FARE', 'DARE', 'AVERE', 'ESSER', 'ANDAR', 'VENIR', 'STARE', 'TENER', 'VOLER', 'DOVER', 'POTER', 'BASTA', 'SERVE', 'PIACE', 'GRAND', 'PICCO', 'BELLO', 'BRUTT', 'BUONO', 'CATTIV', 'FACIL', 'DIFFIC', 'LUNGO', 'CORTO', 'LARGO', 'STRET', 'ALTO', 'BASSO', 'GROSS', 'SOTTO', 'DESTRO', 'SINIS', 'DIETR', 'FRONT', 'AVANT', 'INDIE', 'TORN', 'RESTA', 'CAMBI', 'MUOVI', 'CORRI', 'SALTI', 'BALLI', 'NUOTI', 'CANTI', 'PULIR', 'CUCI', 'STIRI', 'SORRI', 'PIANG', 'RIDI', 'SALTO', 'BALLO', 'NUOTO', 'CANTO', 'DANZO', 'LAVOR', 'STUDI', 'SCRIV', 'PENS', 'ASPET', 'ARRIV', 'PARTI', 'RESTO', 'MANCO', 'RIMAN', 'VADAN', 'VENGO', 'VENG', 'STAI', 'ABBI', 'SIAM', 'SIATE', 'SENZA', 'SOTTO', 'SOVRA', 'FUORI', 'DENTR', 'LASSU', 'QUI', 'QUA', 'DOVE', 'COME', 'QUAND', 'QUANT', 'PERCH', 'PERCH', 'COSA', 'INFAT', 'POICH', 'ALLOR', 'CIOE', 'GRADI', 'PEGGIO', 'SERVI', 'VIENI', 'FACCI', 'DICHI', 'QUELL', 'QUEGLI', 'QUEST', 'TUTTO', 'NESSUN', 'QUALSI', 'QUALUN', 'QUALCO',
+      ];
+      const filteredWordList = wordList.filter(word => word.length === 5);
+      gameState.targetWord = filteredWordList[Math.floor(Math.random() * filteredWordList.length)];
+      gameState.currentGuess = '';
+      gameState.guesses = [];
+      gameState.gameOver = false;
+      
+      const container = document.createElement('div');
+      container.style.textAlign = 'center';
+      container.style.maxWidth = '400px';
+      container.style.margin = '0 auto';
+      
+      const title = document.createElement('h3');
+      title.textContent = 'Wordle - Indovina la parola';
+      title.style.marginBottom = '1rem';
+      title.style.color = 'var(--accent)';
+      
+      const subtitle = document.createElement('p');
+      subtitle.textContent = 'Hai 6 tentativi per indovinare la parola segreta di 5 lettere';
+      subtitle.style.marginBottom = '2rem';
+      subtitle.style.color = 'var(--muted)';
+      subtitle.style.fontSize = '14px';
+      
+      const grid = document.createElement('div');
+      grid.className = 'wordle-grid';
+      grid.style.display = 'grid';
+      grid.style.gridTemplateRows = 'repeat(6, 1fr)';
+      grid.style.gap = '8px';
+      grid.style.marginBottom = '2rem';
+      
+      // Create 6 rows of 5 letters each
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(5, 1fr)';
+        row.style.gap = '8px';
+        
+        for (let j = 0; j < 5; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'wordle-cell';
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.style.width = '60px';
+          cell.style.height = '60px';
+          cell.style.display = 'flex';
+          cell.style.alignItems = 'center';
+          cell.style.justifyContent = 'center';
+          cell.style.fontSize = '24px';
+          cell.style.fontWeight = 'bold';
+          cell.style.border = '2px solid var(--border)';
+          cell.style.borderRadius = '8px';
+          cell.style.background = 'var(--panel-strong)';
+          cell.style.color = 'var(--text)';
+          cell.style.textTransform = 'uppercase';
+          row.appendChild(cell);
+        }
+        
+        grid.appendChild(row);
+      }
+      
+      const inputContainer = document.createElement('div');
+      inputContainer.style.marginBottom = '2rem';
+      
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.id = 'wordleInput';
+      input.placeholder = 'Inserisci 5 lettere';
+      input.maxLength = 5;
+      input.style.fontSize = '18px';
+      input.style.padding = '12px';
+      input.style.textAlign = 'center';
+      input.style.border = '2px solid var(--border)';
+      input.style.borderRadius = '8px';
+      input.style.background = 'var(--panel-strong)';
+      input.style.color = 'var(--text)';
+      input.style.textTransform = 'uppercase';
+      input.style.width = '200px';
+      
+      const submitBtn = document.createElement('button');
+      submitBtn.textContent = 'Invia';
+      submitBtn.className = 'play-button';
+      submitBtn.style.marginLeft = '10px';
+      submitBtn.style.padding = '12px 20px';
+      submitBtn.addEventListener('click', () => submitWordleGuess());
+      
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          submitWordleGuess();
+        }
+      });
+      
+      inputContainer.appendChild(input);
+      inputContainer.appendChild(submitBtn);
+      
+      const message = document.createElement('div');
+      message.id = 'wordleMessage';
+      message.style.marginTop = '1rem';
+      message.style.fontSize = '16px';
+      message.style.fontWeight = 'bold';
+      message.style.minHeight = '24px';
+      
+      container.appendChild(title);
+      container.appendChild(subtitle);
+      container.appendChild(grid);
+      container.appendChild(inputContainer);
+      container.appendChild(message);
+      
+      gameArea.innerHTML = '';
+      gameArea.appendChild(container);
+      
+      // Focus on input
+      input.focus();
+    }
+
+    function submitWordleGuess() {
+      if (gameState.gameOver) return;
+      
+      const input = document.getElementById('wordleInput');
+      const guess = input.value.toUpperCase();
+      
+      if (guess.length !== 5) {
+        showWordleMessage('Inserisci esattamente 5 lettere!', 'error');
+        return;
+      }
+      
+      // Add guess to the grid
+      const currentRow = gameState.guesses.length;
+      if (currentRow >= 6) return;
+      
+      gameState.guesses.push(guess);
+      
+      // Implementazione corretta della logica Wordle
+      const targetWord = gameState.targetWord;
+      const result = ['gray', 'gray', 'gray', 'gray', 'gray'];
+      
+      // Prima passata: trova tutte le lettere nella posizione corretta (verdi)
+      const targetLetters = targetWord.split('');
+      const guessLetters = guess.split('');
+      const usedPositions = new Array(5).fill(false);
+      
+      for (let i = 0; i < 5; i++) {
+        if (guessLetters[i] === targetLetters[i]) {
+          result[i] = 'green';
+          usedPositions[i] = true;
+        }
+      }
+      
+      // Seconda passata: trova le lettere presenti ma in posizione sbagliata (gialle)
+      for (let i = 0; i < 5; i++) {
+        if (result[i] === 'green') continue; // Skip already marked as green
+        
+        // Cerca questa lettera nelle posizioni rimanenti della parola target
+        let found = false;
+        for (let j = 0; j < 5; j++) {
+          if (!usedPositions[j] && guessLetters[i] === targetLetters[j]) {
+            // Controlla se non abbiamo già troppe occorrenze di questa lettera
+            const guessLetterCount = guessLetters.filter((l, idx) => l === guessLetters[i] && idx <= i).length;
+            const targetLetterCount = targetLetters.filter((l, idx) => l === guessLetters[i]).length;
+            const greenCount = result.filter((r, idx) => r === 'green' && guessLetters[idx] === guessLetters[i]).length;
+            const yellowCount = result.filter((r, idx) => r === 'yellow' && guessLetters[idx] === guessLetters[i]).length;
+            
+            if (greenCount + yellowCount < targetLetterCount) {
+              result[i] = 'yellow';
+              usedPositions[j] = true;
+              found = true;
+              break;
+            }
+          }
+        }
+      }
+      
+      // Update the grid with the guess and correct colors
+      for (let i = 0; i < 5; i++) {
+        const cell = document.querySelector(`[data-row="${currentRow}"][data-col="${i}"]`);
+        cell.textContent = guess[i];
+        
+        // Apply correct color coding
+        if (result[i] === 'green') {
+          // Correct position (green)
+          cell.style.background = '#6aaa64';
+          cell.style.color = 'white';
+          cell.style.borderColor = '#6aaa64';
+        } else if (result[i] === 'yellow') {
+          // Wrong position (yellow)
+          cell.style.background = '#c9b458';
+          cell.style.color = 'white';
+          cell.style.borderColor = '#c9b458';
+        } else {
+          // Not in word (gray)
+          cell.style.background = '#787c7e';
+          cell.style.color = 'white';
+          cell.style.borderColor = '#787c7e';
+        }
+        
+        // Add flip animation
+        cell.style.animation = 'flip 0.5s ease-in-out';
+        setTimeout(() => {
+          cell.style.animation = '';
+        }, 500);
+      }
+      
+      // Check if won
+      if (guess === gameState.targetWord) {
+        gameState.gameOver = true;
+        gameState.score += 100 - (currentRow * 10); // More points for fewer guesses
+        updateGameUI();
+        showWordleMessage(`Complimenti! Hai indovinato in ${currentRow + 1} tentativi!`, 'success');
+        setTimeout(() => endGame(true), 2000);
+      } else if (currentRow === 5) {
+        // Last guess, game over
+        gameState.gameOver = true;
+        showWordleMessage(`Game Over! La parola era: ${gameState.targetWord}`, 'error');
+        setTimeout(() => endGame(false), 3000);
+      } else {
+        gameState.score += 5;
+        updateGameUI();
+        showWordleMessage('Riprova!', 'normal');
+      }
+      
+      // Clear input for next guess
+      input.value = '';
+      input.focus();
+    }
+
+    function showWordleMessage(text, type) {
+      const message = document.getElementById('wordleMessage');
+      message.textContent = text;
+      
+      if (type === 'success') {
+        message.style.color = '#6aaa64';
+      } else if (type === 'error') {
+        message.style.color = '#dc3545';
+      } else {
+        message.style.color = 'var(--muted)';
+      }
+    }
+
+    // Math Game Implementation
+    function initMathGame() {
+      generateMathProblem();
+    }
+
+    function generateMathProblem() {
+      const operations = ['+', '-', '*'];
+      const operation = operations[Math.floor(Math.random() * operations.length)];
+      let a, b, answer;
+      
+      switch(operation) {
+        case '+':
+          a = Math.floor(Math.random() * 50) + 1;
+          b = Math.floor(Math.random() * 50) + 1;
+          answer = a + b;
+          break;
+        case '-':
+          a = Math.floor(Math.random() * 50) + 10;
+          b = Math.floor(Math.random() * a) + 1;
+          answer = a - b;
+          break;
+        case '*':
+          a = Math.floor(Math.random() * 12) + 1;
+          b = Math.floor(Math.random() * 12) + 1;
+          answer = a * b;
+          break;
+      }
+      
+      gameState.currentProblem = { a, b, operation, answer };
+      
+      const container = document.createElement('div');
+      container.style.textAlign = 'center';
+      
+      const problem = document.createElement('div');
+      problem.style.fontSize = '2.5rem';
+      problem.style.marginBottom = '2rem';
+      problem.textContent = `${a} ${operation} ${b} = ?`;
+      
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.placeholder = 'Risposta';
+      input.style.fontSize = '1.5rem';
+      input.style.padding = '1rem';
+      input.style.textAlign = 'center';
+      input.style.border = '2px solid var(--border)';
+      input.style.borderRadius = '12px';
+      input.style.background = 'var(--panel-strong)';
+      input.style.color = 'var(--text)';
+      
+      const button = document.createElement('button');
+      button.textContent = 'Verifica';
+      button.className = 'play-button';
+      button.style.marginTop = '1rem';
+      button.addEventListener('click', () => checkMathAnswer(parseInt(input.value)));
+      
+      container.appendChild(problem);
+      container.appendChild(input);
+      container.appendChild(button);
+      
+      gameArea.innerHTML = '';
+      gameArea.appendChild(container);
+    }
+
+    function checkMathAnswer(userAnswer) {
+      if (userAnswer === gameState.currentProblem.answer) {
+        gameState.score += 10;
+        gameState.correctAnswers++;
+        updateGameUI();
+        generateMathProblem();
+      } else {
+        gameState.score = Math.max(0, gameState.score - 5);
+        updateGameUI();
+        alert('Risposta errata! Riprova.');
+      }
+    }
+
+    // Placeholder functions for other games
+    function initSequenceGame() {
+      gameArea.innerHTML = '<p style="font-size: 1.5rem;">Sequence Memory - In sviluppo...</p>';
+    }
+
+    function initWordGame() {
+      gameArea.innerHTML = '<p style="font-size: 1.5rem;">Word Puzzle - In sviluppo...</p>';
+    }
+
+    function initReactionGame() {
+      gameArea.innerHTML = '<p style="font-size: 1.5rem;">Reaction Time - In sviluppo...</p>';
+    }
+
+    function endGame(won) {
+      clearInterval(gameInterval);
+      const message = won ? 
+        `Complimenti! Hai completato il gioco con ${gameState.score} punti in ${gameState.time} secondi!` :
+        `Gioco terminato. Punteggio finale: ${gameState.score}`;
+      
+      // Save win status and update icons
+      if (won && currentGame) {
+        wonGames[currentGame] = true;
+        localStorage.setItem('wonGames', JSON.stringify(wonGames));
+        updateMinigameIcons();
+      }
+      
+      const resultDiv = document.createElement('div');
+      resultDiv.style.textAlign = 'center';
+      resultDiv.style.fontSize = '1.5rem';
+      resultDiv.innerHTML = `
+        <h3>${won ? '🏆 Vittoria!' : '?? Fine Gioco'}</h3>
+        <p>${message}</p>
+        <button class="play-button" onclick="location.reload()">Gioca ancora</button>
+      `;
+      
+      gameArea.innerHTML = '';
+      gameArea.appendChild(resultDiv);
+    }
+    function updateMinigameIcons() {
+      const gameIcons = {
+        'sudoku': '🧠',
+        'wordle': '�', 
+        'math': '➕'
+      };
+      
+      document.querySelectorAll('.minigame-item').forEach(item => {
+        const gameType = item.dataset.game;
+        const iconElement = item.querySelector('.minigame-icon');
+        if (iconElement) {
+          iconElement.textContent = gameIcons[gameType];
+        }
+      });
+    }
+
+    // Initialize icons on page load
+    updateMinigameIcons();
+  </script>
+</body>
+</html>
+

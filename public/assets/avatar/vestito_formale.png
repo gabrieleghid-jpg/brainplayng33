@@ -1,0 +1,16 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Completo formale nero -->
+  <rect x="110" y="140" width="80" height="95" fill="#1a1a1a"/>
+  <rect x="90" y="150" width="20" height="75" fill="#1a1a1a"/>
+  <rect x="190" y="150" width="20" height="75" fill="#1a1a1a"/>
+  <rect x="120" y="235" width="60" height="115" fill="#1a1a1a"/>
+  <rect x="110" y="330" width="15" height="90" fill="#1a1a1a"/>
+  <rect x="175" y="330" width="15" height="90" fill="#1a1a1a"/>
+  <!-- Cravatta rossa -->
+  <rect x="145" y="145" width="10" height="60" fill="#dc143c"/>
+  <!-- Gilet bianco sotto -->
+  <rect x="120" y="180" width="60" height="40" fill="white" opacity="0.9"/>
+  <!-- Tasche -->
+  <rect x="115" y="200" width="25" height="3" fill="#333"/>
+  <rect x="160" y="200" width="25" height="3" fill="#333"/>
+</svg>

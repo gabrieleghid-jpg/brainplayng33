@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negozio - BrainPlay</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="../styles/avatar-game.css">
+    <style>
+        .shop-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .shop-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .shop-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .shop-subtitle {
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-tab {
+            background: var(--background);
+            border: 2px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-tab:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .category-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: var(--panel);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--accent);
+        }
+
+        .product-card.owned {
+            border-color: #4ade80;
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), var(--panel));
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .product-description {
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .owned-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #4ade80;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .shop-container {
+                padding: 1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .category-tabs {
+                justify-content: flex-start;
+            }
+
+            .user-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-container"></div>
+
+    <div class="page-shell">
+        <!-- Sidebar Component -->
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <!-- Shop Header -->
+            <section class="shop-header">
+                <h1 class="shop-title">🛍️ Negozio BrainPlay</h1>
+                <p class="shop-subtitle">Spendi i tuoi crediti per accessori esclusivi e power-up!</p>
+            </section>
+
+            <!-- User Stats -->
+            <section class="user-stats" id="userStats">
+                <div class="stat-card">
+                    <div class="stat-value" id="userCredits">0</div>
+                    <div class="stat-label">Crediti Disponibili</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="ownedProducts">0</div>
+                    <div class="stat-label">Prodotti Acquistati</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSpent">0</div>
+                    <div class="stat-label">Crediti Spesi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completionRate">0%</div>
+                    <div class="stat-label">Completamento</div>
+                </div>
+            </section>
+
+            <!-- Category Tabs -->
+            <section class="category-tabs" id="categoryTabs">
+                <!-- Tabs will be loaded here -->
+            </section>
+
+            <!-- Products Grid -->
+            <section class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/env-config.js"></script>
+    <script src="../js/modules/auth.js"></script>
+    <script src="../js/modules/credits.js"></script>
+    <script src="../js/modules/notifications.js"></script>
+    <script src="../js/utils/utils.js"></script>
+    <script src="../js/modules/shop.js"></script>
+    <script src="../js/animated-avatar.js"></script>
+    <script src="../js/theme-manager.js"></script>
+    <script src="../js/sidebar.js"></script>
+
+    <script>
+        // Shop Page Controller
+        class ShopController {
+            constructor() {
+                this.shop = null;
+                this.currentCategory = 'all';
+                this.init();
+            }
+
+            init() {
+                if (!AuthModule.checkAuthentication()) return;
+                
+                this.loadComponents();
+                this.setupEventListeners();
+                this.initializeSystems();
+            }
+
+            async loadComponents() {
+                try {
+                    // Load header
+                    const headerResponse = await fetch('../components/header.html');
+                    const headerHtml = await headerResponse.text();
+                    document.getElementById('header-container').innerHTML = headerHtml;
+                    document.getElementById('pageTitle').textContent = 'Negozio - BrainPlay';
+
+                    // Load sidebar
+                    const sidebarResponse = await fetch('../components/sidebar.html');
+                    const sidebarHtml = await sidebarResponse.text();
+                    document.getElementById('sidebar-container').innerHTML = sidebarHtml;
+
+                    // Load footer
+                    const footerResponse = await fetch('../components/footer.html');
+                    const footerHtml = await footerResponse.text();
+                    document.getElementById('footer-container').innerHTML = footerHtml;
+
+                } catch (error) {
+                    console.error('Error loading components:', error);
+                    NotificationsModule.showError('Errore nel caricamento dei componenti');
+                }
+            }
+
+            setupEventListeners() {
+                setTimeout(() => {
+                    if (window.sidebarManager) {
+                        window.sidebarManager.updateUserInfo();
+                    }
+                }, 100);
+            }
+
+            initializeSystems() {
+                // Initialize shop
+                this.shop = new ShopModule();
+                
+                // Initialize credits
+                CreditsModule.initializeCredits(100);
+                
+                // Load categories
+                this.loadCategories();
+                
+                // Load products
+                this.loadProducts();
+                
+                // Update stats
+                this.updateStats();
+                
+                // Initialize theme
+                if (window.themeManager) {
+                    window.themeManager.loadTheme();
+                }
+            }
+
+            loadCategories() {
+                const categoriesContainer = document.getElementById('categoryTabs');
+                const categories = this.shop.getCategories();
+                
+                categoriesContainer.innerHTML = categories.map(category => `
+                    <button class="category-tab ${category.id === this.currentCategory ? 'active' : ''}" 
+                            data-category="${category.id}"
+                            onclick="shopController.switchCategory('${category.id}')">
+                        <span>${category.icon}</span>
+                        <span>${category.name}</span>
+                    </button>
+                `).join('');
+            }
+
+            switchCategory(categoryId) {
+                this.currentCategory = categoryId;
+                
+                // Update active tab
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-category="${categoryId}"]`).classList.add('active');
+                
+                // Reload products
+                this.loadProducts();
+            }
+
+            loadProducts() {
+                const productsContainer = document.getElementById('productsGrid');
+                const products = this.shop.getProductsByCategory(this.currentCategory);
+                
+                if (products.length === 0) {
+                    productsContainer.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--muted);">
+                            <h3>Nessun prodotto in questa categoria</h3>
+                            <p>Prova un\'altra categoria!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                productsContainer.innerHTML = products.map(product => `
+                    <div class="product-card ${product.owned ? 'owned' : ''}">
+                        ${product.owned ? '<div class="owned-badge">ACQUISTATO</div>' : ''}
+                        <div class="product-icon">${product.icon}</div>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">${product.price} 💰</div>
+                        <div class="product-actions">
+                            ${product.owned ? 
+                                '<span style="color: #4ade80; font-weight: 600;">✓ Già tuo</span>' :
+                                `<button class="btn-primary" onclick="shopController.purchaseProduct('${product.id}')">
+                                    Acquista
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            purchaseProduct(productId) {
+                const result = this.shop.purchaseProduct(productId);
+                
+                if (result.success) {
+                    // Reload products to update ownership
+                    this.loadProducts();
+                    
+                    // Update stats
+                    this.updateStats();
+                    
+                    // Show success message
+                    NotificationsModule.showSuccess(result.message);
+                } else {
+                    // Show error message
+                    NotificationsModule.showError(result.message);
+                }
+            }
+
+            updateStats() {
+                const stats = this.shop.getUserStats();
+                const credits = CreditsModule.getCrediti();
+                
+                document.getElementById('userCredits').textContent = credits;
+                document.getElementById('ownedProducts').textContent = stats.ownedProducts;
+                document.getElementById('totalSpent').textContent = stats.totalSpent;
+                document.getElementById('completionRate').textContent = stats.completionRate + '%';
+                
+                // Update global credits display
+                CreditsModule.updateCreditDisplay();
+            }
+        }
+
+        // Initialize shop page
+        document.addEventListener('DOMContentLoaded', () => {
+            window.shopController = new ShopController();
+        });
+
+        console.log('Negozio caricato!');
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,38 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <!-- Sfondo trasparente -->
+  <rect width="300" height="400" fill="transparent"/>
+  
+  <!-- Corpo umano stilizzato -->
+  <!-- Testa -->
+  <circle cx="150" cy="80" r="35" fill="#fdbcb4" stroke="#333" stroke-width="2"/>
+  
+  <!-- Collo -->
+  <rect x="140" y="110" width="20" height="20" fill="#fdbcb4"/>
+  
+  <!-- Torso -->
+  <rect x="120" y="130" width="60" height="80" fill="#87ceeb" stroke="#333" stroke-width="2" rx="5"/>
+  
+  <!-- Braccia -->
+  <rect x="90" y="140" width="25" height="60" fill="#fdbcb4" stroke="#333" stroke-width="2" rx="10"/>
+  <rect x="185" y="140" width="25" height="60" fill="#fdbcb4" stroke="#333" stroke-width="2" rx="10"/>
+  
+  <!-- Gambe -->
+  <rect x="125" y="210" width="20" height="80" fill="#4169e1" stroke="#333" stroke-width="2" rx="8"/>
+  <rect x="155" y="210" width="20" height="80" fill="#4169e1" stroke="#333" stroke-width="2" rx="8"/>
+  
+  <!-- Piedi -->
+  <ellipse cx="135" cy="295" rx="15" ry="8" fill="#333"/>
+  <ellipse cx="165" cy="295" rx="15" ry="8" fill="#333"/>
+  
+  <!-- Dettagli faccia -->
+  <circle cx="135" cy="75" r="3" fill="#333"/>
+  <circle cx="165" cy="75" r="3" fill="#333"/>
+  <path d="M 140 90 Q 150 95 160 90" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Mani -->
+  <circle cx="102" cy="200" r="8" fill="#fdbcb4" stroke="#333" stroke-width="2"/>
+  <circle cx="198" cy="200" r="8" fill="#fdbcb4" stroke="#333" stroke-width="2"/>
+  
+  <!-- Bordo di debug -->
+  <rect x="5" y="5" width="290" height="390" fill="none" stroke="#ff0000" stroke-width="2" stroke-dasharray="5,5"/>
+</svg>

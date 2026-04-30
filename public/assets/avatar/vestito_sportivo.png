@@ -1,0 +1,14 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tuta sportiva grigia -->
+  <rect x="115" y="140" width="70" height="90" fill="#808080"/>
+  <rect x="95" y="150" width="20" height="70" fill="#808080"/>
+  <rect x="185" y="150" width="20" height="70" fill="#808080"/>
+  <rect x="125" y="230" width="50" height="110" fill="#808080"/>
+  <rect x="115" y="320" width="15" height="85" fill="#808080"/>
+  <rect x="170" y="320" width="15" height="85" fill="#808080"/>
+  <!-- Strisce laterali bianche -->
+  <rect x="120" y="145" width="5" height="80" fill="white"/>
+  <rect x="175" y="145" width="5" height="80" fill="white"/>
+  <!-- Numero sul petto -->
+  <text x="150" y="190" font-family="Arial" font-size="20" font-weight="bold" fill="white" text-anchor="middle">23</text>
+</svg>

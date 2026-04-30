@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Learning - Slay the Concepts</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="../styles/battle-game.css">
+</head>
+<body class="battle-theme">
+    <!-- Header Navigazione -->
+    <header class="nav">
+        <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Apri menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a href="home.html" class="brand">
+            <span class="brand-icon">🧠</span>
+            <span>brainplaying</span>
+        </a>
+        <div class="nav-actions">
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="minigiochi.html" class="nav-link">Minigiochi</a>
+            <a href="profile.html" class="profile-button">
+                <span class="profile-avatar profile-avatar-small" id="navAvatar">BP</span>
+            </a>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">🌙</button>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <div class="page-shell">
+        <main class="main-content battle-arena">
+            
+            <!-- Mappa del Gioco -->
+            <div id="gameMap" class="game-map">
+                <div class="map-header">
+                    <h2 class="map-title">🗺️ Mappa della Conoscenza</h2>
+                    <div class="map-info">
+                        <span class="act-indicator">Atto <span id="currentAct">1</span>/3</span>
+                        <span class="floor-indicator">Piano <span id="currentFloor">1</span>/15</span>
+                    </div>
+                </div>
+                <div class="map-grid" id="mapGrid">
+                    <!-- Nodi mappa generati dinamicamente -->
+                </div>
+                <div class="map-controls">
+                    <button class="map-btn" id="startBattleBtn" onclick="startBattleFromMap()">Inizia Combattimento</button>
+                    <button class="map-btn secondary" onclick="backToHome()">Torna alla Home</button>
+                </div>
+            </div>
+
+            <!-- Arena di Combattimento -->
+            <div id="battleArena" class="battle-arena" style="display: none;">
+                
+                <!-- Stato Giocatore -->
+                <div class="player-status">
+                    <div class="character-card player">
+                        <div class="character-avatar">
+                            <div class="avatar-display" id="battleAvatar">👤</div>
+                            <div class="level-badge">Lv.<span id="playerLevel">1</span></div>
+                        </div>
+                        <div class="character-info">
+                            <h3>Studente</h3>
+                            <div class="health-bar">
+                                <div class="health-label">Concentrazione</div>
+                                <div class="health-bar-container">
+                                    <div class="health-fill" id="playerHealth" style="width: 100%"></div>
+                                </div>
+                                <span class="health-text"><span id="playerHealthText">75</span>/<span id="playerMaxHealth">75</span></span>
+                            </div>
+                            <div class="energy-bar">
+                                <div class="energy-label">Energia</div>
+                                <div class="energy-bar-container">
+                                    <div class="energy-fill" id="playerEnergy" style="width: 100%"></div>
+                                </div>
+                                <span class="energy-text"><span id="playerEnergyText">3</span>/<span id="playerMaxEnergy">3</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area Mostro -->
+                <div class="monster-area">
+                    <div class="character-card monster">
+                        <div class="character-avatar">
+                            <div class="monster-emoji" id="monsterEmoji">📐</div>
+                            <div class="monster-health">
+                                <div class="health-bar">
+                                    <div class="health-bar-container">
+                                        <div class="health-fill monster-health-fill" id="monsterHealth" style="width: 100%"></div>
+                                    </div>
+                                    <span class="health-text"><span id="monsterHealthText">25</span>/<span id="monsterMaxHealth">25</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="character-info">
+                            <h3 id="monsterName">Equazione Quadratica</h3>
+                            <p id="monsterDescription">Un mostro matematico che ti sfida con incognite e coefficienti</p>
+                            <div class="monster-intent">
+                                <span class="intent-label">Intent:</span>
+                                <span class="intent-text" id="monsterIntent">Prepara un'equazione complessa!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area Domanda -->
+                <div class="question-area" id="questionArea" style="display: none;">
+                    <div class="question-card">
+                        <h3>⚔️ Sfida di Conoscenza</h3>
+                        <div class="question-content">
+                            <p class="question-text" id="questionText">Quanto fa 7 + 8?</p>
+                            <div class="answer-input">
+                                <input type="text" id="answerInput" placeholder="Inserisci la tua risposta..." class="answer-field">
+                                <button class="submit-answer-btn" onclick="submitAnswer()">Conferma</button>
+                            </div>
+                        </div>
+                        <div class="question-category">
+                            <span class="category-badge" id="questionCategory">📐 Matematica</span>
+                            <span class="difficulty-badge" id="questionDifficulty">Medio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area Carte -->
+                <div class="cards-area" id="cardsArea">
+                    <div class="hand-cards" id="handCards">
+                        <!-- Carte generate dinamicamente -->
+                    </div>
+                    <div class="deck-info">
+                        <div class="deck-counter">
+                            <span class="deck-icon">🎴</span>
+                            <span class="deck-text">Mazzo: <span id="deckCount">15</span></span>
+                        </div>
+                        <div class="discard-counter">
+                            <span class="discard-icon">🗑️</span>
+                            <span class="discard-text">Scarti: <span id="discardCount">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log di Combattimento -->
+                <div class="combat-log">
+                    <h4>📜 Registro di Battaglia</h4>
+                    <div class="log-content" id="combatLog">
+                        <div class="log-entry">Inizia il combattimento contro <span class="log-highlight">Equazione Quadratica</span>!</div>
+                    </div>
+                </div>
+
+                <!-- Controlli Combattimento -->
+                <div class="battle-controls">
+                    <button class="battle-btn primary" id="endTurnBtn" onclick="endTurn()" disabled>Termina Turno</button>
+                    <button class="battle-btn secondary" onclick="pauseBattle()">Pausa</button>
+                    <button class="battle-btn danger" onclick="fleeBattle()">Fuga</button>
+                </div>
+            </div>
+
+            <!-- Schermata Vittoria -->
+            <div id="victoryScreen" class="game-over-screen victory" style="display: none;">
+                <div class="game-over-content">
+                    <div class="victory-animation">🎉</div>
+                    <h2>Vittoria!</h2>
+                    <p>Hai sconfitto il mostro e guadagnato conoscenza!</p>
+                    <div class="rewards-display">
+                        <div class="reward-item">
+                            <span class="reward-icon">💰</span>
+                            <span class="reward-text">+<span id="victoryCredits">15</span> Crediti</span>
+                        </div>
+                        <div class="reward-item">
+                            <span class="reward-icon">🎴</span>
+                            <span class="reward-text">+<span id="victoryCards">1</span> Carte</span>
+                        </div>
+                    </div>
+                    <div class="game-over-actions">
+                        <button class="game-over-btn primary" onclick="continueToNextFloor()">Continua</button>
+                        <button class="game-over-btn secondary" onclick="backToMap()">Torna alla Mappa</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schermata Sconfitta -->
+            <div id="defeatScreen" class="game-over-screen defeat" style="display: none;">
+                <div class="game-over-content">
+                    <div class="defeat-animation">💀</div>
+                    <h2>Sconfitta</h2>
+                    <p>La concentrazione si è esaurita... Riprova!</p>
+                    <div class="game-over-actions">
+                        <button class="game-over-btn primary" onclick="retryBattle()">Riprova</button>
+                        <button class="game-over-btn secondary" onclick="backToMap()">Torna alla Mappa</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Script -->
+    <script src="../js/battle-data.js"></script>
+    <script src="../js/battle-data.js"></script>
+    <script src="../js/battle-game.js"></script>
+    <script src="../js/battle-animations.js"></script>
+    <script src="../js/env-config.js"></script>
+    <script src="../js/modules/auth.js"></script>
+</body>
+</html>
+

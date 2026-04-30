@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>brainplaying - Classifica</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/dashboard.css" />
+  
+  <style>
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: stretch;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    .section-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--text);
+    }
+    
+    .leaderboard-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel-strong);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+    
+    .filter-btn:hover {
+      background: rgba(79, 70, 229, 0.08);
+      transform: translateY(-1px);
+    }
+    
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      color: white;
+      border-color: var(--accent);
+    }
+    
+    .leaderboard-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr 1fr;
+      max-height: 75vh;
+      overflow-y: auto;
+      padding: 1rem;
+      align-items: start;
+      flex: 1;
+    }
+    
+    .leaderboard-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .leaderboard-grid::-webkit-scrollbar-track {
+      background: rgba(79, 70, 229, 0.1);
+      border-radius: 4px;
+    }
+    
+    .leaderboard-grid::-webkit-scrollbar-thumb {
+      background: rgba(79, 70, 229, 0.3);
+      border-radius: 4px;
+    }
+    
+    .leaderboard-grid::-webkit-scrollbar-thumb:hover {
+      background: rgba(79, 70, 229, 0.5);
+    }
+    
+    .leaderboard-item {
+      display: grid;
+      grid-template-columns: 50px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(79, 70, 229, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 100px;
+      height: fit-content;
+    }
+    
+    .leaderboard-item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+    
+    .rank-badge {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    
+    .rank-1 {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: white;
+      border-color: #FFD700;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+      transform: scale(1.05);
+    }
+    
+    .rank-2 {
+      background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+      color: white;
+      border-color: #C0C0C0;
+      box-shadow: 0 3px 8px rgba(192, 192, 192, 0.2);
+      transform: scale(1.02);
+    }
+    
+    .rank-3 {
+      background: linear-gradient(135deg, #CD7F32, #B87333);
+      color: white;
+      border-color: #CD7F32;
+      box-shadow: 0 2px 6px rgba(205, 127, 50, 0.2);
+      transform: scale(1.01);
+    }
+    
+    .podio-medaglia {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .podio-oro {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: white;
+    }
+    
+    .podio-argento {
+      background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+      color: white;
+    }
+    
+    .podio-bronzo {
+      background: linear-gradient(135deg, #CD7F32, #B87333);
+      color: white;
+    }
+    
+    .rank-other {
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--accent);
+    }
+    
+    .user-info {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.16), rgba(59, 130, 246, 0.16));
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1rem;
+      overflow: hidden;
+    }
+    
+    .user-details h3 {
+      margin: 0 0 0.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    .user-details p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    
+    .user-stats {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .current-user-highlight {
+      border: 2px solid var(--accent);
+      background: rgba(79, 70, 229, 0.05);
+    }
+    
+    .schemi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .schema-card {
+      padding: 1.5rem;
+      background: rgba(79, 70, 229, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .schema-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+    
+    .schema-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.16), rgba(59, 130, 246, 0.16));
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .schema-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      color: var(--text);
+    }
+    
+    .schema-description {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+    }
+    
+    .empty-state h3 {
+      margin: 0 0 1rem;
+      color: var(--text);
+    }
+    
+    @media (max-width: 1024px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .leaderboard-item {
+        grid-template-columns: 40px 1fr;
+        gap: 0.75rem;
+      }
+      
+      .user-stats {
+        grid-column: 1 / -1;
+        justify-content: space-around;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+      
+      .rank-badge {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Apri menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-brand">
+      <a href="home.html" class="brand-link" style="text-decoration: none; background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; font-weight: bold; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;">
+        Torna alla Home
+      </a>
+      <a href="index.html" class="brand-link" style="margin-left: 15px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="BrainPlay Logo" class="brand-logo">
+        <span class="brand-text">BrainPlay</span>
+      </a>
+    </div>
+    <div class="nav-actions">
+      <a href="profile.html" class="profile-link">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profilo" class="profile-icon">
+      </a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">?</button>
+    </div>
+  </header>
+
+  <div class="page-shell">
+    <div class="main-container">
+      <!-- Sezione Classifica -->
+      <section class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">🏆 Classifica</h2>
+          <div class="leaderboard-filters">
+            <button class="filter-btn active" data-period="week">Settimana</button>
+            <button class="filter-btn" data-period="month">Mese</button>
+            <button class="filter-btn" data-period="all">Sempre</button>
+          </div>
+        </div>
+        
+        <div class="leaderboard-grid" id="leaderboardGrid">
+          <!-- La classifica verrà popolata dinamicamente -->
+        </div>
+        
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <h3>Nessun dato disponibile</h3>
+          <p>Partecipa alle sessioni di studio per apparire nella classifica!</p>
+        </div>
+      </section>
+
+      <!-- Sezione Schemi -->
+      <section class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">� Schemi di Studio</h2>
+        </div>
+        
+        <div class="schemi-grid">
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">🧮</div>
+            <h3 class="schema-title">Matematica</h3>
+            <p class="schema-description">Formule e concetti chiave per algebra e geometria</p>
+          </div>
+          
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">🔬</div>
+            <h3 class="schema-title">Scienze</h3>
+            <p class="schema-description">Biologia, chimica e fisica in sintesi</p>
+          </div>
+          
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">📖</div>
+            <h3 class="schema-title">Italiano</h3>
+            <p class="schema-description">Grammatica, sintassi e analisi del testo</p>
+          </div>
+          
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">🌍</div>
+            <h3 class="schema-title">Storia</h3>
+            <p class="schema-description">Linee temporali e eventi storici fondamentali</p>
+          </div>
+          
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">💻</div>
+            <h3 class="schema-title">Informatica</h3>
+            <p class="schema-description">Algoritmi e programmazione base</p>
+          </div>
+          
+          <div class="schema-card" onclick="window.location.href='schemi-analysis.html'">
+            <div class="schema-icon">🎨</div>
+            <h3 class="schema-title">Arte</h3>
+            <p class="schema-description">Storia dell'arte e tecniche artistiche</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="../js/modules/auth.js"></script>
+  <script>
+    if (!checkAuthentication()) {
+      window.location.href = 'index.html';
+    }
+
+    // HAMBURGER MENU
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.body;
+
+    hamburgerBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar?.classList.toggle('active');
+      body.classList.toggle('menu-open');
+    });
+
+    body.addEventListener('click', (e) => {
+      if (body.classList.contains('menu-open') && !sidebar?.contains(e.target) && e.target !== hamburgerBtn) {
+        sidebar?.classList.remove('active');
+        body.classList.remove('menu-open');
+      }
+    });
+
+    sidebar?.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+        sidebar.classList.remove('active');
+        body.classList.remove('menu-open');
+      }
+    });
+
+    // PROFILE UI
+    const themeToggle = document.getElementById('themeToggle');
+    const navAvatar = document.getElementById('navAvatar');
+
+    const user = {
+      username: sessionStorage.getItem('username') || 'Studente',
+      email: sessionStorage.getItem('email') || 'ospite@brainplaying.it',
+      profileImage: sessionStorage.getItem('profileImage') || ''
+    };
+
+    function getInitials(name) {
+      return name
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join('');
+    }
+
+    function updateProfileUI() {
+      if (navAvatar) {
+        if (user.profileImage) {
+          navAvatar.style.backgroundImage = `url(${user.profileImage})`;
+          navAvatar.textContent = '';
+        } else {
+          navAvatar.style.backgroundImage = '';
+          navAvatar.textContent = getInitials(user.username);
+        }
+      }
+    }
+
+    // THEME TOGGLE
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+    }
+    themeToggle?.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
+
+    themeToggle?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      themeToggle.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
+    });
+
+    // LEADERBOARD SYSTEM
+    const STORAGE_ACCOUNTS_KEY = 'bp_accounts';
+    const STORAGE_STATS_KEY = 'bp_user_stats';
+    const leaderboardGrid = document.getElementById('leaderboardGrid');
+    const emptyState = document.getElementById('emptyState');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    let currentPeriod = 'week';
+
+    // Array JavaScript con 23 oggetti contenenti nome, punti, ore studio, sessioni
+    const usersData = [
+      { name: 'Federico', points: 2850, studyHours: 45, sessions: 28, streak: 12 },
+      { name: 'Chris', points: 2720, studyHours: 42, sessions: 25, streak: 10 },
+      { name: 'Gabriele1', points: 2680, studyHours: 40, sessions: 24, streak: 9 },
+      { name: 'Gabriele2', points: 2650, studyHours: 38, sessions: 23, streak: 8 },
+      { name: 'Nenna', points: 2620, studyHours: 37, sessions: 22, streak: 7 },
+      { name: 'Campanale', points: 2590, studyHours: 36, sessions: 21, streak: 6 },
+      { name: 'Sara', points: 2560, studyHours: 35, sessions: 20, streak: 5 },
+      { name: 'Paolo', points: 2530, studyHours: 34, sessions: 19, streak: 4 },
+      { name: 'Ivan', points: 2500, studyHours: 33, sessions: 18, streak: 3 },
+      { name: 'Andon', points: 2470, studyHours: 32, sessions: 17, streak: 2 },
+      { name: 'Samir', points: 2440, studyHours: 31, sessions: 16, streak: 1 },
+      { name: 'Lorenzo', points: 2410, studyHours: 30, sessions: 15, streak: 0 },
+      { name: 'Nicolò', points: 2380, studyHours: 29, sessions: 14, streak: 0 },
+      { name: 'Franco', points: 2350, studyHours: 28, sessions: 13, streak: 0 },
+      { name: 'Caroti', points: 2320, studyHours: 27, sessions: 12, streak: 0 },
+      { name: 'Dario', points: 2290, studyHours: 26, sessions: 11, streak: 0 },
+      { name: 'Pier', points: 2260, studyHours: 25, sessions: 10, streak: 0 },
+      { name: 'Barzaghi', points: 2230, studyHours: 24, sessions: 9, streak: 0 },
+      { name: 'Manca', points: 2200, studyHours: 23, sessions: 8, streak: 0 },
+      { name: 'Bonato', points: 2170, studyHours: 22, sessions: 7, streak: 0 },
+      { name: 'Amr', points: 2140, studyHours: 21, sessions: 6, streak: 0 },
+      { name: 'Daria', points: 2110, studyHours: 20, sessions: 5, streak: 0 },
+      { name: 'Emely', points: 2080, studyHours: 19, sessions: 4, streak: 0 }
+    ];
+
+    function getAccounts() {
+      return JSON.parse(localStorage.getItem(STORAGE_ACCOUNTS_KEY) || '{}');
+    }
+
+    function getUserStats() {
+      return JSON.parse(localStorage.getItem(STORAGE_STATS_KEY) || '{}');
+    }
+
+    function saveUserStats(stats) {
+      localStorage.setItem(STORAGE_STATS_KEY, JSON.stringify(stats));
+    }
+
+    function calculateUserScore(stats, period) {
+      const now = new Date();
+      let score = 0;
+      
+      if (period === 'week') {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        score += (stats.studyTime || 0) * 10; // 10 punti per ogni minuto di studio
+        score += (stats.sessions || 0) * 50; // 50 punti per ogni sessione
+        score += (stats.streak || 0) * 25; // 25 punti per ogni giorno di streak
+      } else if (period === 'month') {
+        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        score += (stats.studyTime || 0) * 8;
+        score += (stats.sessions || 0) * 40;
+        score += (stats.streak || 0) * 20;
+      } else {
+        score += (stats.totalStudyTime || 0) * 5;
+        score += (stats.totalSessions || 0) * 30;
+        score += (stats.bestStreak || 0) * 15;
+      }
+      
+      return score;
+    }
+
+    function generateMockStats() {
+      const accounts = getAccounts();
+      const stats = {};
+      
+      // Genera statistiche per tutti gli account esistenti
+      Object.keys(accounts).forEach(email => {
+        const account = accounts[email];
+        stats[email] = {
+          studyTime: Math.floor(Math.random() * 500) + 100, // minuti
+          sessions: Math.floor(Math.random() * 20) + 5,
+          streak: Math.floor(Math.random() * 10) + 1,
+          totalStudyTime: Math.floor(Math.random() * 2000) + 500,
+          totalSessions: Math.floor(Math.random() * 100) + 20,
+          bestStreak: Math.floor(Math.random() * 30) + 5,
+          lastActive: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+        };
+      });
+      
+      mockUsers.forEach(mockUser => {
+        stats[mockUser.email] = {
+          studyTime: Math.floor(Math.random() * 600) + 200,
+          sessions: Math.floor(Math.random() * 25) + 10,
+          streak: Math.floor(Math.random() * 15) + 2,
+          totalStudyTime: Math.floor(Math.random() * 3000) + 800,
+          totalSessions: Math.floor(Math.random() * 150) + 30,
+          bestStreak: Math.floor(Math.random() * 40) + 10,
+          lastActive: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+        };
+        
+        // Aggiungi anche l'account
+        accounts[mockUser.email] = {
+          username: mockUser.username,
+          email: mockUser.email,
+          password: 'demo123',
+          profileImage: ''
+        };
+      });
+      
+      saveUserStats(stats);
+      localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
+      
+      return stats;
+    }
+
+    function getLeaderboardData(period) {
+      // Usa l'array usersData per generare la classifica
+      const leaderboard = [];
+      
+      usersData.forEach((user, index) => {
+        const rank = index + 1;
+        
+        leaderboard.push({
+          rank: rank,
+          username: user.name,
+          points: user.points,
+          studyHours: user.studyHours,
+          sessions: user.sessions,
+          streak: user.streak,
+          profileImage: '',
+          score: user.points
+        });
+      });
+      
+      // Ordina per punteggio decrescente
+      leaderboard.sort((a, b) => b.score - a.score);
+      
+      return leaderboard;
+    }
+
+    function renderLeaderboard(period) {
+      const data = getLeaderboardData(period);
+      
+      if (data.length === 0) {
+        leaderboardGrid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      leaderboardGrid.style.display = 'grid';
+      emptyState.style.display = 'none';
+      
+      // Generazione dinamica con ciclo JavaScript per tutti i 23 utenti
+      let leaderboardHTML = '';
+      
+      for (let i = 0; i < data.length; i++) {
+        const user = data[i];
+        const rank = i + 1;
+        const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+        
+        const avatarContent = user.profileImage 
+          ? `<img src="${user.profileImage}" alt="${user.username}" style="width:100%;height:100%;object-fit:cover;">`
+          : getInitials(user.username);
+        
+        const statsDisplay = period === 'all' 
+          ? `<div class="stat-item">
+               <span class="stat-value">${user.studyHours}h</span>
+               <span class="stat-label">Studio totale</span>
+             </div>
+             <div class="stat-item">
+               <span class="stat-value">${user.sessions}</span>
+               <span class="stat-label">Sessioni</span>
+             </div>
+             <div class="stat-item">
+               <span class="stat-value">${user.streak}</span>
+               <span class="stat-label">Streak</span>
+             </div>`
+          : `<div class="stat-item">
+               <span class="stat-value">${user.studyHours}h</span>
+               <span class="stat-label">Studio</span>
+             </div>
+             <div class="stat-item">
+               <span class="stat-value">${user.sessions}</span>
+               <span class="stat-label">Sessioni</span>
+             </div>
+             <div class="stat-item">
+               <span class="stat-value">${user.streak}</span>
+               <span class="stat-label">Streak</span>
+             </div>`;
+        
+        leaderboardHTML += `
+          <div class="leaderboard-item">
+            <div class="rank-badge ${rankClass}" style="position: relative;">
+              ${rank <= 3 ? ['??', '??', '??'][rank - 1] : rank}
+              ${rank <= 3 ? `<div class="podio-medaglia podio-${rank === 1 ? 'oro' : rank === 2 ? 'argento' : 'bronzo'}">??${rank === 1 ? '' : rank === 2 ? '??' : '??'}</div>` : ''}
+            </div>
+            <div class="user-info">
+              <div class="user-avatar">${avatarContent}</div>
+              <div class="user-details">
+                <h3>${user.username}</h3>
+                <p>${user.points} punti</p>
+              </div>
+            </div>
+            <div class="user-stats">
+              ${statsDisplay}
+            </div>
+          </div>
+        `;
+      }
+      
+      leaderboardGrid.innerHTML = leaderboardHTML;
+    }
+
+    // FILTER HANDLING
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPeriod = btn.dataset.period;
+        renderLeaderboard(currentPeriod);
+      });
+    });
+
+    // INIT
+    updateProfileUI();
+    renderLeaderboard(currentPeriod);
+  </script>
+</body>
+</html>
+

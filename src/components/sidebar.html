@@ -1,0 +1,101 @@
+<!-- Sidebar Component -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Chiudi menù">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="sidebar-brand">
+            <span class="sidebar-icon">🧠</span>
+            <span>Menu</span>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <h3 class="nav-section-title">Strumenti</h3>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="home.html" class="nav-link active">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="riassunti-new.html" class="nav-link">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-text">Riassunti AI</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="generatore-schemi.html" class="nav-link">
+                        <span class="nav-icon">🎨</span>
+                        <span class="nav-text">Generatore Schemi</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="minigiochi.html" class="nav-link">
+                        <span class="nav-icon">🎮</span>
+                        <span class="nav-text">Minigiochi</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="avatar-studio.html" class="nav-link">
+                        <span class="nav-icon">🎭</span>
+                        <span class="nav-text">Avatar Studio</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <h3 class="nav-section-title">Personale</h3>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <span class="nav-icon">👤</span>
+                        <span class="nav-text">Profilo</span>
+                    </a>
+                </li>
+                                <li class="nav-item">
+                    <a href="codice.html" class="nav-link">
+                        <span class="nav-icon">🔐</span>
+                        <span class="nav-text">Codice Segreto</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <h3 class="nav-section-title">Altro</h3>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <button class="nav-link theme-nav-link" id="themeNavToggle">
+                        <span class="nav-icon">🌙</span>
+                        <span class="nav-text">Tema Scuro</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link logout-link" onclick="logout()">
+                        <span class="nav-icon">🚪</span>
+                        <span class="nav-text">Logout</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-info-mini">
+            <div class="user-avatar-mini" id="sidebarAvatar">BP</div>
+            <div class="user-details-mini">
+                <div class="user-name-mini">BrainPlayer</div>
+                <div class="user-credits-mini">0 crediti</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Overlay per chiudere il menù -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>

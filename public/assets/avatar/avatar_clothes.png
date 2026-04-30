@@ -1,0 +1,37 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <!-- Sfondo trasparente -->
+  <rect width="300" height="400" fill="transparent"/>
+  
+  <!-- Vestito blu di default -->
+  <!-- Parte superiore del vestito -->
+  <path d="M 100 120 Q 150 110 200 120 L 200 160 Q 150 150 100 160 Z" fill="#4169e1" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Maniche -->
+  <path d="M 100 130 Q 80 140 75 170 L 85 175 Q 90 150 100 135 Z" fill="#4169e1" stroke="#2c3e50" stroke-width="2"/>
+  <path d="M 200 130 Q 220 140 225 170 L 215 175 Q 210 150 200 135 Z" fill="#4169e1" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Corpo principale -->
+  <rect x="100" y="160" width="100" height="120" fill="#4169e1" stroke="#2c3e50" stroke-width="2" rx="5"/>
+  
+  <!-- Parte inferiore -->
+  <path d="M 100 280 L 120 340 L 180 340 L 200 280 Z" fill="#4169e1" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Dettagli -->
+  <!-- Colletto -->
+  <ellipse cx="150" cy="130" rx="25" ry="15" fill="none" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Tasche -->
+  <rect x="110" y="200" width="20" height="15" fill="#2c3e50" opacity="0.3" rx="2"/>
+  <rect x="170" y="200" width="20" height="15" fill="#2c3e50" opacity="0.3" rx="2"/>
+  
+  <!-- Cintura -->
+  <rect x="95" y="240" width="110" height="8" fill="#2c3e50" opacity="0.5"/>
+  
+  <!-- Bottoni -->
+  <circle cx="150" cy="180" r="3" fill="#fff"/>
+  <circle cx="150" cy="200" r="3" fill="#fff"/>
+  <circle cx="150" cy="220" r="3" fill="#fff"/>
+  
+  <!-- Bordo di debug -->
+  <rect x="5" y="5" width="290" height="390" fill="none" stroke="#00ff00" stroke-width="2" stroke-dasharray="5,5"/>
+</svg>

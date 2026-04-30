@@ -1,0 +1,671 @@
+/**
+ * Stili Gioco di Combattimento - Stile Slay the Spire
+ * Design ispirato a Slay the Spire con tema educativo
+ */
+
+/* Tema Battle */
+.battle-theme {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* Mappa del Gioco */
+.game-map {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.map-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.map-title {
+    font-size: 2.5rem;
+    color: #4a7c7e;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.map-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 1.1rem;
+}
+
+.act-indicator, .floor-indicator {
+    background: rgba(74, 124, 126, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #4a7c7e;
+}
+
+.map-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.map-node {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #4a7c7e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 2rem;
+}
+
+.map-node:hover {
+    transform: scale(1.1);
+    background: rgba(74, 124, 126, 0.3);
+    box-shadow: 0 0 20px rgba(74, 124, 126, 0.5);
+}
+
+.map-node.current {
+    background: #4a7c7e;
+    box-shadow: 0 0 30px rgba(74, 124, 126, 0.8);
+    animation: pulse 2s infinite;
+}
+
+.map-node.completed {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: #4caf50;
+}
+
+.map-node.boss {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: #f44336;
+    font-size: 2.5rem;
+}
+
+.map-node.shop {
+    background: rgba(255, 193, 7, 0.3);
+    border-color: #ffc107;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.map-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.map-btn {
+    padding: 12px 24px;
+    background: #4a7c7e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.map-btn:hover {
+    background: #5a8c8e;
+    transform: translateY(-2px);
+}
+
+.map-btn.secondary {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.map-btn.secondary:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Arena di Combattimento */
+.battle-arena {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Card Personaggi */
+.character-card {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #4a7c7e;
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(74, 124, 126, 0.3);
+}
+
+.character-avatar {
+    text-align: center;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.avatar-display, .monster-emoji {
+    font-size: 4rem;
+    margin-bottom: 10px;
+}
+
+.level-badge {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    background: #4a7c7e;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.character-info h3 {
+    margin: 0 0 10px 0;
+    color: #4a7c7e;
+    font-size: 1.3rem;
+}
+
+.character-info p {
+    margin: 0 0 15px 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* Barre Salute */
+.health-bar, .energy-bar {
+    margin-bottom: 10px;
+}
+
+.health-label, .energy-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 3px;
+}
+
+.health-bar-container, .energy-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+
+.health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #8bc34a);
+    transition: width 0.5s ease;
+}
+
+.monster-health-fill {
+    background: linear-gradient(90deg, #f44336, #ff6b6b);
+}
+
+.energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2196f3, #42a5f5);
+    transition: width 0.5s ease;
+}
+
+.health-text, .energy-text {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Monster Intent */
+.monster-intent {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid #f44336;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+.intent-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.intent-text {
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+/* Area Domanda */
+.question-area {
+    grid-column: 1 / -1;
+    margin-bottom: 20px;
+}
+
+.question-card {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #4a7c7e;
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.question-card h3 {
+    margin: 0 0 20px 0;
+    color: #4a7c7e;
+    font-size: 1.5rem;
+}
+
+.question-text {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.answer-input {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.answer-field {
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    width: 300px;
+    text-align: center;
+}
+
+.answer-field:focus {
+    outline: none;
+    border-color: #4a7c7e;
+    background: rgba(255,255,255,0.15);
+}
+
+.submit-answer-btn {
+    padding: 12px 24px;
+    background: #4a7c7e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-answer-btn:hover {
+    background: #5a8c8e;
+    transform: translateY(-2px);
+}
+
+.question-category {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.category-badge, .difficulty-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.difficulty-badge {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+/* Area Carte */
+.cards-area {
+    grid-column: 1 / -1;
+}
+
+.hand-cards {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    min-height: 180px;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 120px;
+    height: 160px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    border: 2px solid #4a7c7e;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(74, 124, 126, 0.4);
+}
+
+.card.playable {
+    border-color: #4caf50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+.card.unplayable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.card.unplayable:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.card-cost {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #4a7c7e;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.card-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.card-description {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.card-type {
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.card.attack {
+    border-color: #f44336;
+}
+
+.card.skill {
+    border-color: #2196f3;
+}
+
+.card.power {
+    border-color: #9c27b0;
+}
+
+.deck-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.deck-counter, .discard-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Log di Combattimento */
+.combat-log {
+    grid-column: 1 / -1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.combat-log h4 {
+    margin: 0 0 10px 0;
+    color: #4a7c7e;
+}
+
+.log-content {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    opacity: 0.8;
+}
+
+.log-highlight {
+    color: #4a7c7e;
+    font-weight: bold;
+}
+
+/* Controlli Combattimento */
+.battle-controls {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.battle-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.battle-btn.primary {
+    background: #4a7c7e;
+    color: white;
+}
+
+.battle-btn.primary:hover:not(:disabled) {
+    background: #5a8c8e;
+    transform: translateY(-2px);
+}
+
+.battle-btn.secondary {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.battle-btn.danger {
+    background: #f44336;
+    color: white;
+}
+
+.battle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Schermate Game Over */
+.game-over-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.game-over-content {
+    background: rgba(26, 26, 46, 0.95);
+    border: 2px solid #4a7c7e;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+}
+
+.victory-animation, .defeat-animation {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.victory h2 {
+    color: #4caf50;
+    margin-bottom: 15px;
+}
+
+.defeat h2 {
+    color: #f44336;
+    margin-bottom: 15px;
+}
+
+.rewards-display {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.reward-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+
+.reward-icon {
+    font-size: 1.2rem;
+}
+
+.game-over-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.game-over-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.game-over-btn.primary {
+    background: #4a7c7e;
+    color: white;
+}
+
+.game-over-btn.secondary {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.game-over-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .battle-arena {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .character-card {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .hand-cards {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .map-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .character-avatar .avatar-display,
+    .character-avatar .monster-emoji {
+        font-size: 3rem;
+    }
+    
+    .answer-input {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .answer-field {
+        width: 250px;
+    }
+    
+    .battle-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .battle-btn {
+        width: 200px;
+    }
+}

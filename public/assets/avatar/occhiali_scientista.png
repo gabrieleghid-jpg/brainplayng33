@@ -1,0 +1,26 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Occhiali da scienziato grandi e rotondi -->
+  <circle cx="125" cy="95" r="28" fill="none" stroke="#2c2c2c" stroke-width="5"/>
+  <circle cx="175" cy="95" r="28" fill="none" stroke="#2c2c2c" stroke-width="5"/>
+  <!-- Lenti spesse -->
+  <circle cx="125" cy="95" r="25" fill="#e6f3ff" opacity="0.4"/>
+  <circle cx="175" cy="95" r="25" fill="#e6f3ff" opacity="0.4"/>
+  <!-- Ponte naso -->
+  <rect x="143" y="90" width="14" height="8" fill="#2c2c2c"/>
+  <rect x="145" y="92" width="10" height="4" fill="#1a1a1a"/>
+  <!-- Aste spesse -->
+  <rect x="97" y="93" width="28" height="6" fill="#2c2c2c"/>
+  <rect x="175" y="93" width="28" height="6" fill="#2c2c2c"/>
+  <!-- Cinghie laterali -->
+  <rect x="90" y="95" width="7" height="4" fill="#2c2c2c"/>
+  <rect x="203" y="95" width="7" height="4" fill="#2c2c2c"/>
+  <!-- Riflessi scientifici -->
+  <ellipse cx="120" cy="88" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <ellipse cx="170" cy="88" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <ellipse cx="130" cy="102" rx="6" ry="4" fill="white" opacity="0.5"/>
+  <ellipse cx="180" cy="102" rx="6" ry="4" fill="white" opacity="0.5"/>
+  <!-- Dettagli tecnici -->
+  <circle cx="125" cy="95" r="2" fill="#666"/>
+  <circle cx="175" cy="95" r="2" fill="#666"/>
+  <rect x="143" y="94" width="14" height="2" fill="#333"/>
+</svg>

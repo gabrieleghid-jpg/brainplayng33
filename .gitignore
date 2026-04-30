@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.tanstack/
+.netlify/
+.vercel/
+
+.env
+
+.env.local
+.env.*.local
+
+backend/node_modules/
+
+codex-temp/
