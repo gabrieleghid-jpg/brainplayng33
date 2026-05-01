@@ -455,6 +455,8 @@
   </div>
 
   <script src="../js/env-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/modules/auth.js"></script>
   <script>
     if (!checkAuthentication()) {
@@ -554,7 +556,8 @@
     
     let currentImageData = null;
     let analysisResults = null;
-    const schemiApiBaseUrl = ENV.BACKEND_URL || '';
+    // Usa sempre apiFetch() che rispetta ENV.BACKEND_URL (se impostato) e
+    // altrimenti passa dal proxy del frontend-server.js (consigliato in locale).
 
     // Photo upload handler
     photoUpload?.addEventListener('change', async (event) => {
@@ -636,25 +639,10 @@
       document.getElementById('backendNotice').style.display = 'none';
       
       try {
-        const response = await fetch(`${schemiApiBaseUrl}/api/schemi/analizza-foto`, {
+        analysisResults = await apiFetch('/api/schemi/analizza-foto', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            imageDataUrl: currentImageData
-          })
+          body: JSON.stringify({ imageDataUrl: currentImageData })
         });
-        
-        if (!response.ok) {
-          const errorPayload = await response.json().catch(() => ({}));
-          if (response.status === 502 || response.status === 504) {
-            document.getElementById('backendNotice').style.display = 'block';
-          }
-          throw new Error(errorPayload.error || 'Errore nell\'analisi dell\'immagine');
-        }
-        
-        analysisResults = await response.json();
         
         // Display results
         displayResults(analysisResults);
@@ -662,6 +650,11 @@
         
       } catch (error) {
         console.error('Errore:', error);
+        // Mostra il banner "backend non raggiungibile" solo per errori di rete/proxy,
+        // non per errori di configurazione (es. API key mancante).
+        if (/network/i.test(error.message) || /failed to fetch/i.test(error.message) || /502|504/.test(error.message)) {
+          document.getElementById('backendNotice').style.display = 'block';
+        }
         alert('Errore durante l\'analisi: ' + error.message);
       } finally {
         analyzeBtn.disabled = false;

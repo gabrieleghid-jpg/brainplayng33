@@ -12,6 +12,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const router = express.Router();
 const Anthropic = require('@anthropic-ai/sdk');
+const { hasValidAnthropicKey } = require('../utils/env');
 
 // Inizializza client Claude - legge la chiave dal .env
 const anthropic = new Anthropic({
@@ -30,9 +31,9 @@ router.post('/genera', async (req, res) => {
       });
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!hasValidAnthropicKey()) {
       return res.status(503).json({
-        error: 'Chiave API Anthropic non configurata. Aggiorna il file .env.'
+        error: 'Claude/Anthropic non configurato: imposta una ANTHROPIC_API_KEY valida nel file .env (non il placeholder).'
       });
     }
 
@@ -69,10 +70,15 @@ Rispondi SOLO con un JSON valido nel formato:
 
   } catch (error) {
     console.error('❌ Errore riassunti:', error.message);
-    res.status(500).json({
-      error: 'Errore durante la generazione del riassunto',
-      details: error.message
-    });
+    const status = error?.status || error?.statusCode;
+    if (status === 401 || status === 403) {
+      return res.status(502).json({
+        error: 'Chiave Anthropic non valida o non autorizzata.',
+        details: error.message
+      });
+    }
+
+    res.status(500).json({ error: 'Errore durante la generazione del riassunto', details: error.message });
   }
 });
 
@@ -83,6 +89,12 @@ router.post('/schema', async (req, res) => {
 
     if (!testo || testo.trim().length < 30) {
       return res.status(400).json({ error: 'Testo troppo breve.' });
+    }
+
+    if (!hasValidAnthropicKey()) {
+      return res.status(503).json({
+        error: 'Claude/Anthropic non configurato: imposta una ANTHROPIC_API_KEY valida nel file .env (non il placeholder).'
+      });
     }
 
     const prompt = `Sei un assistente educativo. Dal testo fornito, crea uno schema di tipo "${tipo}".
@@ -111,6 +123,13 @@ Testo: """${testo}"""`;
 
   } catch (error) {
     console.error('❌ Errore schema:', error.message);
+    const status = error?.status || error?.statusCode;
+    if (status === 401 || status === 403) {
+      return res.status(502).json({
+        error: 'Chiave Anthropic non valida o non autorizzata.',
+        details: error.message
+      });
+    }
     res.status(500).json({ error: 'Errore generazione schema', details: error.message });
   }
 });

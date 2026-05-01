@@ -8,8 +8,9 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const Anthropic = require('@anthropic-ai/sdk');
 const router = express.Router();
-const supabase = require('../config/supabase');
+const { supabase, supabaseConfigured } = require('../config/supabase');
 const authMiddleware = require('../middleware/auth');
+const { hasValidAnthropicKey } = require('../utils/env');
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
@@ -218,8 +219,10 @@ router.post('/analizza-foto', async (req, res) => {
       return res.status(400).json({ error: 'Immagine mancante.' });
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return res.status(503).json({ error: 'Chiave API Anthropic non configurata.' });
+    if (!hasValidAnthropicKey()) {
+      return res.status(503).json({
+        error: 'Claude/Anthropic non configurato: imposta una ANTHROPIC_API_KEY valida nel file .env (non il placeholder).'
+      });
     }
 
     const { mediaType, data } = parseImageDataUrl(imageDataUrl);
@@ -251,16 +254,24 @@ router.post('/analizza-foto', async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Errore analisi schema da foto:', error.message);
-    res.status(500).json({
-      error: 'Errore durante l\'analisi della foto',
-      details: error.message
-    });
+    const status = error?.status || error?.statusCode;
+    if (status === 401 || status === 403) {
+      return res.status(502).json({
+        error: 'Chiave Anthropic non valida o non autorizzata.',
+        details: error.message
+      });
+    }
+
+    res.status(500).json({ error: 'Errore durante l\'analisi della foto', details: error.message });
   }
 });
 
 router.use(authMiddleware);
 
 router.get('/', async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { data, error } = await supabase
     .from('schemi')
     .select('id, titolo, tipo, created_at, updated_at')
@@ -272,6 +283,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { titolo, tipo, contenuto } = req.body;
 
   const { data, error } = await supabase
@@ -285,6 +299,9 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { data, error } = await supabase
     .from('schemi')
     .select('*')
@@ -297,6 +314,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { titolo, contenuto } = req.body;
 
   const { data, error } = await supabase
@@ -312,6 +332,9 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { error } = await supabase
     .from('schemi')
     .delete()

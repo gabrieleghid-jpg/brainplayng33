@@ -10,11 +10,14 @@
 
 const express = require('express');
 const router = express.Router();
-const supabase = require('../config/supabase');
+const { supabase, supabaseConfigured } = require('../config/supabase');
 const authMiddleware = require('../middleware/auth');
 
 // ── GET /api/users/:id/profile ──────────────────────────────
 router.get('/:id/profile', authMiddleware, async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -27,6 +30,9 @@ router.get('/:id/profile', authMiddleware, async (req, res) => {
 
 // ── PUT /api/users/:id/profile ──────────────────────────────
 router.put('/:id/profile', authMiddleware, async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { username, bio } = req.body;
 
   const { data, error } = await supabase
@@ -42,6 +48,9 @@ router.put('/:id/profile', authMiddleware, async (req, res) => {
 
 // ── GET /api/users/:id/avatar ───────────────────────────────
 router.get('/:id/avatar', authMiddleware, async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const { data, error } = await supabase
     .from('avatar_configs')
     .select('*')
@@ -54,6 +63,9 @@ router.get('/:id/avatar', authMiddleware, async (req, res) => {
 
 // ── PUT /api/users/:id/avatar ───────────────────────────────
 router.put('/:id/avatar', authMiddleware, async (req, res) => {
+  if (!supabaseConfigured || !supabase) {
+    return res.status(503).json({ error: 'Supabase non configurato: completa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nel .env.' });
+  }
   const config = req.body;
 
   const { data, error } = await supabase

@@ -167,7 +167,11 @@ async function generaRiassunto() {
   } catch (err) {
     document.getElementById('errorBox').textContent = '❌ ' + err.message;
     document.getElementById('errorBox').classList.add('visible');
-    document.getElementById('apiNotice').classList.add('visible');
+    // Mostra il box "backend non raggiungibile" solo se sembra un errore di rete/proxy.
+    const msg = String(err?.message || '');
+    if (/failed to fetch/i.test(msg) || /network/i.test(msg) || /backend/i.test(msg)) {
+      document.getElementById('apiNotice').classList.add('visible');
+    }
   } finally {
     btn.disabled = false;
     document.getElementById('btnTesto').textContent = '✨ Genera Riassunto con AI';
