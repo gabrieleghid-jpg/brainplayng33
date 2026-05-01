@@ -103,6 +103,225 @@
     .quiz-option.selected { background: var(--study-soft); border-color: var(--study); }
     .quiz-option.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
     .quiz-option.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .schema-flow {
+      text-align: center;
+      background: #f8fafc;
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .flow-node {
+      margin: 0;
+      max-width: 100%;
+    }
+
+    .flow-box {
+      margin: 0;
+      width: 100%;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 0.8rem 1rem;
+      font-weight: 800;
+      line-height: 1.3;
+      font-size: 0.85rem;
+      text-align: center;
+      box-shadow: 0 3px 0 var(--ink);
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+
+    .flow-box.clickable {
+      cursor: pointer;
+      transition: transform 0.12s ease;
+      user-select: none;
+    }
+
+    .flow-box.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 0 var(--ink);
+    }
+
+    .flow-box.clickable.is-open {
+      background: var(--study-soft);
+      border-color: #2563eb;
+      box-shadow: 0 3px 0 #1e40af;
+    }
+
+    .flow-box.clickable::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -12px;
+      width: 3px;
+      height: 10px;
+      background: #2563eb;
+      transform: translateX(-50%);
+      border-radius: 0 0 2px 2px;
+    }
+
+    .flow-box.clickable::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -16px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid #2563eb;
+      transform: translateX(-50%);
+    }
+
+    .flow-box.oval {
+      border-radius: 999px;
+      background: #fef9c3;
+    }
+
+    .flow-box.secondary {
+      background: #f1f5f9;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .flow-title {
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .flow-title.secondary {
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .flow-box .toggle-sign {
+      position: absolute;
+      right: 0.45rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      font-weight: 900;
+      background: #fff;
+      border: 1px solid var(--ink);
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+    }
+
+    .flow-children {
+      margin-top: 0.8rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.5rem;
+      padding: 0.8rem;
+      border: 2px solid #60a5fa;
+      border-radius: 12px;
+      background: #f8fbff;
+      position: relative;
+      box-shadow: inset 0 2px 0 rgba(96, 165, 250, 0.1);
+    }
+
+    .flow-child-wrap {
+      position: relative;
+      padding-top: 0.4rem;
+    }
+
+    .flow-child-wrap::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -8px;
+      width: 3px;
+      height: 10px;
+      background: #2563eb;
+      transform: translateX(-50%);
+      border-radius: 0 0 2px 2px;
+    }
+
+    .flow-child-wrap::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -2px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid #2563eb;
+      transform: translateX(-50%);
+    }
+
+    .flow-children-title {
+      width: 100%;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1d4ed8;
+      margin-bottom: 0.5rem;
+      padding: 0.3rem;
+      background: rgba(37, 99, 235, 0.08);
+      border-radius: 6px;
+    }
+
+    .keyword-hl {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+      color: #7c2d12;
+      background: #ffedd5;
+      border-radius: 6px;
+      padding: 0 0.2rem;
+      font-weight: 800;
+    }
+
+    .concept-hl {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+      color: #1d4ed8;
+      background: #dbeafe;
+      border-radius: 6px;
+      padding: 0 0.2rem;
+      font-weight: 900;
+    }
+
+    @media (max-width: 768px) {
+      .flow-box {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.7rem 0.9rem;
+      }
+
+      .flow-children {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.4rem;
+        padding: 0.6rem;
+      }
+
+      .flow-title {
+        font-size: 0.85rem;
+      }
+
+      .flow-title.secondary {
+        font-size: 0.75rem;
+      }
+    }
+
+    .summary-short-note {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-top: 0.6rem;
+    }
   </style>
 </head>
 <body>
@@ -162,7 +381,7 @@
             <button class="tab-btn active" data-tab="flashcards" style="font-size: 1rem;">🎴 Flashcards</button>
             <button class="tab-btn" data-tab="schema" style="font-size: 1rem;">🗺️ Schema</button>
             <button class="tab-btn" data-tab="riassunto" style="font-size: 1rem;">📝 Riassunto</button>
-            <button class="tab-btn" data-tab="quiz" style="font-size: 1rem;">❓ Quiz</button>
+            <button class="tab-btn" data-tab="quiz" style="font-size: 1rem;">❓ Domande</button>
           </div>
 
           <div id="flashcards" class="tab-content active">
@@ -201,107 +420,52 @@
       window.location.href = 'index.html';
     }
 
-    // HAMBURGER MENU
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebar = document.querySelector('.sidebar');
-    const body = document.body;
-
-    hamburgerBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      sidebar?.classList.toggle('active');
-      body.classList.toggle('menu-open');
-    });
-
-    body.addEventListener('click', (e) => {
-      if (body.classList.contains('menu-open') && !sidebar?.contains(e.target) && e.target !== hamburgerBtn) {
-        sidebar?.classList.remove('active');
-        body.classList.remove('menu-open');
-      }
-    });
-
-    sidebar?.addEventListener('click', (e) => {
-      if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-        sidebar.classList.remove('active');
-        body.classList.remove('menu-open');
-      }
-    });
-
-    // PROFILE UI
-    const themeToggle = document.getElementById('themeToggle');
-    const navAvatar = document.getElementById('navAvatar');
-    const guestNotice = document.getElementById('guestNotice');
-
-    const user = {
-      username: sessionStorage.getItem('username') || 'Studente',
-      profileImage: sessionStorage.getItem('profileImage') || ''
-    };
-
-    function getInitials(name) {
-      return name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0].toUpperCase())
-        .join('');
-    }
-
-    function updateProfileUI() {
-      if (navAvatar) {
-        if (user.profileImage) {
-          navAvatar.style.backgroundImage = `url(${user.profileImage})`;
-          navAvatar.textContent = '';
-        } else {
-          navAvatar.style.backgroundImage = '';
-          navAvatar.textContent = getInitials(user.username);
-        }
-      }
-    }
-
-    function updateGuestMode() {
-      const role = sessionStorage.getItem('role') || 'user';
-      if (role === 'guest') {
-        if (guestNotice) {
-          guestNotice.style.display = 'block';
-          guestNotice.textContent = 'Sei connesso come ospite: alcune funzionalità sono limitate.';
-        }
-      }
-    }
-
-    updateProfileUI();
-    updateGuestMode();
-
-    // THEME TOGGLE
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark');
-    }
-    themeToggle?.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
-
-    themeToggle?.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-      themeToggle.setAttribute('aria-label', document.body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
-    });
-
-    // PHOTO ANALYSIS SYSTEM
-    const photoUpload = document.getElementById('photoUpload');
-    const uploadSection = document.getElementById('uploadSection');
-    const uploadPreview = document.getElementById('uploadPreview');
+    const fileInput = document.getElementById('fileInput');
+    const selectBtn = document.getElementById('selectBtn');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const clearBtn = document.getElementById('clearBtn');
+    const dropZone = document.getElementById('dropZone');
+    const imagePreview = document.getElementById('imagePreview');
     const resultsSection = document.getElementById('resultsSection');
-    const downloadSchema = document.getElementById('downloadSchema');
-    
+    const backendNotice = document.getElementById('backendNotice');
+    const schemaContainer = document.getElementById('schemaContainer');
+    const flashcardContainer = document.getElementById('flashcardContainer');
+    const riassuntoContainer = document.getElementById('riassuntoContainer');
+    const quizContainer = document.getElementById('quizContainer');
+    const checkQuizBtn = document.getElementById('checkQuizBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
     let currentImageData = null;
     let analysisResults = null;
-    // Usa sempre apiFetch() che rispetta ENV.BACKEND_URL (se impostato) e
-    // altrimenti passa dal proxy del frontend-server.js (consigliato in locale).
 
-    // Photo upload handler
-    photoUpload?.addEventListener('change', async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      
+    selectBtn?.addEventListener('click', () => fileInput?.click());
+    dropZone?.addEventListener('click', () => fileInput?.click());
+
+    ['dragenter', 'dragover'].forEach((eventName) => {
+      dropZone?.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    });
+
+    ['dragleave', 'drop'].forEach((eventName) => {
+      dropZone?.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    });
+
+    dropZone?.addEventListener('drop', async (event) => {
+      const file = event.dataTransfer?.files?.[0];
+      if (file) await handleSelectedFile(file);
+    });
+
+    fileInput?.addEventListener('change', async (event) => {
+      const file = event.target.files?.[0];
+      if (file) await handleSelectedFile(file);
+    });
+
+    async function handleSelectedFile(file) {
       if (!file.type.startsWith('image/')) {
         alert('Per favore carica un file immagine.');
         return;
@@ -309,18 +473,22 @@
 
       try {
         currentImageData = await normalizeImageForAnalysis(file);
-        displayImagePreview(currentImageData);
-        uploadSection.style.display = 'block';
+        if (imagePreview) {
+          imagePreview.src = currentImageData;
+          imagePreview.style.display = 'block';
+        }
+        const placeholder = dropZone?.querySelector('.preview-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
         analyzeBtn.disabled = false;
+        clearBtn.style.display = 'inline-block';
       } catch (error) {
         console.error('Errore preparazione immagine:', error);
         alert('Impossibile preparare l\'immagine per l\'analisi.');
       }
-    });
+    }
 
     async function normalizeImageForAnalysis(file) {
       const objectUrl = URL.createObjectURL(file);
-
       try {
         const image = await new Promise((resolve, reject) => {
           const img = new Image();
@@ -334,135 +502,280 @@
         const canvas = document.createElement('canvas');
         canvas.width = Math.max(1, Math.round(image.width * scale));
         canvas.height = Math.max(1, Math.round(image.height * scale));
-
         const context = canvas.getContext('2d');
         context.fillStyle = '#ffffff';
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
         return canvas.toDataURL('image/jpeg', 0.92);
       } finally {
         URL.revokeObjectURL(objectUrl);
       }
     }
 
-    function displayImagePreview(imageData) {
-      uploadPreview.innerHTML = `
-        <img src="${imageData}" alt="Preview" style="width: 100%; height: 300px; object-fit: cover; border-radius: 16px;">
-        <p style="margin-top: 1rem; color: var(--muted);">Foto caricata - pronta per l'analisi AI</p>
-      `;
-    }
-
-    // Clear photo
     clearBtn?.addEventListener('click', () => {
       currentImageData = null;
       analysisResults = null;
-      uploadSection.style.display = 'none';
       resultsSection.style.display = 'none';
-      photoUpload.value = '';
-      uploadPreview.innerHTML = `
-        <div class="preview-placeholder">
-          <span style="font-size: 3rem;">?</span>
-          <p>Anteprima foto</p>
-        </div>
-      `;
+      analyzeBtn.disabled = true;
+      clearBtn.style.display = 'none';
+      if (fileInput) fileInput.value = '';
+      if (imagePreview) {
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+      }
+      const placeholder = dropZone?.querySelector('.preview-placeholder');
+      if (placeholder) placeholder.style.display = 'block';
     });
 
-    // Analyze photo with AI
     analyzeBtn?.addEventListener('click', async () => {
       if (!currentImageData) return;
-      
+
       analyzeBtn.disabled = true;
       analyzeBtn.textContent = '🔍 Analizzando...';
-      document.getElementById('backendNotice').style.display = 'none';
-      
+      backendNotice.style.display = 'none';
+
       try {
         analysisResults = await apiFetch('/api/schemi/analizza-foto', {
           method: 'POST',
           body: JSON.stringify({ imageDataUrl: currentImageData })
         });
-        
-        // Guadagno crediti per attività di studio
-        if (window.CreditsModule) {
-          window.CreditsModule.earnCrediti(30, 'Analisi Foto e Schemi');
-        }
 
-        // Display results
         displayResults(analysisResults);
         resultsSection.style.display = 'block';
-        
       } catch (error) {
-        console.error('Errore:', error);
-        // Mostra il banner "backend non raggiungibile" solo per errori di rete/proxy,
-        // non per errori di configurazione (es. API key mancante).
-        if (/network/i.test(error.message) || /failed to fetch/i.test(error.message) || /502|504/.test(error.message)) {
-          document.getElementById('backendNotice').style.display = 'block';
+        console.error('Errore analisi:', error);
+        if (/network|failed to fetch|502|504/i.test(String(error.message || ''))) {
+          backendNotice.style.display = 'block';
         }
         alert('Errore durante l\'analisi: ' + error.message);
       } finally {
         analyzeBtn.disabled = false;
-        analyzeBtn.textContent = '? Analizza con AI';
+        analyzeBtn.textContent = '🔍 Analizza con AI';
       }
     });
 
-    // Display comprehensive analysis results
-    function displayResults(results) {
-      // Display rewritten content
-      const contenutoContainer = document.getElementById('contenutoContainer');
-      if (contenutoContainer && results.contenuto) {
-        contenutoContainer.innerHTML = `
-          <div class="contenuto-text">${results.contenuto}</div>
-        `;
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getShortSummary(text) {
+      const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+      if (!normalized) return 'Nessun riassunto disponibile.';
+      if (normalized.length <= 300) return normalized;
+      return `${normalized.slice(0, 300).trim()}...`;
+    }
+
+    function getKeywordMap(results) {
+      const stopwords = new Set([
+        'della', 'delle', 'degli', 'dello', 'dalla', 'dalle', 'dagli', 'dallo', 'dello',
+        'dentro', 'fuori', 'quello', 'quella', 'questo', 'questa', 'quindi', 'anche', 'come',
+        'sono', 'essere', 'stato', 'stata', 'nelle', 'nella', 'nello', 'dopo', 'prima',
+        'molto', 'poco', 'dove', 'quando', 'perche', 'perché', 'quale', 'quali', 'sulla',
+        'sulle', 'sugli', 'sullo', 'sotto', 'sopra', 'nella', 'nelle', 'delle', 'degli',
+        'dati', 'dato', 'degli', 'alla', 'alle', 'agli', 'allo', 'dell', 'dall', 'nell',
+        'con', 'tra', 'fra', 'non', 'una', 'uno', 'gli', 'dei', 'del', 'dai', 'dal', 'dil',
+        'che', 'chi', 'poi', 'piu', 'più', 'meno', 'nel', 'nei', 'per', 'dei', 'dai', 'sua',
+        'suo', 'loro', 'noi', 'voi', 'sono', 'era', 'erano', 'avere', 'avuto', 'dove', 'qui',
+        'argomento', 'concetto', 'concetti', 'domanda', 'risposta'
+      ]);
+
+      const corpusParts = [
+        results?.schema || '',
+        results?.riassunto || '',
+        ...(results?.flashcard || []).flatMap((card) => [card.domanda || '', card.risposta || '']),
+        ...(results?.quiz?.domande || []).flatMap((q) => [q.domanda || '', ...(q.opzioni || [])])
+      ];
+
+      const freq = new Map();
+      const words = corpusParts
+        .join(' ')
+        .toLowerCase()
+        .replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter((word) => word.length >= 4 && !stopwords.has(word));
+
+      words.forEach((word) => {
+        freq.set(word, (freq.get(word) || 0) + 1);
+      });
+
+      const sorted = [...freq.entries()]
+        .sort((a, b) => b[1] - a[1] || b[0].length - a[0].length)
+        .slice(0, 20)
+        .map(([word]) => word);
+
+      const keywordMap = new Map();
+      sorted.forEach((word, index) => {
+        keywordMap.set(word, { kind: index < 8 ? 'concept-hl' : 'keyword-hl' });
+      });
+
+      return keywordMap;
+    }
+
+    function highlightText(text, keywordMap) {
+      const source = String(text || '');
+      const tokenRegex = /[A-Za-zÀ-ÖØ-öø-ÿ0-9]{3,}/g;
+      let output = '';
+      let lastIndex = 0;
+      let match;
+
+      while ((match = tokenRegex.exec(source)) !== null) {
+        output += escapeHtml(source.slice(lastIndex, match.index));
+        const token = match[0];
+        const info = keywordMap?.get(token.toLowerCase());
+        if (info) {
+          output += `<span class="${info.kind}">${escapeHtml(token)}</span>`;
+        } else {
+          output += escapeHtml(token);
+        }
+        lastIndex = tokenRegex.lastIndex;
       }
-      
-      // Display flashcards
-      const flashcardContainer = document.getElementById('flashcardContainer');
-      if (flashcardContainer && results.flashcard) {
-        flashcardContainer.innerHTML = results.flashcard.map((card, index) => `
-          <div class="flashcard-item">
-            <div class="flashcard-number">${index + 1}</div>
-            <div class="flashcard-content">
-              <div class="flashcard-question">
-                <strong>Domanda:</strong> ${card.domanda}
-              </div>
-              <div class="flashcard-answer">
-                <strong>Risposta:</strong> ${card.risposta}
-              </div>
+
+      output += escapeHtml(source.slice(lastIndex));
+      return output;
+    }
+
+    function parseSchemaToTree(schemaText) {
+      const lines = String(schemaText || '')
+        .split('\n')
+        .map((line) => line.replace(/\r/g, ''))
+        .map((line) => ({ raw: line, text: line.trim() }))
+        .filter((line) => line.text.length > 0);
+
+      if (!lines.length) return [];
+
+      const root = [];
+      const stack = [];
+
+      for (const line of lines) {
+        const arrowMatch = line.raw.match(/^(\s*)(?:->\s*)?(.*)$/);
+        const spaces = arrowMatch ? arrowMatch[1].length : 0;
+        const text = (arrowMatch ? arrowMatch[2] : line.text).trim();
+        const hasArrow = line.raw.trimStart().startsWith('->');
+        const level = hasArrow ? Math.floor(spaces / 2) + 1 : 0;
+        const node = { title: text, children: [] };
+
+        while (stack.length > level) stack.pop();
+
+        if (level === 0) {
+          root.push(node);
+          stack.length = 0;
+          stack.push(node);
+          continue;
+        }
+
+        const parent = stack[level - 1] || root[root.length - 1];
+        if (parent) {
+          parent.children.push(node);
+        } else {
+          root.push(node);
+        }
+        stack[level] = node;
+      }
+
+      return root;
+    }
+
+    function renderSchemaNodes(nodes, keywordMap, depth = 0) {
+      return nodes.map((node) => {
+        const title = highlightText(node.title, keywordMap);
+        const boxClass = depth === 0 ? 'flow-box oval' : depth === 1 ? 'flow-box' : 'flow-box secondary';
+        const titleClass = depth <= 1 ? 'flow-title' : 'flow-title secondary';
+
+        if (!node.children.length) {
+          return `
+            <div class="flow-node">
+              <div class="${boxClass}"><span class="${titleClass}">${title}</span></div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="flow-node">
+            <button class="${boxClass} clickable" type="button">
+              <span class="${titleClass}">${title}</span>
+              <span class="toggle-sign">+</span>
+            </button>
+            <div class="flow-children" style="display:none;">
+              <div class="flow-children-title">Macroargomenti collegati</div>
+              ${node.children.map((child) => `
+                <div class="flow-child-wrap">
+                  ${renderSchemaNodes([child], keywordMap, depth + 1)}
+                </div>
+              `).join('')}
             </div>
           </div>
-        `).join('');
+        `;
+      }).join('');
+    }
+
+    function bindSchemaToggleEvents() {
+      schemaContainer.querySelectorAll('.flow-box.clickable').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const content = btn.parentElement?.querySelector(':scope > .flow-children');
+          const isOpen = content?.style.display === 'block';
+          if (content) content.style.display = isOpen ? 'none' : 'block';
+          btn.classList.toggle('is-open', !isOpen);
+          const indicator = btn.querySelector('.toggle-sign');
+          if (indicator) indicator.textContent = isOpen ? '+' : '−';
+        });
+      });
+    }
+
+    function displayResults(results) {
+      const keywordMap = getKeywordMap(results);
+
+      if (flashcardContainer) {
+        const flashcards = Array.isArray(results.flashcard) ? results.flashcard : [];
+        flashcardContainer.innerHTML = flashcards.length
+          ? flashcards.map((card, index) => `
+              <div class="flashcard-item">
+                <div class="flashcard-number">${index + 1}</div>
+                <div class="flashcard-content">
+                  <div class="flashcard-question"><strong>Domanda:</strong> ${highlightText(card.domanda, keywordMap)}</div>
+                  <div class="flashcard-answer"><strong>Risposta:</strong> ${highlightText(card.risposta, keywordMap)}</div>
+                </div>
+              </div>
+            `).join('')
+          : '<div class="flashcard-item"><div class="flashcard-content">Nessuna flashcard disponibile.</div></div>';
       }
-      
-      // Display schema
-      const schemaContainer = document.getElementById('schemaContainer');
-      if (schemaContainer && results.schema) {
+
+      if (schemaContainer) {
+        const tree = parseSchemaToTree(results.schema);
         schemaContainer.innerHTML = `
-          <pre class="schema-text">${results.schema}</pre>
+          <div class="schema-flow">
+            ${tree.length ? renderSchemaNodes(tree, keywordMap) : '<div class="flow-box">Nessuno schema disponibile.</div>'}
+          </div>
         `;
+        bindSchemaToggleEvents();
       }
-      
-      // Display summary
-      const riassuntoContainer = document.getElementById('riassuntoContainer');
-      if (riassuntoContainer && results.riassunto) {
+
+      if (riassuntoContainer) {
         riassuntoContainer.innerHTML = `
-          <div class="riassunto-text">${results.riassunto}</div>
+          <div class="riassunto-text">
+            ${highlightText(getShortSummary(results.riassunto), keywordMap)}
+            <div class="summary-short-note">Riassunto breve generato in poche righe.</div>
+          </div>
         `;
       }
-      
-      // Display quiz
-      const quizContainer = document.getElementById('quizContainer');
-      if (quizContainer && results.quiz && results.quiz.domande) {
-        quizContainer.innerHTML = results.quiz.domande.map((question, index) => `
+
+      if (quizContainer) {
+        const questions = results?.quiz?.domande || [];
+        quizContainer.innerHTML = questions.map((question, index) => `
           <div class="quiz-question" data-question-index="${index}">
-            <div class="quiz-question-header">
-              Domanda ${index + 1}: ${question.domanda}
+            <div class="quiz-question-header" style="font-weight:900; margin-bottom: 0.8rem;">
+              Domanda ${index + 1}: ${highlightText(question.domanda, keywordMap)}
             </div>
             <div class="quiz-options">
-              ${question.opzioni.map((option, optionIndex) => `
-                <div class="quiz-option" data-option-index="${optionIndex}">
+              ${(question.opzioni || []).map((option, optionIndex) => `
+                <label class="quiz-option" data-option-index="${optionIndex}">
                   <input type="radio" name="question_${index}" value="${optionIndex}" style="margin: 0;">
-                  <span>${option}</span>
-                </div>
+                  <span>${highlightText(option, keywordMap)}</span>
+                </label>
               `).join('')}
             </div>
           </div>
@@ -470,105 +783,71 @@
       }
     }
 
-    // Tab switching
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabButtons.forEach(btn => {
+    function activateTab(tabId, shouldScroll = false) {
+      document.querySelectorAll('.tab-btn').forEach((button) => {
+        button.classList.toggle('active', button.dataset.tab === tabId);
+      });
+
+      document.querySelectorAll('.tab-content').forEach((content) => {
+        const isActive = content.id === tabId;
+        content.classList.toggle('active', isActive);
+        content.style.display = isActive ? 'block' : 'none';
+      });
+
+      if (shouldScroll) {
+        const target = document.getElementById(tabId);
+        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const targetTab = btn.dataset.tab;
-        
-        // Update buttons
-        tabButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Update content
-        tabContents.forEach(content => {
-          content.classList.remove('active');
-          if (content.id === targetTab) {
-            content.classList.add('active');
-          }
-        });
+        activateTab(targetTab, true);
       });
     });
 
-    // Download functions for all materials
-    document.getElementById('downloadContenuto')?.addEventListener('click', () => {
-      if (analysisResults && analysisResults.contenuto) {
-        downloadFile(analysisResults.contenuto, 'contenuto_ordinato.txt');
-      }
-    });
-    
-    document.getElementById('downloadFlashcard')?.addEventListener('click', () => {
-      if (analysisResults && analysisResults.flashcard) {
-        const flashcardText = analysisResults.flashcard.map((card, index) => 
-          `Flashcard ${index + 1}:\nDomanda: ${card.domanda}\nRisposta: ${card.risposta}\n\n`
-        ).join('');
-        downloadFile(flashcardText, 'flashcard.txt');
-      }
-    });
-    
-    document.getElementById('downloadSchema')?.addEventListener('click', () => {
-      if (analysisResults && analysisResults.schema) {
-        downloadFile(analysisResults.schema, 'schema_gerarchico.txt');
-      }
-    });
-    
-    document.getElementById('downloadRiassunto')?.addEventListener('click', () => {
-      if (analysisResults && analysisResults.riassunto) {
-        downloadFile(analysisResults.riassunto, 'riassunto.txt');
-      }
-    });
-    
-    document.getElementById('downloadQuiz')?.addEventListener('click', () => {
-      if (analysisResults && analysisResults.quiz && analysisResults.quiz.domande) {
-        const quizText = analysisResults.quiz.domande.map((question, index) => {
-          const correctAnswer = question.opzioni[question.risposta_corretta];
-          return `Domanda ${index + 1}: ${question.domanda}\nTipo: ${question.tipo}\nOpzioni:\n${question.opzioni.map((opt, i) => `  ${String.fromCharCode(65 + i)}. ${opt}`).join('\n')}\nRisposta corretta: ${String.fromCharCode(65 + question.risposta_corretta)}. ${correctAnswer}\n\n`;
-        }).join('');
-        downloadFile(quizText, 'quiz.txt');
-      }
-    });
-    
-    function downloadFile(content, filename) {
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    
-    // Quiz answer checking
-    document.getElementById('checkQuizAnswers')?.addEventListener('click', () => {
-      if (!analysisResults || !analysisResults.quiz) return;
-      
-      const quizQuestions = document.querySelectorAll('.quiz-question');
-      quizQuestions.forEach((questionElement, questionIndex) => {
-        const question = analysisResults.quiz.domande[questionIndex];
-        const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
+    activateTab('flashcards', false);
+
+    checkQuizBtn?.addEventListener('click', () => {
+      const questions = analysisResults?.quiz?.domande || [];
+      document.querySelectorAll('.quiz-question').forEach((questionElement, questionIndex) => {
+        const question = questions[questionIndex];
+        const selected = questionElement.querySelector('input[type="radio"]:checked');
         const options = questionElement.querySelectorAll('.quiz-option');
-        
-        // Remove previous classes
-        options.forEach(option => {
-          option.classList.remove('correct', 'incorrect', 'selected');
-        });
-        
-        if (selectedOption) {
-          const selectedIndex = parseInt(selectedOption.value);
-          const correctIndex = question.risposta_corretta;
-          
-          options[selectedIndex].classList.add('selected');
-          
-          if (selectedIndex === correctIndex) {
-            options[selectedIndex].classList.add('correct');
-          } else {
-            options[selectedIndex].classList.add('incorrect');
-            options[correctIndex].classList.add('correct');
-          }
+        options.forEach((option) => option.classList.remove('correct', 'incorrect', 'selected'));
+        if (!selected) return;
+        const selectedIndex = Number(selected.value);
+        const correctIndex = Number(question?.risposta_corretta || 0);
+        options[selectedIndex]?.classList.add('selected');
+        if (selectedIndex === correctIndex) {
+          options[selectedIndex]?.classList.add('correct');
+        } else {
+          options[selectedIndex]?.classList.add('incorrect');
+          options[correctIndex]?.classList.add('correct');
         }
       });
+    });
+
+    downloadBtn?.addEventListener('click', () => {
+      if (!analysisResults) return;
+      const payload = [
+        'RIASSUNTO BREVE',
+        getShortSummary(analysisResults.riassunto),
+        '',
+        'DOMANDE',
+        ...(analysisResults?.quiz?.domande || []).map((q, i) => `${i + 1}. ${q.domanda}`),
+        '',
+        'SCHEMA',
+        analysisResults.schema || ''
+      ].join('\n');
+      const blob = new Blob([payload], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'studio-schema.txt';
+      anchor.click();
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>

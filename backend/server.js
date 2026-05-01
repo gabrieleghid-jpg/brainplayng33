@@ -1,7 +1,7 @@
 /**
  * backend/server.js
  * Server Express principale di BrainPlayng
- * Gestisce: API riassunti (Claude), proxy Supabase, CORS
+ * Gestisce: API schemi (Claude Vision), proxy Supabase, CORS
  */
 
 const path = require('path');
@@ -32,12 +32,10 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 
 // ─── Routes ─────────────────────────────────────────────────
-const riassuntiRoutes = require('./routes/riassunti');
 const authRoutes      = require('./routes/auth');
 const userRoutes      = require('./routes/users');
 const schemiRoutes    = require('./routes/schemi');
 
-app.use('/api/riassunti', riassuntiRoutes);
 app.use('/api/auth',      authRoutes);
 app.use('/api/users',     userRoutes);
 app.use('/api/schemi',    schemiRoutes);

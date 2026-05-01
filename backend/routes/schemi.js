@@ -116,8 +116,11 @@ Genera materiali di studio sintetici e utili.
 Vincoli:
 - Scrivi tutto in italiano.
 - Non usare Markdown.
-- Lo schema deve essere molto sintetico.
+- Lo schema deve essere il focus principale: struttura ad albero con macroargomenti e sotto-argomenti.
 - Lo schema deve usare frecce testuali tipo "->" per mostrare i collegamenti.
+- Usa rientri di 2 spazi per i livelli successivi (esempio sotto).
+- Il riassunto deve essere breve: 3-5 righe massimo.
+- Le domande del quiz devono essere chiare e utili per ripassare.
 - Se il testo nell'immagine e' parziale, usa solo cio' che riesci a dedurre con buona affidabilita'.
 
 Rispondi SOLO con queste sezioni, nello stesso ordine, senza testo extra:
@@ -132,12 +135,14 @@ FLASHCARD:
 SCHEMA:
 Argomento principale
 -> concetto 1
-  -> dettaglio
+  -> macroargomento 1.1
+    -> dettaglio 1.1.a
 -> concetto 2
-  -> dettaglio
+  -> macroargomento 2.1
+    -> dettaglio 2.1.a
 
 RIASSUNTO:
-riassunto sintetico massimo 180 parole
+riassunto molto breve in 3-5 righe
 
 QUIZ:
 1. domanda | opzione A | opzione B | opzione C | opzione D | 0
