@@ -68,6 +68,8 @@
 <body>
 
 <script src="../js/env-config.js"></script>
+<script src="../js/modules/notifications.js"></script>
+<script src="../js/modules/credits.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase-client.js"></script>
 
@@ -163,6 +165,11 @@ async function generaRiassunto() {
 
     if (data.titoloProposto) {
       document.getElementById('titoloBox').textContent = `💡 Titolo proposto: "${data.titoloProposto}"`;
+    }
+
+    // Guadagno crediti per attività di studio
+    if (window.CreditsModule) {
+      window.CreditsModule.earnCrediti(20, 'Generazione Riassunto AI');
     }
   } catch (err) {
     document.getElementById('errorBox').textContent = '❌ ' + err.message;

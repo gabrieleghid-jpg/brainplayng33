@@ -1030,12 +1030,14 @@
     </div>
 
     <script src="../js/env-config.js"></script>
+    <script src="../js/modules/notifications.js"></script>
+    <script src="../js/modules/credits.js"></script>
     <script src="../js/modules/auth.js"></script>
     <script src="../js/animated-avatar.js"></script>
     <script>
         // Variabili globali
         let currentGame = null;
-        let userCredits = parseInt(localStorage.getItem('bp_crediti') || '0');
+        let userCredits = window.CreditsModule ? window.CreditsModule.getCrediti() : 0;
         let userLevel = 1;
         let gameScores = {
             sudoku: 0,
@@ -1047,6 +1049,11 @@
 
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
+            if (window.CreditsModule) {
+                window.CreditsModule.updateCreditDisplay();
+                // Sincronizza variabile locale
+                userCredits = window.CreditsModule.getCrediti();
+            }
             updateUserInfo();
             // Inizializza il sistema di crescita mascotte
             if (window.mascotteGrowth) {
@@ -1056,8 +1063,16 @@
         });
 
         function updateUserInfo() {
-            document.getElementById('userCredits').textContent = userCredits;
-            document.getElementById('userLevel').textContent = 'Lv.' + userLevel;
+            if (window.CreditsModule) {
+                window.CreditsModule.updateCreditDisplay();
+                userCredits = window.CreditsModule.getCrediti();
+            } else {
+                const creds = document.getElementById('userCredits');
+                if (creds) creds.textContent = userCredits;
+            }
+            
+            const level = document.getElementById('userLevel');
+            if (level) level.textContent = 'Lv.' + userLevel;
         }
 
         function startGame(gameType) {
@@ -1110,7 +1125,13 @@
             const score = gameScores[currentGame];
             const creditsEarned = Math.floor(score / 10); // 1 credito ogni 10 punti
             
-            userCredits += creditsEarned;
+            if (creditsEarned > 0 && window.CreditsModule) {
+                window.CreditsModule.earnCrediti(creditsEarned, `Minigioco: ${currentGame.toUpperCase()}`);
+                userCredits = window.CreditsModule.getCrediti();
+            } else if (creditsEarned > 0) {
+                userCredits += creditsEarned;
+                localStorage.setItem('bp_crediti', userCredits.toString());
+            }
             
             // Calcola nuovo livello (1 livello ogni 100 crediti)
             const newLevel = Math.floor(userCredits / 100) + 1;
@@ -1118,9 +1139,6 @@
                 userLevel = newLevel;
                 showLevelUp();
             }
-            
-            // Salva nel localStorage
-            localStorage.setItem('bp_crediti', userCredits.toString());
             
             updateUserInfo();
             
@@ -2117,8 +2135,12 @@
             // Aggiungi crediti
             const credits = Math.floor(tetrisScore / 100);
             if (credits > 0) {
-                userCredits += credits;
-                localStorage.setItem('bp_crediti', userCredits.toString());
+                if (window.CreditsModule) {
+                    window.CreditsModule.earnCrediti(credits, 'Minigioco: TETRIS');
+                } else {
+                    userCredits += credits;
+                    localStorage.setItem('bp_crediti', userCredits.toString());
+                }
                 updateUserInfo();
             }
         }

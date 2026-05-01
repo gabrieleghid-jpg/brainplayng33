@@ -1,0 +1,10 @@
+{
+  "name": "brainplayng-root",
+  "version": "1.0.0",
+  "description": "Project root for BrainPlayng",
+  "scripts": {
+    "start": "node start-all.js"
+  },
+  "author": "brainplayng",
+  "license": "MIT"
+}

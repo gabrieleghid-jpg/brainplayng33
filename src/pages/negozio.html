@@ -5,225 +5,497 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Negozio - BrainPlay</title>
     <link rel="stylesheet" href="../styles/dashboard.css">
-    <link rel="stylesheet" href="../styles/dashboard.css">
     <link rel="stylesheet" href="../styles/avatar-game.css">
     <style>
-        .shop-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+        :root {
+            --shop-primary: #7c3aed;
+            --shop-secondary: #4c1d95;
+            --shop-bg: #fdf4ff;
+            --shop-panel: #ffffff;
+            --shop-card: #ffffff;
+            --shop-border: #4c1d95;
+            --shop-text: #4c1d95;
+            --shop-muted: #7c3aed;
+            --shop-accent: #fbbf24;
+            --shop-shadow: 8px 8px 0px #4c1d95;
+            --rarity-common: #94a3b8;
+            --rarity-rare: #3b82f6;
+            --rarity-epic: #a855f7;
+            --rarity-legendary: #f59e0b;
         }
 
-        .shop-header {
-            text-align: center;
-            margin-bottom: 3rem;
+        body.shop-page {
+            background-color: var(--shop-bg);
+            color: var(--shop-text);
+            font-family: 'Fredoka One', cursive;
+            margin: 0;
+            padding-top: 120px;
         }
 
-        .shop-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 1rem;
-        }
-
-        .shop-subtitle {
-            font-size: 1.2rem;
-            color: var(--muted);
-            margin-bottom: 2rem;
-        }
-
-        .user-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: var(--panel);
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .category-tabs {
+        /* Navigazione stile RPG HUD */
+        .shop-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 80px;
+            background: var(--shop-panel);
+            border: 5px solid var(--shop-border);
+            border-radius: 20px;
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 10px 10px 0px var(--shop-border);
         }
 
-        .category-tab {
-            background: var(--background);
-            border: 2px solid var(--border);
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            color: var(--text);
+        .btn-exit {
+            background: #ef4444;
+            border: 4px solid var(--shop-border);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 900;
+            box-shadow: 4px 4px 0px var(--shop-border);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .category-tab:hover {
-            border-color: var(--accent);
-            background: var(--accent-soft);
+        .btn-exit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--shop-border);
         }
 
-        .category-tab.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
+        .shop-logo {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--shop-primary);
+            -webkit-text-stroke: 1px var(--shop-border);
         }
 
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+        .credits-capsule {
+            background: var(--shop-accent);
+            border: 4px solid var(--shop-border);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 4px 4px 0px var(--shop-border);
         }
 
+        /* Card Prodotti stile Carte Collezionabili */
         .product-card {
-            background: var(--panel);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-            position: relative;
+            background: var(--shop-card);
+            border: 5px solid var(--shop-border);
+            border-radius: 25px;
+            box-shadow: var(--shop-shadow);
+            padding: 1rem;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-color: var(--accent);
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 12px 12px 0px var(--shop-border);
         }
 
-        .product-card.owned {
-            border-color: #4ade80;
-            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), var(--panel));
-        }
-
-        .product-icon {
-            font-size: 3rem;
+        .product-visual {
+            background: var(--shop-bg);
+            border: 4px solid var(--shop-border);
+            border-radius: 15px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
             margin-bottom: 1rem;
-            display: block;
+        }
+
+        .btn-purchase {
+            background: var(--shop-accent);
+            border: 4px solid var(--shop-border);
+            color: var(--shop-border);
+            padding: 1rem;
+            border-radius: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px var(--shop-border);
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-purchase:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--shop-border);
+        }
+
+        .rarity-tag {
+            border: 3px solid var(--shop-border);
+            border-radius: 10px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .coin-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--shop-accent);
+            filter: blur(15px);
+            opacity: 0.2;
+            left: 0;
+            top: 0;
+        }
+
+        .credits-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--shop-accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .btn-theme {
+            background: var(--shop-card);
+            border: 1px solid var(--shop-border);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-left: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Nuova Hero Section */
+        .shop-hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .hero-main-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, var(--shop-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .hero-sub-title {
+            color: var(--shop-muted);
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        /* Resto degli stili esistenti ottimizzati */
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 4rem;
+            justify-content: center;
+        }
+
+        .stat-card {
+            background: var(--shop-panel);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            border: 5px solid var(--shop-border);
+            box-shadow: var(--shop-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 12px 12px 0px var(--shop-border);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--shop-accent);
+            margin-bottom: 0.5rem;
+            -webkit-text-stroke: 1px var(--shop-border);
+        }
+
+        .stat-label {
+            color: var(--shop-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1rem;
+            background: var(--shop-panel);
+            border-radius: 20px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 4px solid var(--shop-border);
+            box-shadow: 6px 6px 0px var(--shop-border);
+        }
+
+        .category-tab {
+            background: transparent;
+            border: 3px solid transparent;
+            padding: 0.8rem 1.8rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 900;
+            color: var(--shop-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .category-tab:hover {
+            color: var(--shop-text);
+            background: var(--shop-bg);
+            border-color: var(--shop-border);
+        }
+
+        .category-tab.active {
+            background: var(--shop-accent);
+            color: var(--shop-border);
+            border-color: var(--shop-border);
+            box-shadow: 4px 4px 0px var(--shop-border);
+            transform: scale(1.05);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            justify-content: center;
+        }
+
+        .product-card {
+            background: var(--shop-panel);
+            border-radius: 32px;
+            padding: 0;
+            border: 2px solid var(--shop-border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--shop-accent);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .product-visual {
+            height: 180px;
+            background: var(--shop-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .product-card:hover .product-visual {
+            font-size: 6rem;
+        }
+
+        .product-card.rarity-common { border-top: 6px solid var(--rarity-common); }
+        .product-card.rarity-rare { border-top: 6px solid var(--rarity-rare); }
+        .product-card.rarity-epic { border-top: 6px solid var(--rarity-epic); }
+        .product-card.rarity-legendary { border-top: 6px solid var(--rarity-legendary); }
+
+        .product-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
             text-align: center;
         }
 
         .product-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--shop-text);
+            margin-bottom: 0.75rem;
         }
 
         .product-description {
-            color: var(--muted);
-            line-height: 1.6;
+            color: var(--shop-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
             margin-bottom: 1.5rem;
-            text-align: center;
+            flex-grow: 1;
+        }
+
+        .product-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--shop-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .product-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
-            text-align: center;
-            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--shop-accent);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .product-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
+        .btn-purchase {
+            background: var(--shop-accent);
+            color: var(--shop-bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px var(--shop-glow);
+        }
+
+        .btn-purchase:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .btn-purchase:active {
+            transform: scale(0.95);
+        }
+
+        .product-card.owned .product-visual {
+            filter: grayscale(0.5);
+            opacity: 0.7;
         }
 
         .owned-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: #4ade80;
+            background: #10b981;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            z-index: 10;
         }
 
-        .loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-top: 2px solid var(--accent);
+        .rarity-tag {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: white;
+            z-index: 10;
+        }
+
+        .rarity-tag.common { background: var(--rarity-common); }
+        .rarity-tag.rare { background: var(--rarity-rare); }
+        .rarity-tag.epic { background: var(--rarity-epic); }
+        .rarity-tag.legendary { background: var(--rarity-legendary); }
+
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            background: #fbbf24;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #78350f;
+            font-weight: 900;
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
         }
 
         @media (max-width: 768px) {
-            .shop-container {
-                padding: 1rem;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .category-tabs {
-                justify-content: flex-start;
-            }
-
-            .user-stats {
-                grid-template-columns: 1fr;
-            }
+            .shop-title { font-size: 2.5rem; }
+            .shop-container { padding: 1rem; }
+            .stat-card { min-width: 140px; padding: 1rem; }
+            .stat-value { font-size: 1.8rem; }
+            .category-tabs { border-radius: 20px; gap: 0.25rem; }
+            .category-tab { padding: 0.6rem 1rem; font-size: 0.8rem; }
         }
     </style>
 </head>
-<body>
-    <!-- Header Component -->
-    <div id="header-container"></div>
+<body class="shop-page">
+    <!-- Shop Navigation Bar (Game Style) -->
+    <nav class="shop-nav">
+        <div class="nav-left">
+            <a href="home.html" class="btn-exit">
+                <span class="btn-icon">🏠</span>
+                <span class="btn-text">ESCI</span>
+            </a>
+        </div>
+        <div class="nav-center">
+            <div class="shop-logo">SHOP EMPORIUM</div>
+        </div>
+        <div class="nav-right">
+            <div class="credits-capsule">
+                <div class="coin-glow"></div>
+                <span class="coin-icon">C</span>
+                <span id="navCredits" class="credits-value">0</span>
+            </div>
+            <button id="themeToggle" class="btn-theme" title="Cambia Tema">🌙</button>
+        </div>
+    </nav>
 
     <div class="page-shell">
-        <!-- Sidebar Component -->
-        <div id="sidebar-container"></div>
-
         <main class="main-content">
-            <!-- Shop Header -->
-            <section class="shop-header">
-                <h1 class="shop-title">🛍️ Negozio BrainPlay</h1>
-                <p class="shop-subtitle">Spendi i tuoi crediti per accessori esclusivi e power-up!</p>
-            </section>
+            <!-- Hero Section con Spaziatura Corretta -->
+            <header class="shop-hero">
+                <div class="hero-glow"></div>
+                <h1 class="hero-main-title">Benvenuto nell'Emporio</h1>
+                <p class="hero-sub-title">Oggetti leggendari per studenti leggendari</p>
+            </header>
 
-            <!-- User Stats -->
+            <!-- User Stats Grid -->
             <section class="user-stats" id="userStats">
                 <div class="stat-card">
                     <div class="stat-value" id="userCredits">0</div>
@@ -288,29 +560,30 @@
 
             async loadComponents() {
                 try {
-                    // Load header
-                    const headerResponse = await fetch('../components/header.html');
-                    const headerHtml = await headerResponse.text();
-                    document.getElementById('header-container').innerHTML = headerHtml;
-                    document.getElementById('pageTitle').textContent = 'Negozio - BrainPlay';
-
-                    // Load sidebar
-                    const sidebarResponse = await fetch('../components/sidebar.html');
-                    const sidebarHtml = await sidebarResponse.text();
-                    document.getElementById('sidebar-container').innerHTML = sidebarHtml;
-
-                    // Load footer
+                    // Header personalizzato già presente nel body per stile gaming
+                    // Carichiamo solo il footer
                     const footerResponse = await fetch('../components/footer.html');
                     const footerHtml = await footerResponse.text();
                     document.getElementById('footer-container').innerHTML = footerHtml;
 
                 } catch (error) {
                     console.error('Error loading components:', error);
-                    NotificationsModule.showError('Errore nel caricamento dei componenti');
                 }
             }
 
             setupEventListeners() {
+                // Gestione Tema
+                const themeBtn = document.getElementById('themeToggle');
+                if (themeBtn) {
+                    themeBtn.addEventListener('click', () => {
+                        if (window.themeManager) {
+                            window.themeManager.toggleTheme();
+                            this.updateThemeIcon();
+                        }
+                    });
+                }
+
+                // Aggiorna info utente (sidebar rimosso ma teniamo per compatibilità se serve)
                 setTimeout(() => {
                     if (window.sidebarManager) {
                         window.sidebarManager.updateUserInfo();
@@ -318,12 +591,19 @@
                 }, 100);
             }
 
+            updateThemeIcon() {
+                const themeBtn = document.getElementById('themeToggle');
+                if (!themeBtn) return;
+                const isDark = document.body.classList.contains('dark');
+                themeBtn.textContent = isDark ? '☀️' : '🌙';
+            }
+
             initializeSystems() {
                 // Initialize shop
                 this.shop = new ShopModule();
                 
-                // Initialize credits
-                CreditsModule.initializeCredits(100);
+                // Inizializza icona tema
+                this.updateThemeIcon();
                 
                 // Load categories
                 this.loadCategories();
@@ -337,6 +617,7 @@
                 // Initialize theme
                 if (window.themeManager) {
                     window.themeManager.loadTheme();
+                    this.updateThemeIcon();
                 }
             }
 
@@ -373,31 +654,47 @@
                 
                 if (products.length === 0) {
                     productsContainer.innerHTML = `
-                        <div style="text-align: center; padding: 3rem; color: var(--muted);">
+                        <div style="text-align: center; padding: 5rem; color: var(--shop-muted); grid-column: 1/-1;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">📦</div>
                             <h3>Nessun prodotto in questa categoria</h3>
-                            <p>Prova un\'altra categoria!</p>
+                            <p>I rifornimenti arriveranno presto!</p>
                         </div>
                     `;
                     return;
                 }
                 
-                productsContainer.innerHTML = products.map(product => `
-                    <div class="product-card ${product.owned ? 'owned' : ''}">
-                        ${product.owned ? '<div class="owned-badge">ACQUISTATO</div>' : ''}
-                        <div class="product-icon">${product.icon}</div>
-                        <h3 class="product-name">${product.name}</h3>
-                        <p class="product-description">${product.description}</p>
-                        <div class="product-price">${product.price} 💰</div>
-                        <div class="product-actions">
+                productsContainer.innerHTML = products.map(product => {
+                    const rarity = this.getRarity(product.price);
+                    return `
+                    <div class="product-card rarity-${rarity.id} ${product.owned ? 'owned' : ''}">
+                        <div class="rarity-tag ${rarity.id}">${rarity.label}</div>
+                        ${product.owned ? '<div class="owned-badge">SBLOCCATO</div>' : ''}
+                        <div class="product-visual">${product.icon}</div>
+                        <div class="product-info">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="coin-icon">C</span>
+                                ${product.price}
+                            </div>
                             ${product.owned ? 
-                                '<span style="color: #4ade80; font-weight: 600;">✓ Già tuo</span>' :
-                                `<button class="btn-primary" onclick="shopController.purchaseProduct('${product.id}')">
+                                '<span style="color: #10b981; font-weight: 800; font-size: 0.8rem;">✓ POSSEDUTO</span>' :
+                                `<button class="btn-purchase" onclick="shopController.purchaseProduct('${product.id}')">
                                     Acquista
                                 </button>`
                             }
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
+            }
+
+            getRarity(price) {
+                if (price >= 500) return { id: 'legendary', label: 'Leggendario' };
+                if (price >= 200) return { id: 'epic', label: 'Epico' };
+                if (price >= 100) return { id: 'rare', label: 'Raro' };
+                return { id: 'common', label: 'Comune' };
             }
 
             purchaseProduct(productId) {

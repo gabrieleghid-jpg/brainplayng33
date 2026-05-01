@@ -9,8 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/dashboard.css" />
-  
-  <style>
+    <script src="../js/env-config.js"></script>
+    <script src="../js/modules/notifications.js"></script>
+    <script src="../js/modules/credits.js"></script>
+    
+    <style>
     .upload-section {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -644,6 +647,11 @@
           body: JSON.stringify({ imageDataUrl: currentImageData })
         });
         
+        // Guadagno crediti per attività di studio
+        if (window.CreditsModule) {
+          window.CreditsModule.earnCrediti(30, 'Analisi Foto e Schemi');
+        }
+
         // Display results
         displayResults(analysisResults);
         resultsSection.style.display = 'block';
