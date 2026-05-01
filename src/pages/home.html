@@ -10,382 +10,173 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/dashboard.css" />
   <style>
-    /* Hero Section Migliorata */
-    .hero-section {
-      position: relative;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      overflow: hidden;
-    }
-    
-    .hero-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0.1;
-    }
-    
-    .hero-particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(255,255,255,0.2) 0%, transparent 50%);
-      animation: float 20s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-    
-    .hero-badge {
-      display: inline-block;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
+    .main-title {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 900;
+      letter-spacing: -2px;
+      color: var(--ink);
+      text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
     }
 
-    /* Stili per rendere bianche le scritte sulla hero section */
-    .hero-section .hero-subtitle {
-      color: rgba(255, 255, 255, 0.9) !important;
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
     }
 
-    .hero-section .stat-number {
-      color: white !important;
-    }
-
-    .hero-section .stat-label {
-      color: rgba(255, 255, 255, 0.8) !important;
-    }
-    
-    .hero-cta {
-      display: flex;
-      gap: 15px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    
-    .cta-button {
-      padding: 12px 24px;
-      border-radius: 25px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-    }
-    
-    .cta-button.primary {
-      background: white;
-      color: #667eea;
-    }
-    
-    .cta-button.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    
-    .cta-button.secondary {
-      background: transparent;
-      color: white;
-      border-color: white;
-    }
-    
-    .cta-button.secondary:hover {
-      background: white;
-      color: #667eea;
-      transform: translateY(-2px);
-    }
-    
-    .stat-icon {
-      font-size: 24px;
-      margin-bottom: 8px;
-      display: block;
-    }
-    
-    /* Sezioni Migliorate */
-    .section-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    
-    .section-description {
-      color: #666;
-      font-size: 16px;
-      max-width: 600px;
-      margin: 10px auto 0;
-      opacity: 0.8;
-    }
-    
-    /* Tool Cards Migliorate */
-    .tool-card {
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .tool-card:hover::before {
-      opacity: 1;
-    }
-    
-    .tool-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
-    
-    /* Animazioni per le sezioni */
-    .main-section {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 0.6s ease forwards;
-    }
-    
-    .main-section:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    
-    .main-section:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero-cta {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .cta-button {
-        width: 200px;
-        text-align: center;
-      }
-      
-      .hero-stats {
-        flex-direction: column;
-        gap: 20px;
-      }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
+</head>
 
 </head>
 <body>
-  <header class="nav">
-    <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Apri menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <a href="home.html" class="brand" style="display: none;">
-      <span class="brand-icon">🧠</span>
-      <span>brainplaying</span>
-    </a>
-    <div class="nav-actions">
-      <div class="nav-credits" title="I tuoi crediti">
-        <span class="coin-icon">C</span>
-        <span id="navCredits">0</span>
-      </div>
-      <button class="nav-link" type="button">Home</button>
-      <a href="profile.html" class="profile-button">
-        <span class="profile-avatar profile-avatar-small" id="navAvatar">BP</span>
+  <!-- Top Nav -->
+  <header class="nav" style="position: sticky; top: 0; z-index: 1000; background: rgba(253, 250, 244, 0.8); backdrop-filter: blur(10px); border-bottom: 3px solid var(--ink); padding: 1rem 2rem;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <a href="home.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--foreground);">
+        <span class="text-3xl animate-float-slow" style="font-size: 2rem;">🧠</span>
+        <h2 class="text-stroke-ink" style="margin: 0; font-size: 1.5rem; letter-spacing: 2px;">brainplaying</h2>
       </a>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">🌙</button>
+      
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="toon-pill" style="background: rgba(236, 201, 75, 0.2); border-color: var(--coin);">
+          <span style="font-size: 1.2rem;">🪙</span>
+          <span id="navCredits">0</span>
+        </div>
+        <a href="profile.html" class="toon-btn" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">
+          Profilo
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">🌙</button>
+      </div>
     </div>
   </header>
 
   <div class="page-shell">
-    <main class="main-content">
-
-      <!-- Titolo Grande Centrale -->
-       <section class="home-hero">
-         <h1 class="main-title">BRAINPLAYING</h1>
-       </section>
+    <main class="main-content" style="max-width: 1200px; margin: 0 auto; padding: 4rem 2rem;">
+      <!-- Hero Section -->
+      <section style="text-align: center; margin-bottom: 5rem; animation: float 6s ease-in-out infinite;">
+        <div class="toon-pill" style="background: var(--games-soft); margin-bottom: 1.5rem;">
+          ⚡ Livello 7 · Avventuriero
+        </div>
+        <h1 class="main-title" style="font-size: 5rem; margin: 0; line-height: 1;">
+          BRAIN<span style="color: var(--accent);">PLAY</span>ING
+        </h1>
+        <p style="font-size: 1.2rem; color: var(--foreground); opacity: 0.8; max-width: 600px; margin: 1.5rem auto;">
+          Studia, gioca e sali di livello. La tua avventura per imparare divertendoti.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+          <a href="#apprendimento" class="toon-btn">🚀 Inizia l'avventura</a>
+          <a href="negozio.html" class="toon-btn" style="background: var(--card); color: var(--foreground);">🛍️ Negozio</a>
+        </div>
+      </section>
 
       <!-- Sezione Apprendimento -->
-      <section id="apprendimento" class="main-section">
-        <div class="section-header">
-          <h2 class="section-title">📚 Apprendimento</h2>
-          <p class="section-description">Strumenti intelligenti per massimizzare il tuo studio</p>
+      <section id="apprendimento" style="margin-bottom: 5rem; width: 100%;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; border-bottom: 3px solid var(--ink); padding-bottom: 1rem;">
+          <div style="text-align: left;">
+            <h2 class="text-stroke-ink" style="font-size: 2.5rem; margin: 0;">📚 Apprendimento</h2>
+            <p style="margin: 0.5rem 0 0; opacity: 0.7;">Strumenti intelligenti per il tuo studio.</p>
+          </div>
+          <div class="toon-pill" style="background: var(--study-soft); color: var(--study);">3 strumenti</div>
         </div>
-        
-        <div class="tools-grid">
-          <!-- Riassunti AI -->
-          <a href="riassunti.html" class="tool-card primary">
-            <div class="tool-icon">AI</div>
-            <h3>Riassunti Intelligenti</h3>
-            <p>Genera riassunti automatici con ricerca Google e AI per qualsiasi argomento</p>
-            <div class="tool-badge">Potente</div>
+
+        <div class="tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+          <a href="riassunti.html" class="toon-card" style="border-top: 8px solid var(--study);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+            <h3 style="margin: 0 0 0.5rem;">Riassunti AI</h3>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Genera riassunti automatici con AI per qualsiasi argomento.</p>
+            <span class="toon-pill" style="font-size: 0.7rem; background: var(--study-soft);">POTENTE</span>
           </a>
 
-          <!-- Generatore Schemi -->
-          <a href="schemi-analysis.html" class="tool-card">
-            <div class="tool-icon">S</div>
-            <h3>Generatore Schemi</h3>
-            <p>Crea schemi visivi e mappe concettuali per studiare in modo efficace</p>
-            <div class="tool-badge">Visuale</div>
+          <a href="schemi-analysis.html" class="toon-card" style="border-top: 8px solid var(--study);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🗺️</div>
+            <h3 style="margin: 0 0 0.5rem;">Generatore Schemi</h3>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Crea mappe concettuali e schemi visivi per studiare meglio.</p>
+            <span class="toon-pill" style="font-size: 0.7rem; background: var(--study-soft);">VISUALE</span>
           </a>
 
-          <!-- Classifica -->
-          <a href="classifica.html" class="tool-card">
-            <div class="tool-icon">C</div>
-            <h3>Classifica</h3>
-            <p>Confronta i tuoi progressi con altri studenti e motìvati a migliorare</p>
-            <div class="tool-badge">Competitivo</div>
+          <a href="classifica.html" class="toon-card" style="border-top: 8px solid var(--study);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+            <h3 style="margin: 0 0 0.5rem;">Classifica</h3>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Confrontati con altri studenti e motivati a migliorare.</p>
+            <span class="toon-pill" style="font-size: 0.7rem; background: var(--study-soft);">COMPETITIVO</span>
           </a>
         </div>
       </section>
 
       <!-- Sezione Giochi -->
-      <section id="giochi" class="main-section">
-        <div class="section-header">
-          <h2 class="section-title">🎮 Giochi</h2>
-          <p class="section-description">Allena la mente mentre ti diverti con i nostri giochi educativi</p>
-        </div>
-        
-        <div class="tools-grid">
-          <!-- Minigiochi -->
-          <a href="minigiochi.html" class="tool-card">
-            <div class="tool-icon">G</div>
-            <h3>Minigiochi</h3>
-            <p>Allena la mente con Wordle, Sudoku e altri giochi educativi</p>
-            <div class="tool-badge">Interattivo</div>
-          </a>
+      <section id="giochi" style="margin-bottom: 5rem; width: 100%;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; border-bottom: 3px solid var(--ink); padding-bottom: 1rem;">
+          <div style="text-align: left;">
+            <h2 class="text-stroke-ink" style="font-size: 2.5rem; margin: 0;">🎮 Giochi</h2>
+            <p style="margin: 0.5rem 0 0; opacity: 0.7;">Allena la mente mentre ti diverti.</p>
+          </div>
+          <div class="toon-pill" style="background: var(--games-soft); color: var(--games);">2 giochi</div>
+      </div>
 
-          <!-- Quiz Game -->
-          <a href="quiz.html" class="tool-card">
-            <div class="tool-icon">Q</div>
-            <h3>Quiz Game</h3>
-            <p>Metti alla prova le tue conoscenze con quiz su diverse materie</p>
-            <div class="tool-badge">Sfida</div>
-          </a>
+      <div class="tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <a href="minigiochi.html" class="toon-card" style="border-top: 8px solid var(--games);">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🧩</div>
+          <h3 style="margin: 0 0 0.5rem;">Minigiochi</h3>
+          <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Wordle, Sudoku e altri rompicapi per allenare la mente.</p>
+          <span class="toon-pill" style="font-size: 0.7rem; background: var(--games-soft);">INTERATTIVO</span>
+        </a>
 
-          <!-- Battle Learning -->
-          <a href="battle-game.html" class="tool-card primary">
-            <div class="tool-icon">⚔️</div>
-            <h3>Battle Learning</h3>
-            <p>Combatti contro concetti didattici in un'avventura stile Slay the Spire</p>
-            <div class="tool-badge">Epico</div>
-          </a>
-
-                  </div>
+        <a href="battle-game.html" class="toon-card" style="border-top: 8px solid var(--games);">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⚔️</div>
+          <h3 style="margin: 0 0 0.5rem;">Battle Learning</h3>
+          <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Combatti contro concetti didattici in stile roguelike.</p>
+          <span class="toon-pill" style="font-size: 0.7rem; background: var(--games-soft);">EPICO</span>
+        </a>
+      </div>
       </section>
 
-      <!-- Sezione Personalizzazione -->
-      <section id="personalizzazione" class="main-section">
-        <div class="section-header">
-          <h2 class="section-title">🎨 Personalizzazione</h2>
-          <p class="section-description">Crea la tua esperienza unica con avatar personalizzati e temi esclusivi</p>
-        </div>
-        
-        <div class="tools-grid">
-          <!-- Avatar Studio -->
-          <a href="avatar-game.html" class="tool-card primary">
-            <div class="tool-icon">🎮</div>
-            <h3>Avatar Studio</h3>
-            <p>Crea il tuo avatar stile videogioco con Image Layering e oggetti reali</p>
-            <div class="tool-badge">NUOVO</div>
-          </a>
-
-          
-          <!-- Negozio -->
-          <a href="negozio.html" class="tool-card">
-            <div class="tool-icon">🛍️</div>
-            <h3>Negozio</h3>
-            <p>Usa i tuoi crediti per acquistare accessori e power-up esclusivi</p>
-            <div class="tool-badge">Shopping</div>
-          </a>
-
-          <!-- Profilo -->
-          <a href="profile.html" class="tool-card">
-            <div class="tool-icon">P</div>
-            <h3>Profilo</h3>
-            <p>Gestisci il tuo account e visualizza i tuoi progressi</p>
-            <div class="tool-badge">Account</div>
-          </a>
-        </div>
-      </section>
-
-      <!-- Sezione Profilo Utente -->
-      <section class="profile-section">
-        <h2 class="section-title">Il Tuo Progresso</h2>
-        
-        <div class="profile-grid">
-          <!-- Avatar e Livello -->
-          <div class="profile-card">
-            <div class="avatar-section">
-              <div class="avatar-container">
-                <div class="avatar-base">??</div>
-                <div class="level-badge">Lv.1</div>
+      <!-- Statistiche Rapide -->
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; width: 100%;">
+        <div class="toon-card" style="background: var(--study-soft); display: flex; align-items: center; gap: 1.5rem;">
+          <div style="width: 80px; height: 80px; background: white; border: 3px solid var(--ink); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;" class="animate-float-slow">
+            🦊
+          </div>
+          <div style="text-align: left; flex: 1;">
+            <h3 style="margin: 0; font-size: 1.5rem;">Sir Foxy</h3>
+            <p style="margin: 0; font-size: 0.9rem; opacity: 0.7;">Lv. 7 · Avventuriero</p>
+            <div style="margin-top: 1rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 900; margin-bottom: 0.3rem;">
+                <span>EXP</span> <span>720 / 1000</span>
               </div>
-              <div class="avatar-info">
-                <h3>Tuo Profilo</h3>
-                <p id="creditiDisplay" class="credits">0 crediti</p>
-              </div>
-            </div>
-            <div class="progress-section">
-              <div class="progress-header">
-                <span>Prossimo Livello</span>
-                <span>10 / 100</span>
-              </div>
-              <div class="progress-bar">
-                <div id="progressBar" class="progress-fill" style="width: 10%"></div>
+              <div style="height: 12px; background: white; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden;">
+                <div style="width: 72%; height: 100%; background: var(--xp);"></div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Statistiche Giornaliere -->
-          <div class="stats-card">
-            <h3>Oggi</h3>
-            <div class="daily-stats">
-              <div class="daily-stat">
-                <span class="daily-value">45min</span>
-                <span class="daily-label">Tempo di studio</span>
-              </div>
-              <div class="daily-stat">
-                <span class="daily-value">3</span>
-                <span class="daily-label">Sessioni</span>
-              </div>
-              <div class="daily-stat">
-                <span class="daily-value">85%</span>
-                <span class="daily-label">Obiettivo raggiunto</span>
-              </div>
+        <div class="toon-card" style="background: var(--games-soft); text-align: left;">
+          <h3 style="margin: 0 0 1rem; font-size: 1.5rem;">📅 Oggi</h3>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
+              <div style="font-weight: 900;">45m</div>
+              <div style="font-size: 0.6rem; opacity: 0.7;">STUDIO</div>
+            </div>
+            <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
+              <div style="font-weight: 900;">3</div>
+              <div style="font-size: 0.6rem; opacity: 0.7;">SESSIONI</div>
+            </div>
+            <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
+              <div style="font-weight: 900;">85%</div>
+              <div style="font-size: 0.6rem; opacity: 0.7;">GOAL</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Footer Semplificato -->
-      <footer class="home-footer">
-        <p>&copy; 2026 brainplaying · Creato per concentrazione ed efficienza.</p>
+      <footer style="margin-top: 5rem; opacity: 0.6; font-weight: 700; font-size: 0.9rem; text-align: center; width: 100%;">
+        © 2026 brainplaying · Creato per concentrazione ed efficienza.
       </footer>
     </main>
+  </div>
   </div>
 
   <!-- Minigame Modal -->

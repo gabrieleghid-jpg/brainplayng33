@@ -1,117 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
 :root {
-  /* Palette "Adventure Game" - Vivace ma non neon */
-  --bg: #fdf4ff;
-  --panel: #ffffff;
-  --panel-strong: #ffffff;
-  --text: #4c1d95;
-  --muted: #7c3aed;
-  --accent: #f59e0b;
-  --accent-hover: #d97706;
-  --accent-soft: #fef3c7;
-  --border: #4c1d95;
-  --shadow: 6px 6px 0px #4c1d95;
-  --radius: 20px;
-  --sidebar-width: 280px;
-  
-  /* Colori di stato stile gioco */
-  --hp-bar: #ef4444;
-  --exp-bar: #3b82f6;
-  --coin-gold: #fbbf24;
+  /* Palette "Lovable Pastel Pop" */
+  --background: #fdfaf4;      /* Cream */
+  --foreground: #2d1b5e;      /* Deep Ink */
+  --card: #ffffff;
+  --primary: #2d1b5e;
+  --secondary: #fff9db;
+  --accent: #f59e0b;          /* Orange */
+  --border: #2d1b5e;
+  --ink: #2d1b5e;
+  --radius: 1.5rem;
+
+  /* Section palette */
+  --study: #63b3ed;           /* Blue */
+  --study-soft: #ebf8ff;
+  --games: #f6ad55;           /* Orange */
+  --games-soft: #fffaf0;
+  --custom: #f687b3;          /* Pink */
+  --custom-soft: #fff5f7;
+  --xp: #48bb78;              /* Green */
+  --coin: #ecc94b;            /* Gold */
 }
 
 body.dark {
-  --bg: #2e1065;
-  --panel: #4c1d95;
-  --panel-strong: #2e1065;
-  --text: #f5f3ff;
-  --muted: #a78bfa;
-  --accent: #fbbf24;
-  --accent-hover: #f59e0b;
-  --accent-soft: rgba(251, 191, 36, 0.2);
-  --border: #f5f3ff;
-  --shadow: 6px 6px 0px #000000;
+  --background: #1a103d;
+  --foreground: #fdfaf4;
+  --card: #2d1b5e;
+  --border: #fdfaf4;
+  --ink: #000000;
 }
 
 body {
   margin: 0;
-  font-family: 'Fredoka One', 'Montserrat', sans-serif; /* Font più giocoso */
-  background: var(--bg);
-  color: var(--text);
+  font-family: 'Quicksand', sans-serif;
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 10% 0%, var(--study-soft) 0%, transparent 40%), 
+    radial-gradient(circle at 90% 10%, var(--games-soft) 0%, transparent 40%), 
+    radial-gradient(circle at 50% 100%, var(--custom-soft) 0%, transparent 50%);
+  background-attachment: fixed;
+  color: var(--foreground);
   line-height: 1.6;
 }
 
-/* Bordi spessi e stile "Cartoon" */
-.tool-card, .stat-card, .btn-primary, .nav-link, .credits-capsule {
-  border: 4px solid var(--border) !important;
-  box-shadow: var(--shadow) !important;
-  border-radius: var(--radius) !important;
-  transition: all 0.1s ease-out !important;
-  background: var(--panel);
-}
-
-.tool-card:hover, .btn-primary:hover, .nav-link:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0px var(--border) !important;
-}
-
-.tool-card:active, .btn-primary:active, .nav-link:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px var(--border) !important;
-}
-
-/* Titoli con contorno stile gioco */
-h1, h2, h3 {
+h1, h2, h3, h4 {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  -webkit-text-stroke: 1px var(--border);
+}
+
+/* Stile "Toon" Globale */
+.toon-card {
+  background: var(--card);
+  border: 3px solid var(--ink);
+  box-shadow: 0 6px 0 0 var(--ink);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.toon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 0 0 var(--ink);
+}
+
+.toon-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 var(--ink);
+}
+
+.toon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: white;
+  border: 3px solid var(--ink);
+  box-shadow: 0 5px 0 0 var(--ink);
+  border-radius: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-decoration: none;
+}
+
+.toon-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 0 var(--ink); }
+.toon-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 0 var(--ink); }
+
+.toon-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  box-shadow: 0 4px 0 0 var(--ink);
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Utilities */
+.text-stroke-ink {
+  -webkit-text-stroke: 1.5px var(--ink);
   paint-order: stroke fill;
 }
 
-/* Tool Icon come "Item Box" */
-.tool-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--accent-soft);
-  border: 4px solid var(--border);
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  box-shadow: inset 4px 4px 0px rgba(0,0,0,0.1);
+.animate-float-slow {
+  animation: float 4s ease-in-out infinite;
 }
 
-/* Sidebar come Pannello Inventario */
-.sidebar {
-  background: var(--panel-strong);
-  border-right: 6px solid var(--border);
-  padding: 2rem 1rem;
-}
-
-.nav-link {
-  margin-bottom: 1rem;
-  padding: 1.2rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nav-link.active {
-  background: var(--accent);
-  color: var(--border);
-}
-
-/* Barra Crediti stile RPG */
-.credits-capsule {
-  background: var(--coin-gold);
-  color: #78350f;
-  padding: 0.5rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 900;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 

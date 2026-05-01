@@ -5,940 +5,475 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>brainplaying! — Accedi</title>
 
-  <!-- Tipografia elegante e moderna -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+  <link rel="stylesheet" href="../styles/dashboard.css" />
   <style>
-    /* Variabili di tema per la versione chiara */
-    :root {
-      color-scheme: light;
-      --bg: #f5f7ff;
-      --panel: rgba(255, 255, 255, 0.92);
-      --panel-strong: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --accent: #4f46e5;
-      --accent-soft: rgba(79, 70, 229, 0.12);
-      --border: rgba(15, 23, 42, 0.08);
-      --shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
-      --input-bg: #f9fafb;
-      --input-border: rgba(15, 23, 42, 0.12);
-      --radius: 28px;
-    }
-
-    /* Tema dark opzionale */
-    body.dark {
-      color-scheme: dark;
-      --bg: #090b14;
-      --panel: rgba(15, 23, 42, 0.92);
-      --panel-strong: #111827;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #818cf8;
-      --accent-soft: rgba(129, 140, 248, 0.16);
-      --border: rgba(148, 163, 184, 0.2);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
-      --input-bg: rgba(15, 23, 42, 0.7);
-      --input-border: rgba(148, 163, 184, 0.18);
-      --radius: 28px;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.15), transparent 24%),
-                  radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 20%),
-                  linear-gradient(180deg, #eef2ff 0%, #f8fafc 42%, var(--bg) 100%);
-      color: var(--text);
-      line-height: 1.6;
-      position: relative;
-    }
-
-    /* Layout principale centrato per il login */
-    main {
       display: flex;
       justify-content: center;
       align-items: center;
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem;
-      min-height: 100vh;
+      background: var(--background);
+      font-family: 'Quicksand', sans-serif;
     }
 
-    /* Sfondo leggero a griglia per profondità */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle at top left, rgba(255,255,255,0.65), transparent 15%),
-                        radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.15), transparent 18%),
-                        linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
-      pointer-events: none;
-      z-index: 0;
+    .login-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
     }
 
-    .brand-panel,
-    .form-panel {
-      position: relative;
-      z-index: 1;
+    .toon-card {
+      padding: 3rem;
+      background: white;
     }
 
-    .brand-panel {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 3rem 2.5rem;
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      min-height: 560px;
+    .form-header {
+      text-align: center;
+      margin-bottom: 3rem;
     }
 
-    .brand-panel::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 24%),
-                  radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 20%);
-      opacity: 0.9;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.8rem;
-      color: var(--accent);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      margin-bottom: 2rem;
-      font-size: 1rem;
-    }
-
-    .logo-icon {
-      width: 2.4rem;
-      height: 2.4rem;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: rgba(79, 70, 229, 0.12);
-      color: var(--accent);
-      box-shadow: 0 8px 30px rgba(79, 70, 229, 0.1);
-    }
-
-    .brand-headline {
-      font-size: clamp(3.1rem, 5vw, 4.4rem);
-      margin: 0;
-      max-width: 15ch;
-      letter-spacing: -0.04em;
-      line-height: 0.95;
-    }
-
-    .brand-headline em {
-      font-style: normal;
-      color: var(--accent);
-    }
-
-    .brand-sub {
-      margin: 1.8rem 0 2.4rem;
-      max-width: 42rem;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .feature-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 1rem;
-    }
-
-    .feature-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .feat-icon {
-      width: 2.1rem;
-      height: 2.1rem;
-      display: grid;
-      place-items: center;
-      margin-top: 0.2rem;
-      border-radius: 14px;
-      background: rgba(79, 70, 229, 0.12);
-      color: var(--accent);
-      font-size: 0.95rem;
-    }
-
-    .brand-decoration {
-      position: absolute;
-      inset: -3rem auto auto -3rem;
-      width: 12rem;
-      height: 12rem;
-      border-radius: 50%;
-      background: rgba(79, 70, 229, 0.08);
-      filter: blur(24px);
-      z-index: -1;
-    }
-
-    .form-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 0.5rem;
-    }
-
-    .form-card {
-      width: min(100%, 640px);
-      padding: 2.4rem;
-      border-radius: 32px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .form-card .form-header {
-      display: grid;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-
-    .mobile-logo {
-      display: none;
-      align-items: center;
-      gap: 0.8rem;
-      font-weight: 700;
-      color: var(--accent);
+    .logo-main {
+      font-size: 3rem;
       margin-bottom: 1rem;
-      letter-spacing: 0.02em;
+      display: block;
+      animation: float 3s ease-in-out infinite;
     }
 
     .form-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.5rem;
       margin: 0;
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      letter-spacing: -0.04em;
+      color: var(--foreground);
     }
 
     .form-subtitle {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 3rem;
-      height: 3rem;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--panel-strong);
-      color: var(--accent);
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-    }
-
-    .theme-toggle:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
+      opacity: 0.7;
+      margin-top: 0.5rem;
     }
 
     .auth-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      display: flex;
       gap: 0.5rem;
-      background: var(--input-bg);
-      border: 1px solid var(--border);
+      background: var(--background);
+      padding: 0.5rem;
       border-radius: 20px;
-      padding: 0.4rem;
-      margin-bottom: 1.75rem;
+      border: 3px solid var(--ink);
+      margin-bottom: 2rem;
     }
 
     .tab-btn {
-      position: relative;
-      background: transparent;
+      flex: 1;
       border: none;
-      color: var(--muted);
-      padding: 1rem 1rem;
-      border-radius: 18px;
-      font-weight: 600;
+      background: transparent;
+      padding: 0.8rem;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      border-radius: 15px;
       cursor: pointer;
-      transition: color 0.25s ease;
+      transition: all 0.2s;
+      color: var(--foreground);
     }
 
     .tab-btn.active {
-      color: var(--accent);
-    }
-
-    .tab-btn.active::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(59, 130, 246, 0.12));
-      border-radius: 18px;
-      z-index: -1;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      background: var(--study);
+      color: white;
+      box-shadow: 0 4px 0 var(--ink);
+      border: 2px solid var(--ink);
     }
 
     .tab-panel {
       display: none;
-      gap: 1.25rem;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     .tab-panel.active {
-      display: grid;
+      display: flex;
     }
 
     .input-group {
-      display: grid;
-      gap: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .input-group label {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .forgot-link {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .forgot-link:hover {
-      color: #3730a3;
     }
 
     .input-wrapper {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
+      position: relative;
+      display: flex;
       align-items: center;
-      gap: 0.8rem;
-      padding: 0.95rem 1rem;
-      border-radius: 18px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: rgba(79, 70, 229, 0.35);
-      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.08);
-      background: #fff;
     }
 
     .input-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 14px;
-      background: rgba(79, 70, 229, 0.08);
-      color: var(--accent);
-      font-size: 1rem;
+      position: absolute;
+      left: 1.2rem;
+      font-size: 1.2rem;
+      pointer-events: none;
     }
 
     input {
       width: 100%;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text);
+      padding: 1rem 1rem 1rem 3.5rem;
+      border: 3px solid var(--ink);
+      border-radius: 15px;
+      font-family: 'Quicksand', sans-serif;
       font-size: 1rem;
-      font-weight: 500;
+      font-weight: 700;
+      transition: all 0.2s;
     }
 
-    input::placeholder {
-      color: var(--muted);
-      opacity: 0.8;
+    input:focus {
+      outline: none;
+      box-shadow: 0 4px 0 var(--ink);
+      transform: translateY(-2px);
     }
 
     .toggle-password {
+      position: absolute;
+      right: 1.2rem;
+      background: none;
       border: none;
-      background: transparent;
-      color: var(--muted);
       cursor: pointer;
-      font-size: 1.1rem;
-      padding: 0.2rem;
+      font-size: 1.2rem;
     }
 
-    .btn-primary,
-    .btn-guest {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
+    .btn-primary {
       width: 100%;
+      margin-top: 1rem;
+      background: var(--study);
+      font-size: 1.2rem;
+      padding: 1.2rem;
+    }
+
+    .divider {
+      margin: 2rem 0;
+      height: 3px;
+      background: var(--ink);
+      border-radius: 10px;
+      position: relative;
+      opacity: 0.1;
+    }
+
+    .btn-guest {
+      width: 100%;
+      background: white;
+      color: var(--foreground);
+      border: 3px solid var(--ink);
+    }
+
+    .forgot-link {
+      font-size: 0.8rem;
+      color: var(--study);
+      text-decoration: none;
+      background: none;
       border: none;
-      border-radius: 18px;
-      padding: 1rem 1.1rem;
-      font-size: 1rem;
-      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+      padding: 0;
     }
 
     .password-reset-panel {
       display: none;
+      background: var(--background);
+      padding: 1.5rem;
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      margin-top: 1rem;
+      flex-direction: column;
       gap: 1rem;
-      padding: 1.4rem 1.2rem;
-      margin: 1rem 0 0;
-      border-radius: 24px;
-      background: var(--input-bg);
-      border: 1px solid var(--border);
     }
 
     .password-reset-panel.active {
-      display: grid;
-    }
-
-    .btn-primary {
-      color: #ffffff;
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
-      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.18);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 22px 48px rgba(79, 70, 229, 0.22);
-    }
-
-    .btn-guest {
-      background: rgba(79, 70, 229, 0.06);
-      color: var(--text);
-    }
-
-    .btn-guest:hover {
-      background: rgba(79, 70, 229, 0.12);
-      transform: translateY(-1px);
-    }
-
-    .btn-arrow {
-      font-size: 1.2rem;
-      transition: transform 0.25s ease;
-    }
-
-    .btn-primary:hover .btn-arrow,
-    .btn-guest:hover .btn-arrow {
-      transform: translateX(4px);
-    }
-
-    .divider {
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      color: var(--muted);
-      margin: 1.75rem 0;
-      font-size: 0.95rem;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .guest-text {
-      text-align: left;
-      display: grid;
-      gap: 0.1rem;
-    }
-
-    .guest-text strong {
-      display: block;
-      color: var(--text);
-    }
-
-    .guest-text small {
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .terms-note {
-      margin: 1.75rem 0 0;
-      color: var(--muted);
-      font-size: 0.875rem;
-      line-height: 1.7;
-    }
-
-    .terms-note a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .terms-note a:hover {
-      text-decoration: underline;
     }
 
     .toast {
       position: fixed;
+      bottom: 2rem;
       left: 50%;
-      bottom: 1.5rem;
-      transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.92);
-      color: #fff;
-      padding: 0.95rem 1.3rem;
-      border-radius: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 10;
-      font-size: 0.95rem;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--ink);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
     }
 
     .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-0.5rem);
+      transform: translateX(-50%) translateY(0);
     }
 
-    @media (max-width: 1024px) {
-      main {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2.5rem 1.5rem;
-      }
-
-      .brand-panel {
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 720px) {
-      body::before {
-        opacity: 0.7;
-      }
-
-      .brand-panel,
-      .form-card {
-        border-radius: 24px;
-      }
-
-      .brand-panel {
-        padding: 2rem;
-      }
-
-      .form-card {
-        padding: 2rem;
-      }
-
-      .auth-tabs {
-        grid-template-columns: 1fr;
-      }
-
-      .theme-toggle {
-        top: 1rem;
-        right: 1rem;
-      }
-
-      .mobile-logo {
-        display: inline-flex;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Pulsante di cambio tema: opzione dark/light per accessibilità e stile -->
-  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">🌓</button>
-
-  <main>
-    <section class="form-panel" aria-label="Accesso brainplaying">
-      <div class="form-card">
-        <div class="form-header">
-          <div class="mobile-logo">
-            <span class="logo-icon">S</span>
-            <span class="logo-text">brainplaying</span>
-          </div>
-          <h2 class="form-title">Bentornato</h2>
-          <p class="form-subtitle">Accedi, registrati o prova la versione ospite con funzionalità limitate.</p>
-        </div>
-
-        <div class="auth-tabs" role="tablist" aria-label="Seleziona accesso o registrazione">
-          <button class="tab-btn active" id="tab-login" type="button" role="tab" aria-selected="true">Accedi</button>
-          <button class="tab-btn" id="tab-register" type="button" role="tab" aria-selected="false">Registrati</button>
-        </div>
-
-        <div class="tab-panel active" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
-          <div class="input-group">
-            <label for="login-email">Email</label>
-            <div class="input-wrapper">
-              <span class="input-icon">✉</span>
-              <input type="email" id="login-email" placeholder="nome@esempio.com" autocomplete="email" />
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="login-password">
-              Password
-              <button class="forgot-link" id="forgotPasswordButton" type="button">Dimenticata?</button>
-            </label>
-            <div class="input-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
-              <button class="toggle-password" type="button" aria-label="Mostra password">👁</button>
-            </div>
-          </div>
-
-          <div class="password-reset-panel" id="passwordResetPanel">
-            <div class="input-group">
-              <label for="reset-email">Email</label>
-              <div class="input-wrapper">
-                <span class="input-icon">✉</span>
-                <input type="email" id="reset-email" placeholder="nome@esempio.com" autocomplete="email" />
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="reset-password">Nuova password</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🔒</span>
-                <input type="password" id="reset-password" placeholder="••••••••" autocomplete="new-password" />
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="reset-confirm-password">Conferma nuova password</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🔒</span>
-                <input type="password" id="reset-confirm-password" placeholder="••••••••" autocomplete="new-password" />
-              </div>
-            </div>
-            <button class="btn-primary" id="btn-reset-password" type="button">Cambia password <span class="btn-arrow">→</span></button>
-          </div>
-
-          <button class="btn-primary" id="btn-login" type="button">Accedi <span class="btn-arrow">→</span></button>
-        </div>
-
-        <div class="tab-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register">
-          <div class="input-group">
-            <label for="register-username">Nome utente</label>
-            <div class="input-wrapper">
-              <span class="input-icon">👤</span>
-              <input type="text" id="register-username" placeholder="Il tuo nome" autocomplete="name" />
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="register-email">Email</label>
-            <div class="input-wrapper">
-              <span class="input-icon">✉</span>
-              <input type="email" id="register-email" placeholder="nome@esempio.com" autocomplete="email" />
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="register-password">Password</label>
-            <div class="input-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" id="register-password" placeholder="••••••••" autocomplete="new-password" />
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="register-confirm-password">Conferma password</label>
-            <div class="input-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" id="register-confirm-password" placeholder="••••••••" autocomplete="new-password" />
-            </div>
-          </div>
-
-          <button class="btn-primary" id="btn-register" type="button">Registrati <span class="btn-arrow">→</span></button>
-        </div>
-
-        <div class="divider"></div>
-        <div class="guest-access">
-          <button class="btn-guest" id="btn-guest" type="button">Accedi come ospite <span class="btn-arrow">→</span></button>
-          <div class="guest-text" style="margin-top:1rem;">
-            <strong>Accesso ospite</strong>
-            <small>Accedi subito con funzionalità limitate: il profilo e le impostazioni non saranno salvati in modo completo.</small>
-          </div>
-        </div>
+  <div class="login-container">
+    <div class="toon-card">
+      <div class="form-header">
+        <span class="logo-main">🧠</span>
+        <h2 class="form-title text-stroke-ink">brainplaying</h2>
+        <p class="form-subtitle">L'avventura dello studio ti aspetta!</p>
       </div>
-    </section>
-  </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  
-  <!-- Test modifica impercettibile - 30/04/2026 -->
+      <div class="auth-tabs" role="tablist">
+        <button class="tab-btn active" id="tab-login" type="button" role="tab">Accedi</button>
+        <button class="tab-btn" id="tab-register" type="button" role="tab">Registrati</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="tab-panel active" id="panel-login" role="tabpanel">
+        <div class="input-group">
+          <label for="login-email">Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="login-email" placeholder="nome@esempio.com" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="login-password">
+            Password
+            <button class="forgot-link" id="forgotPasswordButton" type="button">Dimenticata?</button>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" placeholder="••••••••" />
+            <button class="toggle-password" type="button">👁️</button>
+          </div>
+        </div>
+
+        <div class="password-reset-panel" id="passwordResetPanel">
+          <div class="input-group">
+            <label>Tua Email</label>
+            <input type="email" id="reset-email" placeholder="Email registrata" />
+          </div>
+          <div class="input-group">
+            <label>Nuova Password</label>
+            <input type="password" id="reset-password" placeholder="Minimo 8 caratteri" />
+          </div>
+          <button class="toon-btn" id="btn-reset-password" style="background: var(--xp);">Recupera Password</button>
+        </div>
+
+        <button class="toon-btn btn-primary" id="btn-login">Inizia l'Avventura! 🚀</button>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div class="tab-panel" id="panel-register" role="tabpanel">
+        <div class="input-group">
+          <label>Nome Utente</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="register-username" placeholder="Come ti chiameremo?" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="register-email" placeholder="La tua email" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="register-password" placeholder="Crea una password" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Conferma</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🛡️</span>
+            <input type="password" id="register-confirm-password" placeholder="Ripeti password" />
+          </div>
+        </div>
+
+        <button class="toon-btn btn-primary" id="btn-register" style="background: var(--xp);">Crea Account ✨</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="toon-btn btn-guest" id="btn-guest">Entra come Ospite 👤</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const tabs = document.querySelectorAll('.tab-btn');
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const passwordToggles = document.querySelectorAll('.toggle-password');
-    const toast = document.getElementById('toast');
-    const loginEmail = document.getElementById('login-email');
-    const loginPassword = document.getElementById('login-password');
-    const loginTab = document.getElementById('tab-login');
-    const registerTab = document.getElementById('tab-register');
-    const panelLogin = document.getElementById('panel-login');
-    const panelRegister = document.getElementById('panel-register');
-    const registerUsername = document.getElementById('register-username');
-    const registerEmail = document.getElementById('register-email');
-    const registerPassword = document.getElementById('register-password');
-    const registerConfirmPassword = document.getElementById('register-confirm-password');
-    const btnRegister = document.getElementById('btn-register');
-    const btnGuest = document.getElementById('btn-guest');
+      const loginTab = document.getElementById('tab-login');
+      const registerTab = document.getElementById('tab-register');
+      const panelLogin = document.getElementById('panel-login');
+      const panelRegister = document.getElementById('panel-register');
+      const toast = document.getElementById('toast');
+      const passwordToggles = document.querySelectorAll('.toggle-password');
 
-    const STORAGE_ACCOUNTS_KEY = 'bp_accounts';
+      const STORAGE_ACCOUNTS_KEY = 'bp_accounts';
 
-    function getAccounts() {
-      return JSON.parse(localStorage.getItem(STORAGE_ACCOUNTS_KEY) || '{}');
-    }
+      function getAccounts() {
+        return JSON.parse(localStorage.getItem(STORAGE_ACCOUNTS_KEY) || '{}');
+      }
 
-    function saveAccounts(accounts) {
-      localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
-    }
+      function saveAccounts(accounts) {
+        localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
+      }
 
-    function getAccountByEmail(email) {
-      if (!email) return null;
-      const accounts = getAccounts();
-      return accounts[email.toLowerCase()] || null;
-    }
+      function getAccountByEmail(email) {
+        if (!email) return null;
+        const accounts = getAccounts();
+        return accounts[email.toLowerCase()] || null;
+      }
 
-    function storeAccount(account) {
-      const accounts = getAccounts();
-      accounts[account.email.toLowerCase()] = account;
-      saveAccounts(accounts);
-    }
+      function storeAccount(account) {
+        const accounts = getAccounts();
+        accounts[account.email.toLowerCase()] = account;
+        saveAccounts(accounts);
+      }
 
-    passwordToggles.forEach((button) => {
-      button.addEventListener('click', () => {
-        const input = button.previousElementSibling;
-        if (input && input.type === 'password') {
-          input.type = 'text';
-          button.textContent = '🙈';
-          button.setAttribute('aria-label', 'Nascondi password');
-        } else if (input) {
-          input.type = 'password';
-          button.textContent = '👁';
-          button.setAttribute('aria-label', 'Mostra password');
-        }
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+
+      // Password Toggle
+      passwordToggles.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const input = btn.previousElementSibling;
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+          } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+          }
+        });
       });
-    });
 
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      body.classList.add('dark');
-    }
-    themeToggle.setAttribute('aria-label', body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
-
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-      themeToggle.setAttribute('aria-label', body.classList.contains('dark') ? 'Attiva modalità chiara' : 'Attiva modalità scura');
-    });
-
-    function switchTab(selectedTab) {
-      if (selectedTab === 'login') {
-        loginTab.classList.add('active');
-        loginTab.setAttribute('aria-selected', 'true');
-        registerTab.classList.remove('active');
-        registerTab.setAttribute('aria-selected', 'false');
-        panelLogin.classList.add('active');
-        panelRegister.classList.remove('active');
-      } else {
-        registerTab.classList.add('active');
-        registerTab.setAttribute('aria-selected', 'true');
-        loginTab.classList.remove('active');
-        loginTab.setAttribute('aria-selected', 'false');
-        panelRegister.classList.add('active');
-        panelLogin.classList.remove('active');
-      }
-    }
-
-    loginTab.addEventListener('click', () => switchTab('login'));
-    registerTab.addEventListener('click', () => switchTab('register'));
-
-    btnRegister.addEventListener('click', () => {
-      const usernameValue = normalizeUsername(registerUsername.value);
-      const emailValue = registerEmail.value.trim();
-      const passwordValue = registerPassword.value.trim();
-      const confirmValue = registerConfirmPassword.value.trim();
-
-      if (!usernameValue || !emailValue || !passwordValue || !confirmValue) {
-        showToast('Compila tutti i campi per registrarti.');
-        return;
-      }
-      if (passwordValue !== confirmValue) {
-        showToast('La password e la conferma non corrispondono.');
-        return;
-      }
-      if (getAccountByEmail(emailValue)) {
-        showToast('Esiste già un account con questa email.');
-        return;
+      // Tabs
+      function switchTab(mode) {
+        if (mode === 'login') {
+          loginTab.classList.add('active');
+          registerTab.classList.remove('active');
+          panelLogin.classList.add('active');
+          panelRegister.classList.remove('active');
+        } else {
+          registerTab.classList.add('active');
+          loginTab.classList.remove('active');
+          panelRegister.classList.add('active');
+          panelLogin.classList.remove('active');
+        }
       }
 
-      const account = {
-        username: usernameValue,
-        email: emailValue,
-        password: passwordValue,
-        profileImage: ''
-      };
-      storeAccount(account);
+      loginTab.addEventListener('click', () => switchTab('login'));
+      registerTab.addEventListener('click', () => switchTab('register'));
 
-      // Store in both sessionStorage and localStorage for persistence
-      sessionStorage.setItem('authenticated', 'true');
-      sessionStorage.setItem('role', 'user');
-      sessionStorage.setItem('username', usernameValue);
-      sessionStorage.setItem('email', emailValue);
-      sessionStorage.setItem('profileImage', '');
-      
-      localStorage.setItem('bp_authenticated', 'true');
-      localStorage.setItem('bp_role', 'user');
-      localStorage.setItem('bp_username', usernameValue);
-      localStorage.setItem('bp_email', emailValue);
-      localStorage.setItem('bp_profileImage', '');
-      showToast('Registrazione completata! Benvenuto su brainplaying.');
-      setTimeout(() => {
-        window.location.href = '/pages/home.html';
-      }, 450);
-    });
+      // Auth Logic
+      document.getElementById('btn-login').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value.trim();
+        const pass = document.getElementById('login-password').value.trim();
 
-    btnGuest.addEventListener('click', () => {
-      sessionStorage.setItem('authenticated', 'true');
-      sessionStorage.setItem('role', 'guest');
-      sessionStorage.setItem('username', 'Ospite');
-      sessionStorage.setItem('email', 'ospite@brainplaying.it');
-      sessionStorage.removeItem('profileImage');
-      showToast('Accesso ospite attivato. Alcune funzioni sono limitate.');
-      setTimeout(() => {
-        window.location.href = '/pages/home.html';
-      }, 450);
-    });
+        if (!email || !pass) {
+          showToast('Inserisci email e password!');
+          return;
+        }
 
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2600);
-    }
+        const account = getAccountByEmail(email);
+        if (!account || account.password !== pass) {
+          showToast('Email o password errati! ❌');
+          return;
+        }
 
-    const forgotPasswordButton = document.getElementById('forgotPasswordButton');
-    const passwordResetPanel = document.getElementById('passwordResetPanel');
-    const resetEmail = document.getElementById('reset-email');
-    const resetPassword = document.getElementById('reset-password');
-    const resetConfirmPassword = document.getElementById('reset-confirm-password');
-    const btnResetPassword = document.getElementById('btn-reset-password');
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('username', account.username);
+        sessionStorage.setItem('email', account.email);
+        localStorage.setItem('bp_authenticated', 'true');
+        localStorage.setItem('bp_username', account.username);
 
-    forgotPasswordButton?.addEventListener('click', () => {
-      passwordResetPanel?.classList.toggle('active');
-      if (passwordResetPanel?.classList.contains('active')) {
-        forgotPasswordButton.textContent = 'Chiudi recupero';
-      } else {
-        forgotPasswordButton.textContent = 'Dimenticata?';
-      }
-    });
+        showToast('Accesso eseguito! Benvenuto ' + account.username + '! 🌈');
+        setTimeout(() => window.location.href = 'home.html', 1000);
+      });
 
-    btnResetPassword?.addEventListener('click', () => {
-      const emailValue = resetEmail.value.trim();
-      const passwordValue = resetPassword.value.trim();
-      const confirmValue = resetConfirmPassword.value.trim();
-      if (!emailValue || !passwordValue || !confirmValue) {
-        showToast('Compila tutti i campi per il recupero password.');
-        return;
-      }
-      if (passwordValue !== confirmValue) {
-        showToast('Le password non corrispondono.');
-        return;
-      }
-      const account = getAccountByEmail(emailValue);
-      if (!account) {
-        showToast('Account non trovato per questa email.');
-        return;
-      }
-      account.password = passwordValue;
-      storeAccount(account);
-      showToast('Password aggiornata con successo. Ora puoi accedere.');
-      resetEmail.value = '';
-      resetPassword.value = '';
-      resetConfirmPassword.value = '';
-      passwordResetPanel?.classList.remove('active');
-      forgotPasswordButton.textContent = 'Dimenticata?';
-    });
+      document.getElementById('btn-register').addEventListener('click', () => {
+        const user = document.getElementById('register-username').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const pass = document.getElementById('register-password').value.trim();
+        const confirm = document.getElementById('register-confirm-password').value.trim();
 
-    function normalizeUsername(value) {
-      if (!value) return 'Studente';
-      return value
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part[0].toUpperCase() + part.slice(1).toLowerCase())
-        .join(' ');
-    }
+        if (!user || !email || !pass) {
+          showToast('Compila tutti i campi! 📝');
+          return;
+        }
+        if (pass !== confirm) {
+          showToast('Le password non corrispondono! 🛡️');
+          return;
+        }
+        if (getAccountByEmail(email)) {
+          showToast('Email già registrata! ✉️');
+          return;
+        }
 
-    document.getElementById('btn-login').addEventListener('click', () => {
-      const emailValue = loginEmail?.value.trim() || '';
-      const passwordValue = loginPassword?.value.trim() || '';
-      if (!emailValue || !passwordValue) {
-        showToast('Inserisci email e password per accedere.');
-        return;
-      }
-      const account = getAccountByEmail(emailValue);
-      if (!account) {
-        showToast('Account non trovato. Registrati prima.');
-        return;
-      }
-      if (account.password !== passwordValue) {
-        showToast('Password errata. Riprova.');
-        return;
-      }
+        const account = { username: user, email, password: pass };
+        storeAccount(account);
+        
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('username', user);
+        sessionStorage.setItem('email', email);
+        localStorage.setItem('bp_authenticated', 'true');
+        localStorage.setItem('bp_username', user);
 
-      // Store in both sessionStorage and localStorage for persistence
-      sessionStorage.setItem('authenticated', 'true');
-      sessionStorage.setItem('role', 'user');
-      sessionStorage.setItem('username', account.username);
-      sessionStorage.setItem('email', account.email);
-      sessionStorage.setItem('profileImage', account.profileImage || '');
-      
-      localStorage.setItem('bp_authenticated', 'true');
-      localStorage.setItem('bp_role', 'user');
-      localStorage.setItem('bp_username', account.username);
-      localStorage.setItem('bp_email', account.email);
-      localStorage.setItem('bp_profileImage', account.profileImage || '');
-      showToast('Login eseguito! Benvenuto su brainplaying.');
-      setTimeout(() => {
-        window.location.href = '/pages/home.html';
-      }, 450);
-    });
+        showToast('Account creato! Benvenuto nell\'avventura! ✨');
+        setTimeout(() => window.location.href = 'home.html', 1000);
+      });
 
+      document.getElementById('btn-guest').addEventListener('click', () => {
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('role', 'guest');
+        sessionStorage.setItem('username', 'Ospite');
+        showToast('Entrato come Ospite! 👤');
+        setTimeout(() => window.location.href = 'home.html', 1000);
+      });
+
+      // Forgot Password
+      const forgotBtn = document.getElementById('forgotPasswordButton');
+      const resetPanel = document.getElementById('passwordResetPanel');
+      forgotBtn.addEventListener('click', () => {
+        resetPanel.classList.toggle('active');
+        forgotBtn.textContent = resetPanel.classList.contains('active') ? 'Chiudi' : 'Dimenticata?';
+      });
+
+      document.getElementById('btn-reset-password').addEventListener('click', () => {
+        const email = document.getElementById('reset-email').value.trim();
+        const newPass = document.getElementById('reset-password').value.trim();
+        const account = getAccountByEmail(email);
+        if (!account) {
+          showToast('Email non trovata! 🏜️');
+          return;
+        }
+        account.password = newPass;
+        storeAccount(account);
+        showToast('Password aggiornata! Ora puoi accedere. ✅');
+        resetPanel.classList.remove('active');
+        forgotBtn.textContent = 'Dimenticata?';
+      });
     });
   </script>
 </body>
 </html>
-

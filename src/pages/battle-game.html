@@ -7,31 +7,29 @@
     <link rel="stylesheet" href="../styles/dashboard.css">
     <link rel="stylesheet" href="../styles/battle-game.css">
 </head>
-<body class="battle-theme">
-    <!-- Header Navigazione -->
-    <header class="nav">
-        <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Apri menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <a href="home.html" class="brand">
-            <span class="brand-icon">🧠</span>
-            <span>brainplaying</span>
-        </a>
-        <div class="nav-actions">
-            <a href="home.html" class="nav-link">Home</a>
-            <a href="minigiochi.html" class="nav-link">Minigiochi</a>
-            <a href="profile.html" class="profile-button">
-                <span class="profile-avatar profile-avatar-small" id="navAvatar">BP</span>
-            </a>
-            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Attiva modalità scura">🌙</button>
+<body>
+  <!-- Top Nav -->
+  <header class="nav" style="position: sticky; top: 0; z-index: 1000; background: rgba(253, 250, 244, 0.8); backdrop-filter: blur(10px); border-bottom: 3px solid var(--ink); padding: 1rem 2rem;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <a href="home.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--foreground);">
+        <span class="text-3xl animate-float-slow" style="font-size: 2rem;">🧠</span>
+        <h2 class="text-stroke-ink" style="margin: 0; font-size: 1.5rem; letter-spacing: 2px;">brainplaying</h2>
+      </a>
+      
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="toon-pill" style="background: rgba(236, 201, 75, 0.2); border-color: var(--coin);">
+          <span style="font-size: 1.2rem;">🪙</span>
+          <span id="navCredits">0</span>
         </div>
-    </header>
+        <a href="profile.html" class="toon-btn" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">
+          Profilo
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <!-- Main Game Area -->
-    <div class="page-shell">
-        <main class="main-content battle-arena">
+  <div class="page-shell">
+    <main class="main-content battle-arena" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
             
             <!-- Mappa del Gioco -->
             <div id="gameMap" class="game-map">
