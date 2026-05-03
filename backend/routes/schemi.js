@@ -42,11 +42,16 @@ function parseImageDataUrl(imageDataUrl) {
 function buildFallbackSchema(topic) {
   return [
     `${topic}`,
-    `-> idea principale`,
-    `-> concetti chiave`,
-    `-> dettagli importanti`,
-    `-> collegamenti logici`,
-    `-> sintesi finale`
+    `-> Concetto Principale`,
+    `  -> Sottoconcetto 1`,
+    `    -> Dettaglio A`,
+    `    -> Dettaglio B`,
+    `  -> Sottoconcetto 2`,
+    `    -> Dettaglio C`,
+    `-> Concetto Secondario`,
+    `  -> Applicazione 1`,
+    `  -> Applicazione 2`,
+    `-> Sintesi e Conclusioni`
   ].join('\n');
 }
 
@@ -79,7 +84,12 @@ function parseFlashcardsSection(sectionText) {
     .map((line) => {
       const parts = line.split('|').map((part) => part.trim()).filter(Boolean);
       if (parts.length < 2) return null;
-      return { domanda: parts[0], risposta: parts[1] };
+      
+      // Validate and clean flashcard content
+      const domanda = parts[0].length > 200 ? parts[0].substring(0, 200) + '...' : parts[0];
+      const risposta = parts[1].length > 200 ? parts[1].substring(0, 200) + '...' : parts[1];
+      
+      return { domanda, risposta };
     })
     .filter(Boolean);
 
@@ -95,12 +105,23 @@ function parseQuizSection(sectionText) {
       const parts = line.split('|').map((part) => part.trim()).filter(Boolean);
       if (parts.length < 6) return null;
 
+      // Validate quiz content
+      const domanda = parts[0].length > 300 ? parts[0].substring(0, 300) + '...' : parts[0];
+      const opzioni = parts.slice(1, 5).map(opt => opt.length > 100 ? opt.substring(0, 100) + '...' : opt);
       const correctIndex = Number(parts[5]);
+      
+      // Debug logging
+      console.log('Quiz parsing - parts:', parts);
+      console.log('Quiz parsing - correctIndex:', correctIndex, 'type:', typeof correctIndex);
+      
+      // Ensure correctIndex is valid
+      const validIndex = Number.isInteger(correctIndex) && correctIndex >= 0 && correctIndex < 4 ? correctIndex : Math.floor(Math.random() * 4);
+      
       return {
-        domanda: parts[0],
+        domanda,
         tipo: 'scelta_multipla',
-        opzioni: parts.slice(1, 5),
-        risposta_corretta: Number.isInteger(correctIndex) && correctIndex >= 0 && correctIndex < 4 ? correctIndex : 0
+        opzioni,
+        risposta_corretta: validIndex
       };
     })
     .filter(Boolean);
@@ -116,12 +137,14 @@ Genera materiali di studio sintetici e utili.
 Vincoli:
 - Scrivi tutto in italiano.
 - Non usare Markdown.
-- Lo schema deve essere il focus principale: struttura ad albero con macroargomenti e sotto-argomenti.
-- Lo schema deve usare frecce testuali tipo "->" per mostrare i collegamenti.
+- Lo schema deve essere il focus principale: struttura ad albero gerarchica con macroargomenti e sotto-argomenti ben organizzati.
+- Lo schema deve usare frecce testuali tipo "->" per mostrare i collegamenti logici.
 - Usa rientri di 2 spazi per i livelli successivi (esempio sotto).
+- Organizza gli argomenti in modo logico e gerarchico, dal generale al particolare.
 - Il riassunto deve essere breve: 3-5 righe massimo.
 - Le domande del quiz devono essere chiare e utili per ripassare.
 - Se il testo nell'immagine e' parziale, usa solo cio' che riesci a dedurre con buona affidabilita'.
+- La sezione MERMAID deve contenere solo codice Mermaid valido (nessun testo esplicativo dentro MERMAID); diagramma flowchart TD o LR coerente con lo SCHEMA, massimo 22 nodi, etichette italiane brevi tra quadre, senza carattere " nelle etichette.
 
 Rispondi SOLO con queste sezioni, nello stesso ordine, senza testo extra:
 
@@ -134,12 +157,25 @@ FLASHCARD:
 
 SCHEMA:
 Argomento principale
--> concetto 1
+-> concetto fondamentale 1
   -> macroargomento 1.1
-    -> dettaglio 1.1.a
--> concetto 2
+    -> dettaglio specifico 1.1.a
+    -> dettaglio specifico 1.1.b
+  -> macroargomento 1.2
+    -> dettaglio specifico 1.2.a
+-> concetto fondamentale 2
   -> macroargomento 2.1
-    -> dettaglio 2.1.a
+    -> dettaglio specifico 2.1.a
+  -> macroargomento 2.2
+    -> dettaglio specifico 2.2.a
+    -> dettaglio specifico 2.2.b
+-> concetto fondamentale 3
+  -> macroargomento 3.1
+
+MERMAID:
+flowchart TD
+    A["Nodo radice breve"] --> B["Primo concetto"]
+    B --> C["Dettaglio"]
 
 RIASSUNTO:
 riassunto molto breve in 3-5 righe
@@ -147,6 +183,100 @@ riassunto molto breve in 3-5 righe
 QUIZ:
 1. domanda | opzione A | opzione B | opzione C | opzione D | 0
 2. domanda | opzione A | opzione B | opzione C | opzione D | 1`;
+}
+
+function buildTextPrompt(topic) {
+  return `Genera materiali di studio completi per l'argomento: ${topic}
+
+Crea contenuti educativi sintetici e utili per studenti.
+
+Vincoli:
+- Scrivi tutto in italiano.
+- Non usare Markdown.
+- Lo schema deve essere il focus principale: struttura ad albero gerarchica con macroargomenti e sotto-argomenti ben organizzati.
+- Lo schema deve usare frecce testuali tipo "->" per mostrare i collegamenti logici.
+- Usa rientri di 2 spazi per i livelli successivi.
+- Organizza gli argomenti in modo logico e gerarchico, dal generale al particolare.
+- Il riassunto deve essere breve: 3-5 righe massimo.
+- Le domande del quiz devono essere chiare e utili per ripassare.
+- I contenuti devono essere accurati e ben strutturati.
+- La sezione MERMAID deve contenere solo codice Mermaid valido (nessun testo esplicativo dentro MERMAID); diagramma flowchart TD o LR coerente con lo SCHEMA, massimo 22 nodi, etichette italiane brevi tra quadre, senza carattere " nelle etichette.
+
+Rispondi SOLO con queste sezioni, nello stesso ordine, senza testo extra:
+
+CONTENUTO:
+testo chiaro e ordinato sull'argomento
+
+FLASHCARD:
+- domanda breve | risposta breve
+- domanda breve | risposta breve
+- domanda breve | risposta breve
+
+SCHEMA:
+${topic}
+-> concetto fondamentale 1
+  -> macroargomento 1.1
+    -> dettaglio specifico 1.1.a
+    -> dettaglio specifico 1.1.b
+  -> macroargomento 1.2
+    -> dettaglio specifico 1.2.a
+-> concetto fondamentale 2
+  -> macroargomento 2.1
+    -> dettaglio specifico 2.1.a
+  -> macroargomento 2.2
+    -> dettaglio specifico 2.2.a
+    -> dettaglio specifico 2.2.b
+-> concetto fondamentale 3
+  -> macroargomento 3.1
+
+MERMAID:
+flowchart TD
+    A["Nodo radice breve"] --> B["Primo concetto"]
+    B --> C["Dettaglio"]
+
+RIASSUNTO:
+riassunto molto breve in 3-5 righe
+
+QUIZ:
+1. domanda | opzione A | opzione B | opzione C | opzione D | 0
+2. domanda | opzione A | opzione B | opzione C | opzione D | 1
+3. domanda | opzione A | opzione B | opzione C | opzione D | 2`;
+}
+
+async function createTextMessage(topic) {
+  const modelsToTry = [...new Set([
+    anthropicModel,
+    'claude-3-7-sonnet-20250219',
+    'claude-3-5-sonnet-20241022'
+  ])];
+
+  let lastError = null;
+
+  for (const model of modelsToTry) {
+    try {
+      return await anthropic.messages.create({
+        model,
+        max_tokens: 2000,
+        temperature: 0.1,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: buildTextPrompt(topic)
+              }
+            ]
+          }
+        ]
+      });
+    } catch (error) {
+      lastError = error;
+      console.warn(`Model ${model} failed for text generation, trying next...`);
+    }
+  }
+
+  throw lastError || new Error('Impossibile generare materiali dal testo.');
 }
 
 async function createVisionMessage(mediaType, data) {
@@ -163,8 +293,8 @@ async function createVisionMessage(mediaType, data) {
     try {
       return await anthropic.messages.create({
         model,
-        max_tokens: 1800,
-        temperature: 0.2,
+        max_tokens: 2000, // Increased for better schema generation
+        temperature: 0.1, // Lower for more consistent structure
         messages: [
           {
             role: 'user',
@@ -187,6 +317,7 @@ async function createVisionMessage(mediaType, data) {
       });
     } catch (error) {
       lastError = error;
+      console.warn(`Model ${model} failed, trying next...`);
     }
   }
 
@@ -202,19 +333,75 @@ function parseStudyMaterials(rawText) {
       contenuto: normalizeMultilineText(parsed.contenuto),
       flashcard: Array.isArray(parsed.flashcard) ? parsed.flashcard : [],
       schema: normalizeMultilineText(parsed.schema),
+      mermaid: normalizeMultilineText(parsed.mermaid || ''),
       riassunto: normalizeMultilineText(parsed.riassunto),
       quiz: parsed.quiz && Array.isArray(parsed.quiz.domande) ? parsed.quiz.domande : []
     };
   } catch {
     return {
-      contenuto: extractSection(normalized, 'CONTENUTO', ['FLASHCARD', 'SCHEMA', 'RIASSUNTO', 'QUIZ']),
-      flashcard: parseFlashcardsSection(extractSection(normalized, 'FLASHCARD', ['SCHEMA', 'RIASSUNTO', 'QUIZ'])),
-      schema: extractSection(normalized, 'SCHEMA', ['RIASSUNTO', 'QUIZ']),
+      contenuto: extractSection(normalized, 'CONTENUTO', ['FLASHCARD', 'SCHEMA', 'MERMAID', 'RIASSUNTO', 'QUIZ']),
+      flashcard: parseFlashcardsSection(extractSection(normalized, 'FLASHCARD', ['SCHEMA', 'MERMAID', 'RIASSUNTO', 'QUIZ'])),
+      schema: extractSection(normalized, 'SCHEMA', ['MERMAID', 'RIASSUNTO', 'QUIZ']),
+      mermaid: extractSection(normalized, 'MERMAID', ['RIASSUNTO', 'QUIZ']),
       riassunto: extractSection(normalized, 'RIASSUNTO', ['QUIZ']),
       quiz: parseQuizSection(extractSection(normalized, 'QUIZ', []))
     };
   }
 }
+
+router.post('/analizza-testo', async (req, res) => {
+  try {
+    const { topic } = req.body;
+
+    if (!topic || topic.trim().length < 3) {
+      return res.status(400).json({ error: 'Argomento troppo breve. Inserisci almeno 3 caratteri.' });
+    }
+
+    // Usa lo stesso controllo dell'endpoint foto che funziona
+    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.includes('your_anthropic_api_key_here')) {
+      return res.status(503).json({
+        error: 'Claude/Anthropic non configurato: imposta una ANTHROPIC_API_KEY valida nel file .env (non il placeholder).'
+      });
+    }
+
+    const message = await createTextMessage(topic.trim());
+    const raw = message.content[0]?.text?.trim() || '';
+    const parsed = parseStudyMaterials(raw);
+    
+    res.json({
+      contenuto: normalizeMultilineText(parsed.contenuto) || topic,
+      flashcard: Array.isArray(parsed.flashcard) && parsed.flashcard.length > 0
+        ? parsed.flashcard
+        : [{ domanda: 'Qual e\' il tema principale?', risposta: topic }],
+      schema: normalizeMultilineText(parsed.schema) || buildFallbackSchema(topic),
+      mermaid: normalizeMultilineText(parsed.mermaid || ''),
+      riassunto: normalizeMultilineText(parsed.riassunto) || topic,
+      quiz: Array.isArray(parsed.quiz) && parsed.quiz.length > 0
+        ? { domande: parsed.quiz }
+        : {
+            domande: [
+              {
+                domanda: `L'argomento "${topic}" presenta concetti principali riconoscibili?`,
+                tipo: 'vero_falso',
+                opzioni: ['Vero', 'Falso'],
+                risposta_corretta: Math.random() > 0.5 ? 0 : 1
+              }
+            ]
+          }
+    });
+  } catch (error) {
+    console.error('❌ Errore analisi testo:', error.message);
+    const status = error?.status || error?.statusCode;
+    if (status === 401 || status === 403) {
+      return res.status(502).json({
+        error: 'Chiave Anthropic non valida o non autorizzata.',
+        details: error.message
+      });
+    }
+
+    res.status(500).json({ error: 'Errore durante l\'analisi del testo', details: error.message });
+  }
+});
 
 router.post('/analizza-foto', async (req, res) => {
   try {
@@ -243,6 +430,7 @@ router.post('/analizza-foto', async (req, res) => {
         ? parsed.flashcard
         : [{ domanda: 'Qual e\' il tema principale?', risposta: topic }],
       schema: normalizeMultilineText(parsed.schema) || buildFallbackSchema(topic),
+      mermaid: normalizeMultilineText(parsed.mermaid || ''),
       riassunto: normalizeMultilineText(parsed.riassunto) || topic,
       quiz: Array.isArray(parsed.quiz) && parsed.quiz.length > 0
         ? { domande: parsed.quiz }
@@ -252,7 +440,7 @@ router.post('/analizza-foto', async (req, res) => {
                 domanda: 'Il contenuto dell\'immagine presenta un concetto principale riconoscibile?',
                 tipo: 'vero_falso',
                 opzioni: ['Vero', 'Falso'],
-                risposta_corretta: 0
+                risposta_corretta: Math.random() > 0.5 ? 0 : 1 // Random correct answer for fallback
               }
             ]
           }

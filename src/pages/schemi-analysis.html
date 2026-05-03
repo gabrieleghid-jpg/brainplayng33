@@ -106,171 +106,234 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* ── SCHEMA: TEMA WINDSURF 🏄‍♂️ ── */
     .schema-flow {
-      text-align: center;
-      background: #f8fafc;
-      border: 3px solid var(--ink);
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 3px solid #0077BE;
       border-radius: 20px;
-      padding: 1rem;
-      box-shadow: 0 4px 0 var(--ink);
-    }
-
-    .flow-node {
-      margin: 0;
-      max-width: 100%;
-    }
-
-    .flow-box {
-      margin: 0;
-      width: 100%;
-      border: 2px solid var(--ink);
-      border-radius: 12px;
-      background: #ffffff;
-      padding: 0.8rem 1rem;
-      font-weight: 800;
-      line-height: 1.3;
-      font-size: 0.85rem;
-      text-align: center;
-      box-shadow: 0 3px 0 var(--ink);
+      padding: 2rem;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 450px;
       position: relative;
-      transition: transform 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 40px rgba(0, 119, 190, 0.15);
     }
 
-    .flow-box.clickable {
-      cursor: pointer;
-      transition: transform 0.12s ease;
-      user-select: none;
+    /* Container centrale */
+    .schema-center {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .flow-box.clickable:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 0 var(--ink);
+    /* Argomento principale (centrale) */
+    .schema-root {
+      position: relative;
+      z-index: 10;
+      text-align: center;
     }
 
-    .flow-box.clickable.is-open {
-      background: var(--study-soft);
-      border-color: #2563eb;
-      box-shadow: 0 3px 0 #1e40af;
-    }
-
-    .flow-box.clickable::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -12px;
-      width: 3px;
-      height: 10px;
-      background: #2563eb;
-      transform: translateX(-50%);
-      border-radius: 0 0 2px 2px;
-    }
-
-    .flow-box.clickable::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -16px;
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 8px solid #2563eb;
-      transform: translateX(-50%);
-    }
-
-    .flow-box.oval {
-      border-radius: 999px;
-      background: #fef9c3;
-    }
-
-    .flow-box.secondary {
-      background: #f1f5f9;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.6rem 0.8rem;
-    }
-
-    .flow-title {
-      font-weight: 900;
-      font-size: 0.9rem;
-    }
-
-    .flow-title.secondary {
+    /* 🟠 BOA ARANCIONE - Nodo principale */
+    .root-box {
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
+      color: #ffffff;
+      border: 4px solid #FF4500;
+      font-size: 1.3rem;
       font-weight: 700;
-      font-size: 0.8rem;
+      padding: 1.5rem 2.5rem;
+      border-radius: 25px;
+      min-width: 280px;
+      max-width: 380px;
+      box-shadow: 0 8px 30px rgba(255, 140, 0, 0.4);
+      display: inline-block;
+      text-align: center;
+      line-height: 1.4;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
-    .flow-box .toggle-sign {
+    /* 4 Rami attaccati */
+    .branches-container {
       position: absolute;
-      right: 0.45rem;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    /* 🔵 ACQUA AZZURRA - Rami di approfondimento */
+    .branch {
+      position: absolute;
+      background: linear-gradient(135deg, #0077BE 0%, #005a8c 100%);
+      color: #ffffff;
+      border: 3px solid #004a75;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.8rem 1.2rem;
+      border-radius: 15px;
+      min-width: 160px;
+      max-width: 220px;
+      box-shadow: 0 4px 20px rgba(0, 119, 190, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      line-height: 1.4;
+      pointer-events: auto;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .branch:hover {
+      background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 119, 190, 0.5);
+      border-color: #0077BE;
+    }
+
+    /* Posizionamento 4 rami in croce */
+    .branch-top {
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .branch-right {
+      right: -80px;
       top: 50%;
       transform: translateY(-50%);
+    }
+
+    .branch-bottom {
+      bottom: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .branch-left {
+      left: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* 🌊 Linee di connessione stile windsurf */
+    .connection-line {
+      position: absolute;
+      background: linear-gradient(90deg, #0077BE 0%, #00d4ff 100%);
+      z-index: 1;
+      border-radius: 3px;
+    }
+
+    .line-top {
+      top: -25px;
+      left: 50%;
+      width: 4px;
+      height: 65px;
+      transform: translateX(-50%);
+    }
+
+    .line-right {
+      right: -25px;
+      top: 50%;
+      width: 65px;
+      height: 4px;
+      transform: translateY(-50%);
+    }
+
+    .line-bottom {
+      bottom: -25px;
+      left: 50%;
+      width: 4px;
+      height: 65px;
+      transform: translateX(-50%);
+    }
+
+    .line-left {
+      left: -25px;
+      top: 50%;
+      width: 65px;
+      height: 4px;
+      transform: translateY(-50%);
+    }
+
+    /* Animazione apparizione */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .schema-root {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .branch {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .branch-top { animation-delay: 0.1s; z-index: 20; }
+    .branch-right { animation-delay: 0.2s; z-index: 20; }
+    .branch-bottom { animation-delay: 0.3s; z-index: 20; }
+    .branch-left { animation-delay: 0.4s; z-index: 20; }
+
+    /* 🏄‍♂️ Etichette sezioni windsurf */
+    .section-label {
+      position: absolute;
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
       font-size: 0.8rem;
-      font-weight: 900;
-      background: #fff;
-      border: 1px solid var(--ink);
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-    }
-
-    .flow-children {
-      margin-top: 0.8rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.5rem;
-      padding: 0.8rem;
-      border: 2px solid #60a5fa;
-      border-radius: 12px;
-      background: #f8fbff;
-      position: relative;
-      box-shadow: inset 0 2px 0 rgba(96, 165, 250, 0.1);
-    }
-
-    .flow-child-wrap {
-      position: relative;
-      padding-top: 0.4rem;
-    }
-
-    .flow-child-wrap::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -8px;
-      width: 3px;
-      height: 10px;
-      background: #2563eb;
-      transform: translateX(-50%);
-      border-radius: 0 0 2px 2px;
-    }
-
-    .flow-child-wrap::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -2px;
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 7px solid #2563eb;
-      transform: translateX(-50%);
-    }
-
-    .flow-children-title {
-      width: 100%;
-      text-align: center;
-      font-size: 0.65rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
+      font-weight: 700;
       text-transform: uppercase;
-      color: #1d4ed8;
-      margin-bottom: 0.5rem;
-      padding: 0.3rem;
-      background: rgba(37, 99, 235, 0.08);
-      border-radius: 6px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+      border: 2px solid #FF4500;
+    }
+
+    /* Force simple layout - hide any nested elements */
+    .schema-flow .flow-children,
+    .schema-flow .flow-child-wrap,
+    .schema-flow [data-children-of] {
+      display: none !important;
+    }
+
+    .schema-flow .flow-node {
+      position: static !important;
+      display: inline-block !important;
+    }
+
+    /* Ensure only simple schema is visible */
+    .schema-center {
+      position: relative !important;
+      width: 100% !important;
+      height: 400px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .schema-root {
+      position: relative !important;
+      z-index: 30 !important;
+    }
+
+    .branches-container {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
     }
 
     .keyword-hl {
@@ -281,39 +344,49 @@
       background: #ffedd5;
       border-radius: 6px;
       padding: 0 0.2rem;
-      font-weight: 800;
-    }
-
-    .concept-hl {
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 2px;
-      color: #1d4ed8;
-      background: #dbeafe;
-      border-radius: 6px;
-      padding: 0 0.2rem;
       font-weight: 900;
     }
 
+    /* Responsive per struttura ad albero */
     @media (max-width: 768px) {
+      .schema-flow {
+        padding: 1.5rem 1rem;
+        min-height: 400px;
+      }
+      
       .flow-box {
-        width: 100%;
-        font-size: 0.8rem;
-        padding: 0.7rem 0.9rem;
-      }
-
-      .flow-children {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 0.4rem;
-        padding: 0.6rem;
-      }
-
-      .flow-title {
         font-size: 0.85rem;
+        padding: 0.6rem 0.9rem;
+        min-width: auto;
+        width: auto;
+        box-sizing: border-box;
       }
-
-      .flow-title.secondary {
-        font-size: 0.75rem;
+      
+      .flow-box.root-box {
+        font-size: 1rem;
+        padding: 1rem 1.5rem;
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .flow-box.macro-box {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .flow-box.sub-box {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.9rem;
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .toggle-sign {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
       }
     }
 
@@ -321,6 +394,242 @@
       font-size: 0.95rem;
       opacity: 0.8;
       margin-top: 0.6rem;
+    }
+
+    /* Zoom and Pan Controls */
+    .schema-controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .zoom-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      color: #3b82f6;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      display: grid;
+      place-items: center;
+    }
+
+    .zoom-btn:hover {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .zoom-btn:active {
+      transform: scale(0.95);
+    }
+
+    .zoom-level {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1e293b;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .schema-viewport {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .schema-viewport.dragging {
+      cursor: grabbing;
+    }
+
+    .schema-content {
+      transform-origin: center center;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .schema-content.dragging {
+      transition: none;
+    }
+
+    /* Animazione minima all'apertura */
+    @keyframes nodeAppear {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .flow-node[data-level="0"] {
+      animation: nodeAppear 0.3s ease forwards;
+    }
+
+    /* Search and highlight */
+    .schema-search {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .search-input {
+      padding: 0.5rem 1rem;
+      border: 2px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #1e293b;
+      min-width: 200px;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .flow-box.highlighted {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+      border: 2px solid #f59e0b !important;
+      box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4) !important;
+      animation: pulse 1s ease infinite;
+    }
+
+    /* Export controls */
+    .export-controls {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .export-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .schema-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .schema-mermaid-section {
+      margin-top: 0.5rem;
+      padding-top: 1.5rem;
+      border-top: 3px dashed var(--ink);
+    }
+
+    .schema-mermaid-heading {
+      margin: 0 0 1rem 0;
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--foreground);
+    }
+
+    .schema-mermaid-mount {
+      overflow-x: auto;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      padding: 1rem;
+      min-height: 100px;
+      box-shadow: inset 0 4px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .schema-mermaid-mount .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .schema-mermaid-error {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .schema-controls {
+        top: 0.5rem;
+        right: 0.5rem;
+        flex-direction: column;
+      }
+
+      .schema-search {
+        top: 0.5rem;
+        left: 0.5rem;
+        flex-direction: column;
+      }
+
+      .search-input {
+        min-width: 150px;
+        font-size: 0.8rem;
+      }
+
+      .export-controls {
+        bottom: 0.5rem;
+        right: 0.5rem;
+        flex-direction: column;
+      }
+
+      .zoom-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+
+      .zoom-level {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        min-width: 50px;
+      }
     }
   </style>
 </head>
@@ -357,20 +666,62 @@
       </div>
 
       <div class="toon-card" style="width: 100%; border-top: 10px solid var(--study) !important; margin-bottom: 4rem; padding: 2.5rem;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
-          <div id="dropZone" class="upload-preview" style="min-height: 350px;">
-            <div class="preview-placeholder">
-              <div style="font-size: 5rem; margin-bottom: 1.5rem;">📸</div>
-              <p style="font-weight: 900; font-size: 1.2rem;">Trascina qui la foto<br>o clicca per caricarla</p>
-            </div>
-            <img id="imagePreview" style="display:none; width:100%; height:100%; object-fit:contain; border-radius:20px;" />
-          </div>
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap;">
+          <button class="tab-btn active" data-input-mode="photo" style="font-size: 1rem;">📷 Da Foto</button>
+          <button class="tab-btn" data-input-mode="text" style="font-size: 1rem;">✏️ Da Testo</button>
+        </div>
 
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            <input type="file" id="fileInput" accept="image/*" style="display:none" />
-            <button class="toon-btn" id="selectBtn" style="background: var(--card); color: var(--foreground); font-size: 1.2rem; padding: 1rem;">📂 Seleziona Foto</button>
-            <button class="toon-btn" id="analyzeBtn" disabled style="background: var(--study); color: white; font-size: 1.2rem; padding: 1rem;">🔍 Analizza con AI</button>
-            <button class="toon-btn" id="clearBtn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444; display:none; font-size: 1.2rem; padding: 1rem;">🗑️ Rimuovi</button>
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap;">
+          <button class="tab-btn active" data-view="tree" style="font-size: 1rem;">🌳 Albero</button>
+          <button class="tab-btn" data-view="list" style="font-size: 1rem;">📋 Lista</button>
+        </div>
+
+        <!-- Photo Input Section -->
+        <div id="photoInputSection" class="input-section active">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
+            <div id="dropZone" class="upload-preview" style="min-height: 350px;">
+              <div class="preview-placeholder">
+                <div style="font-size: 5rem; margin-bottom: 1.5rem;">📸</div>
+                <p style="font-weight: 900; font-size: 1.2rem;">Trascina qui la foto<br>o clicca per caricarla</p>
+              </div>
+              <img id="imagePreview" style="display:none; width:100%; height:100%; object-fit:contain; border-radius:20px;" />
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <input type="file" id="fileInput" accept="image/*" style="display:none" />
+              <button class="toon-btn" id="selectBtn" style="background: var(--card); color: var(--foreground); font-size: 1.2rem; padding: 1rem;">📂 Seleziona Foto</button>
+              <button class="toon-btn" id="analyzeBtn" disabled style="background: var(--study); color: white; font-size: 1.2rem; padding: 1rem;">🔍 Analizza con AI</button>
+              <button class="toon-btn" id="clearBtn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444; display:none; font-size: 1.2rem; padding: 1rem;">🗑️ Rimuovi</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Input Section -->
+        <div id="textInputSection" class="input-section" style="display:none;">
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <div>
+              <label style="display: block; font-weight: 700; margin-bottom: 1rem; color: var(--foreground); font-size: 1.1rem;">📝 Inserisci l'argomento da studiare:</label>
+              <textarea 
+                id="topicInput" 
+                placeholder="Esempio: La Rivoluzione Francese, La Fotosintesi, I Numeri Complessi, Il Rinascimento Italiano..."
+                style="width: 100%; min-height: 150px; padding: 1rem; border: 3px solid var(--ink); border-radius: 20px; font-size: 1rem; font-family: inherit; resize: vertical; background: var(--card); color: var(--foreground); line-height: 1.5;"
+              ></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <button class="toon-btn" id="generateBtn" style="background: var(--study); color: white; font-size: 1.2rem; padding: 1rem; min-width: 200px;">🧠 Genera Materiali</button>
+              <button class="toon-btn" id="clearTextBtn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444; font-size: 1.2rem; padding: 1rem; min-width: 150px;">🗑️ Pulisci</button>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.1); border: 2px solid var(--study); border-radius: 15px; padding: 1.5rem; margin-top: 1rem;">
+              <h4 style="margin: 0 0 1rem 0; color: var(--study); font-weight: 800;">💡 Suggerimenti:</h4>
+              <ul style="margin: 0; padding-left: 1.5rem; color: var(--muted); line-height: 1.6;">
+                <li>Sii specifico: "La Seconda Guerra Mondiale" invece di "Guerra"</li>
+                <li>Puoi includere dettagli: "La Fotosintesi clorofilliana nelle piante superiori"</li>
+                <li>Funziona per qualsiasi materia: storia, scienze, matematica, letteratura...</li>
+                <li>L'AI genererà schemi, flashcard, riassunti e domande personalizzati</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -411,6 +762,7 @@
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script src="../js/env-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
@@ -418,6 +770,14 @@
   <script>
     if (!checkAuthentication()) {
       window.location.href = 'index.html';
+    }
+
+    if (typeof mermaid !== 'undefined') {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+        securityLevel: 'loose'
+      });
     }
 
     const fileInput = document.getElementById('fileInput');
@@ -434,9 +794,114 @@
     const quizContainer = document.getElementById('quizContainer');
     const checkQuizBtn = document.getElementById('checkQuizBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    
+    // New text input elements
+    const topicInput = document.getElementById('topicInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const clearTextBtn = document.getElementById('clearTextBtn');
+    const photoInputSection = document.getElementById('photoInputSection');
+    const textInputSection = document.getElementById('textInputSection');
 
     let currentImageData = null;
     let analysisResults = null;
+    let currentInputMode = 'photo'; // 'photo' or 'text'
+    let currentViewMode = 'tree'; // 'tree' or 'list'
+
+    // View mode switching
+    document.querySelectorAll('[data-view]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        currentViewMode = view;
+        
+        // Update button states
+        document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update schema container class
+        const schemaFlow = schemaContainer?.querySelector('.schema-flow');
+        if (schemaFlow) {
+          if (view === 'list') {
+            schemaFlow.classList.add('list-view');
+          } else {
+            schemaFlow.classList.remove('list-view');
+          }
+          
+          // Re-render schema if we have results
+          if (analysisResults && analysisResults.schema) {
+            renderSchema();
+          }
+        }
+      });
+    });
+
+    // Input mode switching
+    document.querySelectorAll('[data-input-mode]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.inputMode;
+        currentInputMode = mode;
+        
+        // Update button states
+        document.querySelectorAll('[data-input-mode]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Show/hide sections
+        if (mode === 'photo') {
+          photoInputSection.style.display = 'block';
+          textInputSection.style.display = 'none';
+        } else {
+          photoInputSection.style.display = 'none';
+          textInputSection.style.display = 'block';
+        }
+        
+        // Clear results when switching modes
+        resultsSection.style.display = 'none';
+        backendNotice.style.display = 'none';
+      });
+    });
+
+    // Text input event listeners
+    topicInput?.addEventListener('input', () => {
+      const hasText = topicInput.value.trim().length >= 3;
+      generateBtn.disabled = !hasText;
+    });
+
+    generateBtn?.addEventListener('click', async () => {
+      const topic = topicInput.value.trim();
+      if (topic.length < 3) {
+        alert('Inserisci almeno 3 caratteri.');
+        return;
+      }
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = '🧠 Generando...';
+      backendNotice.style.display = 'none';
+
+      try {
+        analysisResults = await apiFetch('/api/schemi/analizza-testo', {
+          method: 'POST',
+          body: JSON.stringify({ topic })
+        });
+
+        displayResults(analysisResults);
+        resultsSection.style.display = 'block';
+      } catch (error) {
+        console.error('Errore generazione:', error);
+        if (/network|failed to fetch|502|504/i.test(String(error.message || ''))) {
+          backendNotice.style.display = 'block';
+        }
+        alert('Errore durante la generazione: ' + error.message);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = '🧠 Genera Materiali';
+      }
+    });
+
+    clearTextBtn?.addEventListener('click', () => {
+      topicInput.value = '';
+      analysisResults = null;
+      resultsSection.style.display = 'none';
+      generateBtn.disabled = true;
+    });
 
     selectBtn?.addEventListener('click', () => fileInput?.click());
     dropZone?.addEventListener('click', () => fileInput?.click());
@@ -617,26 +1082,8 @@
     }
 
     function highlightText(text, keywordMap) {
-      const source = String(text || '');
-      const tokenRegex = /[A-Za-zÀ-ÖØ-öø-ÿ0-9]{3,}/g;
-      let output = '';
-      let lastIndex = 0;
-      let match;
-
-      while ((match = tokenRegex.exec(source)) !== null) {
-        output += escapeHtml(source.slice(lastIndex, match.index));
-        const token = match[0];
-        const info = keywordMap?.get(token.toLowerCase());
-        if (info) {
-          output += `<span class="${info.kind}">${escapeHtml(token)}</span>`;
-        } else {
-          output += escapeHtml(token);
-        }
-        lastIndex = tokenRegex.lastIndex;
-      }
-
-      output += escapeHtml(source.slice(lastIndex));
-      return output;
+      // Disabilitato highlighting - restituisce il testo normale
+      return escapeHtml(text || '');
     }
 
     function parseSchemaToTree(schemaText) {
@@ -650,6 +1097,7 @@
 
       const root = [];
       const stack = [];
+      let nodeCounter = 0;
 
       for (const line of lines) {
         const arrowMatch = line.raw.match(/^(\s*)(?:->\s*)?(.*)$/);
@@ -657,7 +1105,16 @@
         const text = (arrowMatch ? arrowMatch[2] : line.text).trim();
         const hasArrow = line.raw.trimStart().startsWith('->');
         const level = hasArrow ? Math.floor(spaces / 2) + 1 : 0;
-        const node = { title: text, children: [] };
+        
+        const node = {
+          id: `node-${nodeCounter++}`,
+          title: text,
+          children: [],
+          level: level,
+          hasArrow: hasArrow,
+          expanded: level <= 1, // Auto-expand first two levels
+          parent: null
+        };
 
         while (stack.length > level) stack.pop();
 
@@ -670,6 +1127,7 @@
 
         const parent = stack[level - 1] || root[root.length - 1];
         if (parent) {
+          node.parent = parent.id;
           parent.children.push(node);
         } else {
           root.push(node);
@@ -680,33 +1138,245 @@
       return root;
     }
 
-    function renderSchemaNodes(nodes, keywordMap, depth = 0) {
+    function stripMermaidFences(text) {
+      let t = String(text || '').trim();
+      const fence = /^```(?:mermaid)?\s*\r?\n([\s\S]*?)\r?\n```\s*$/im;
+      const m = t.match(fence);
+      if (m) return m[1].trim();
+      return t;
+    }
+
+    function sanitizeMermaidLabel(text) {
+      let s = String(text || '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
+      s = s.replace(/"/g, "'");
+      if (s.length > 72) s = `${s.slice(0, 69)}...`;
+      return s || 'Nodo';
+    }
+
+    function schemaTreeToMermaid(nodes, maxNodes = 28) {
+      const lines = ['flowchart TD'];
+      let count = 0;
+      const queue = [];
+      for (const n of nodes) {
+        queue.push({ node: n, parentId: null });
+      }
+      while (queue.length && count < maxNodes) {
+        const { node, parentId } = queue.shift();
+        const id = `n${count}`;
+        count += 1;
+        const label = sanitizeMermaidLabel(node.title);
+        lines.push(`    ${id}["${label}"]`);
+        if (parentId !== null) {
+          lines.push(`    ${parentId} --> ${id}`);
+        }
+        for (const child of node.children || []) {
+          if (count >= maxNodes) break;
+          queue.push({ node: child, parentId: id });
+        }
+      }
+      return lines.join('\n');
+    }
+
+    function normalizeMermaidCode(raw) {
+      const t = stripMermaidFences(raw).trim();
+      if (!t) return '';
+      if (/^(flowchart|graph)\s+/i.test(t)) return t;
+      return `flowchart TD\n${t}`;
+    }
+
+    function getMermaidDiagramSource(results) {
+      const raw = stripMermaidFences(results?.mermaid || '').trim();
+      if (raw) {
+        return normalizeMermaidCode(raw);
+      }
+      const tree = parseSchemaToTree(results?.schema || '');
+      return tree.length ? schemaTreeToMermaid(tree) : 'flowchart TD\n    empty["Nessuno schema"]';
+    }
+
+    async function refreshSchemaMermaidDiagram() {
+      const mount = document.getElementById('schemaMermaidMount');
+      if (!mount || !analysisResults) return;
+      if (typeof mermaid === 'undefined') {
+        mount.innerHTML = '<p class="schema-mermaid-error">Diagramma non disponibile (libreria Mermaid non caricata).</p>';
+        return;
+      }
+      let code = getMermaidDiagramSource(analysisResults);
+      mount.innerHTML = '';
+      const pre = document.createElement('pre');
+      pre.className = 'mermaid';
+      pre.textContent = code;
+      mount.appendChild(pre);
+      try {
+        await mermaid.run({ nodes: [pre] });
+      } catch (err) {
+        console.warn('Mermaid: rendering AI fallito, uso fallback da SCHEMA.', err);
+        const fallback = schemaTreeToMermaid(parseSchemaToTree(analysisResults.schema || ''));
+        code = fallback || 'flowchart TD\n    empty["Schema vuoto"]';
+        pre.textContent = normalizeMermaidCode(code);
+        try {
+          await mermaid.run({ nodes: [pre] });
+        } catch (err2) {
+          console.warn('Mermaid: anche il fallback è fallito.', err2);
+          mount.innerHTML = `<pre class="schema-text">${escapeHtml(getMermaidDiagramSource(analysisResults))}</pre><p class="schema-mermaid-error">Anteprima grafica non disponibile; sopra il codice o il testo dello schema.</p>`;
+        }
+      }
+    }
+
+    function schemaMermaidSectionHtml() {
+      return `
+        <div class="schema-mermaid-section" id="schemaMermaidSection">
+          <h4 class="schema-mermaid-heading">Diagramma di flusso (Mermaid)</h4>
+          <div id="schemaMermaidMount" class="schema-mermaid-mount"></div>
+        </div>`;
+    }
+
+    function renderSchema() {
+      if (!analysisResults?.schema) return;
+      
+      const keywordMap = getKeywordMap(analysisResults);
+      const nodes = parseSchemaToTree(analysisResults.schema);
+      
+      schemaContainer.innerHTML = '';
+      schemaContainer.className = 'schema-stack';
+
+      const flowClass = `schema-flow${currentViewMode === 'list' ? ' list-view' : ''}`;
+      const inner = currentViewMode === 'list'
+        ? renderSchemaList(nodes, keywordMap)
+        : renderSimpleSchema(nodes, keywordMap);
+
+      schemaContainer.innerHTML = `<div class="${flowClass}">${inner}</div>${schemaMermaidSectionHtml()}`;
+      void refreshSchemaMermaidDiagram();
+    }
+    
+    function renderSimpleSchema(nodes, keywordMap) {
+      if (!nodes.length) return '';
+      
+      const rootNode = nodes[0];
+      const rootTitle = highlightText(rootNode.title, keywordMap);
+      
+      // Get ONLY first 4 direct children - NO grandchildren, NO nesting
+      const branches = (rootNode.children || []).slice(0, 4);
+      
+      const branchHtml = branches.map((branch, index) => {
+        const branchTitle = highlightText(branch.title, keywordMap);
+        const positions = ['top', 'right', 'bottom', 'left'];
+        const position = positions[index];
+        
+        return `
+          <div class="branch branch-${position}">${branchTitle}</div>
+          <div class="connection-line line-${position}"></div>
+        `;
+      }).join('');
+      
+      return `
+        <div class="schema-center">
+          <div class="branches-container">
+            ${branchHtml}
+          </div>
+          <div class="schema-root">
+            <div class="root-box">${rootTitle}</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderSchemaList(nodes, keywordMap, depth = 0) {
       return nodes.map((node) => {
         const title = highlightText(node.title, keywordMap);
-        const boxClass = depth === 0 ? 'flow-box oval' : depth === 1 ? 'flow-box' : 'flow-box secondary';
-        const titleClass = depth <= 1 ? 'flow-title' : 'flow-title secondary';
-
-        if (!node.children.length) {
+        const isLeaf = !node.children.length;
+        
+        // Assign box class by depth
+        let boxClass = 'flow-box';
+        if (depth === 0) boxClass += ' root-box';
+        else if (depth === 1) boxClass += ' macro-box';
+        else if (depth === 2) boxClass += ' sub-box';
+        else boxClass += ' leaf-box';
+        
+        if (!isLeaf && node.expanded) boxClass += ' is-open';
+        
+        if (isLeaf) {
           return `
-            <div class="flow-node">
-              <div class="${boxClass}"><span class="${titleClass}">${title}</span></div>
+            <div class="flow-node" data-node-id="${node.id}" data-level="${depth}">
+              <div class="${boxClass}"><span class="flow-title">${title}</span></div>
             </div>
           `;
         }
-
+        
+        const childrenHtml = renderSchemaList(node.children, keywordMap, depth + 1);
+        
         return `
-          <div class="flow-node">
-            <button class="${boxClass} clickable" type="button">
-              <span class="${titleClass}">${title}</span>
-              <span class="toggle-sign">+</span>
+          <div class="flow-node" data-node-id="${node.id}" data-level="${depth}">
+            <button class="${boxClass}" type="button" data-node-toggle="${node.id}">
+              <span class="flow-title">${title}</span>
+              <span class="toggle-sign">${node.expanded ? '▾' : '▸'}</span>
             </button>
-            <div class="flow-children" style="display:none;">
-              <div class="flow-children-title">Macroargomenti collegati</div>
-              ${node.children.map((child) => `
-                <div class="flow-child-wrap">
-                  ${renderSchemaNodes([child], keywordMap, depth + 1)}
-                </div>
-              `).join('')}
+            <div class="flow-children" style="display: ${node.expanded ? 'block' : 'none'};" data-children-of="${node.id}">
+              <div class="flow-children-title"></div>
+              ${childrenHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSchemaNodes(nodes, keywordMap, depth = 0, parentExpanded = true) {
+      return nodes.map((node, index) => {
+        const title = highlightText(node.title, keywordMap);
+        const isRoot = depth === 0;
+        const isLeaf = !node.children.length;
+        
+        // Assign box class by depth
+        let boxClass = 'flow-box';
+        if (depth === 0) boxClass += ' root-box';
+        else if (depth === 1) boxClass += ' macro-box';
+        else if (depth === 2) boxClass += ' sub-box';
+        else boxClass += ' leaf-box';
+        
+        if (!isLeaf && node.expanded) boxClass += ' is-open';
+        
+        if (isLeaf) {
+          return `
+            <div class="flow-node" data-node-id="${node.id}" data-level="${depth}">
+              <div class="${boxClass}"><span class="flow-title">${title}</span></div>
+            </div>
+          `;
+        }
+        
+        const childrenHtml = node.children.map((child, childIndex) => {
+          // Calculate position for organized tree layout
+          const totalChildren = node.children.length;
+          const angleStep = 360 / totalChildren;
+          const angle = childIndex * angleStep - 90; // Start from top
+          
+          // Different radius for different levels
+          let radius;
+          if (depth === 0) {
+            radius = totalChildren <= 6 ? 200 : 250; // Compact for few children
+          } else if (depth === 1) {
+            radius = totalChildren <= 4 ? 150 : 180;
+          } else {
+            radius = 120;
+          }
+          
+          const x = Math.cos(angle * Math.PI / 180) * radius;
+          const y = Math.sin(angle * Math.PI / 180) * radius;
+          
+          return `
+            <div class="flow-child-wrap" data-child-of="${node.id}" style="position: absolute; left: ${x}px; top: ${y}px;">
+              ${renderSchemaNodes([child], keywordMap, depth + 1, node.expanded)}
+            </div>
+          `;
+        }).join('');
+        
+        return `
+          <div class="flow-node" data-node-id="${node.id}" data-level="${depth}">
+            <button class="${boxClass}" type="button" data-node-toggle="${node.id}">
+              <span class="flow-title">${title}</span>
+              <span class="toggle-sign">${node.expanded ? '▾' : '▸'}</span>
+            </button>
+            <div class="flow-children" style="display: ${node.expanded ? 'block' : 'none'};" data-children-of="${node.id}">
+              <div class="flow-children-title"></div>
+              ${childrenHtml}
             </div>
           </div>
         `;
@@ -714,15 +1384,254 @@
     }
 
     function bindSchemaToggleEvents() {
-      schemaContainer.querySelectorAll('.flow-box.clickable').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const content = btn.parentElement?.querySelector(':scope > .flow-children');
+      schemaContainer.querySelectorAll('[data-node-toggle]').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const nodeId = btn.dataset.nodeToggle;
+          const content = schemaContainer.querySelector(`[data-children-of="${nodeId}"]`);
           const isOpen = content?.style.display === 'block';
-          if (content) content.style.display = isOpen ? 'none' : 'block';
-          btn.classList.toggle('is-open', !isOpen);
-          const indicator = btn.querySelector('.toggle-sign');
-          if (indicator) indicator.textContent = isOpen ? '+' : '−';
+          
+          if (content) {
+            content.style.display = isOpen ? 'none' : 'block';
+            btn.classList.toggle('is-open', !isOpen);
+            const indicator = btn.querySelector('.toggle-sign');
+            if (indicator) indicator.textContent = isOpen ? '▸' : '▾';
+            
+            // Animate children appearance
+            if (!isOpen) {
+              content.style.opacity = '0';
+              content.style.transform = 'translateY(-10px)';
+              setTimeout(() => {
+                content.style.transition = 'all 0.3s ease';
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+              }, 10);
+            } else {
+              content.style.transition = 'all 0.2s ease';
+              content.style.opacity = '0';
+              content.style.transform = 'translateY(-10px)';
+            }
+          }
         });
+      });
+    }
+
+    function bindZoomControls() {
+      const viewport = document.getElementById('schemaViewport');
+      const content = document.getElementById('schemaContent');
+      const zoomInBtn = document.getElementById('zoomInBtn');
+      const zoomOutBtn = document.getElementById('zoomOutBtn');
+      const zoomResetBtn = document.getElementById('zoomResetBtn');
+      const zoomLevel = document.getElementById('zoomLevel');
+
+      if (!viewport || !content) return;
+
+      let currentZoom = 1;
+      const minZoom = 0.5;
+      const maxZoom = 3;
+      const zoomStep = 0.25;
+
+      function updateZoom(zoom) {
+        currentZoom = Math.max(minZoom, Math.min(maxZoom, zoom));
+        content.style.transform = `scale(${currentZoom})`;
+        zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+        
+        // Update viewport height to accommodate zoom
+        const newHeight = content.scrollHeight * currentZoom;
+        viewport.style.height = `${Math.max(400, newHeight)}px`;
+      }
+
+      zoomInBtn?.addEventListener('click', () => {
+        updateZoom(currentZoom + zoomStep);
+      });
+
+      zoomOutBtn?.addEventListener('click', () => {
+        updateZoom(currentZoom - zoomStep);
+      });
+
+      zoomResetBtn?.addEventListener('click', () => {
+        updateZoom(1);
+        content.style.transform = 'translate(0, 0)';
+      });
+
+      // Mouse wheel zoom
+      viewport?.addEventListener('wheel', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
+          updateZoom(currentZoom + delta);
+        }
+      });
+    }
+
+    function bindDragControls() {
+      const viewport = document.getElementById('schemaViewport');
+      const content = document.getElementById('schemaContent');
+
+      if (!viewport || !content) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let translateX = 0;
+      let translateY = 0;
+
+      function startDrag(e) {
+        if (e.target.closest('.schema-controls') || e.target.closest('.schema-search') || e.target.closest('.export-controls')) {
+          return;
+        }
+        
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        viewport.classList.add('dragging');
+        content.classList.add('dragging');
+        e.preventDefault();
+      }
+
+      function drag(e) {
+        if (!isDragging) return;
+        
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        content.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        e.preventDefault();
+      }
+
+      function endDrag() {
+        isDragging = false;
+        viewport.classList.remove('dragging');
+        content.classList.remove('dragging');
+      }
+
+      viewport.addEventListener('mousedown', startDrag);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', endDrag);
+
+      // Touch support
+      viewport.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startDrag({ clientX: touch.clientX, clientY: touch.clientY, preventDefault: () => e.preventDefault() });
+      });
+
+      viewport.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        drag({ clientX: touch.clientX, clientY: touch.clientY, preventDefault: () => e.preventDefault() });
+      });
+
+      viewport.addEventListener('touchend', endDrag);
+    }
+
+    function bindSearchControls() {
+      const searchInput = document.getElementById('schemaSearchInput');
+      const searchBtn = document.getElementById('schemaSearchBtn');
+
+      if (!searchInput || !searchBtn) return;
+
+      function performSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        const allBoxes = schemaContainer.querySelectorAll('.flow-box');
+        
+        // Remove previous highlights
+        allBoxes.forEach(box => box.classList.remove('highlighted'));
+        
+        if (!query) return;
+
+        // Highlight matching boxes
+        let matchCount = 0;
+        allBoxes.forEach(box => {
+          const text = box.textContent.toLowerCase();
+          if (text.includes(query)) {
+            box.classList.add('highlighted');
+            matchCount++;
+            
+            // Scroll to first match
+            if (matchCount === 1) {
+              box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        });
+
+        // Show match count
+        if (matchCount > 0) {
+          searchBtn.textContent = `${matchCount} trovati`;
+        } else {
+          searchBtn.textContent = 'Nessuna corrispondenza';
+        }
+
+        setTimeout(() => {
+          searchBtn.textContent = 'Cerca';
+        }, 2000);
+      }
+
+      searchBtn.addEventListener('click', performSearch);
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+
+      // Clear highlights on empty input
+      searchInput.addEventListener('input', () => {
+        if (!searchInput.value.trim()) {
+          const allBoxes = schemaContainer.querySelectorAll('.flow-box');
+          allBoxes.forEach(box => box.classList.remove('highlighted'));
+        }
+      });
+    }
+
+    function bindExportControls() {
+      const exportImageBtn = document.getElementById('exportImageBtn');
+      const exportSvgBtn = document.getElementById('exportSvgBtn');
+
+      exportImageBtn?.addEventListener('click', async () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const schemaFlow = schemaContainer.querySelector('.schema-flow');
+          
+          canvas.width = schemaFlow.offsetWidth * 2;
+          canvas.height = schemaFlow.offsetHeight * 2;
+          ctx.scale(2, 2);
+          
+          // Use html2canvas or similar library for better results
+          // For now, create a simple text export
+          const schemaText = analysisResults?.schema || 'Nessuno schema disponibile';
+          const blob = new Blob([schemaText], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'schema.txt';
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('Export error:', error);
+          alert('Errore durante l\'esportazione');
+        }
+      });
+
+      exportSvgBtn?.addEventListener('click', () => {
+        try {
+          const schemaText = analysisResults?.schema || 'Nessuno schema disponibile';
+          const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+              <rect width="800" height="600" fill="#f8fafc"/>
+              <text x="400" y="50" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold" fill="#1e293b">Schema Concettuale</text>
+              <text x="50" y="100" font-family="Arial" font-size="14" fill="#475569">${schemaText.replace(/\n/g, '</text><text x="50" y="').replace(/->/g, '→')}</text>
+            </svg>
+          `;
+          
+          const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'schema.svg';
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('SVG export error:', error);
+          alert('Errore durante l\'esportazione SVG');
+        }
       });
     }
 
@@ -747,11 +1656,35 @@
       if (schemaContainer) {
         const tree = parseSchemaToTree(results.schema);
         schemaContainer.innerHTML = `
-          <div class="schema-flow">
-            ${tree.length ? renderSchemaNodes(tree, keywordMap) : '<div class="flow-box">Nessuno schema disponibile.</div>'}
+          <div class="schema-viewport" id="schemaViewport">
+            <div class="schema-content" id="schemaContent">
+              <div class="schema-flow">
+                ${tree.length ? renderSchemaNodes(tree, keywordMap) : '<div class="flow-box">Nessuno schema disponibile.</div>'}
+              </div>
+              ${schemaMermaidSectionHtml()}
+            </div>
+            <div class="schema-controls">
+              <button class="zoom-btn" id="zoomOutBtn" title="Zoom indietro">−</button>
+              <div class="zoom-level" id="zoomLevel">100%</div>
+              <button class="zoom-btn" id="zoomInBtn" title="Zoom avanti">+</button>
+              <button class="zoom-btn" id="zoomResetBtn" title="Reset zoom">⟲</button>
+            </div>
+            <div class="schema-search">
+              <input type="text" class="search-input" id="schemaSearchInput" placeholder="Cerca nel schema...">
+              <button class="search-btn" id="schemaSearchBtn">Cerca</button>
+            </div>
+            <div class="export-controls">
+              <button class="export-btn" id="exportImageBtn">📷 Immagine</button>
+              <button class="export-btn" id="exportSvgBtn">📄 SVG</button>
+            </div>
           </div>
         `;
         bindSchemaToggleEvents();
+        bindZoomControls();
+        bindDragControls();
+        bindSearchControls();
+        bindExportControls();
+        void refreshSchemaMermaidDiagram();
       }
 
       if (riassuntoContainer) {
@@ -784,7 +1717,7 @@
     }
 
     function activateTab(tabId, shouldScroll = false) {
-      document.querySelectorAll('.tab-btn').forEach((button) => {
+      document.querySelectorAll('.tab-btn[data-tab]').forEach((button) => {
         button.classList.toggle('active', button.dataset.tab === tabId);
       });
 
@@ -800,10 +1733,15 @@
       }
     }
 
-    document.querySelectorAll('.tab-btn').forEach((btn) => {
+    document.querySelectorAll('.tab-btn[data-tab]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const targetTab = btn.dataset.tab;
         activateTab(targetTab, true);
+        if (targetTab === 'schema') {
+          requestAnimationFrame(() => {
+            void refreshSchemaMermaidDiagram();
+          });
+        }
       });
     });
 
@@ -811,20 +1749,38 @@
 
     checkQuizBtn?.addEventListener('click', () => {
       const questions = analysisResults?.quiz?.domande || [];
+      console.log('Quiz questions:', questions);
+      
       document.querySelectorAll('.quiz-question').forEach((questionElement, questionIndex) => {
         const question = questions[questionIndex];
         const selected = questionElement.querySelector('input[type="radio"]:checked');
         const options = questionElement.querySelectorAll('.quiz-option');
+        
+        console.log(`Question ${questionIndex}:`, question);
+        console.log('Selected:', selected?.value);
+        console.log('Correct answer:', question?.risposta_corretta);
+        
         options.forEach((option) => option.classList.remove('correct', 'incorrect', 'selected'));
-        if (!selected) return;
+        
+        if (!selected) {
+          console.log('No answer selected for question', questionIndex);
+          return;
+        }
+        
         const selectedIndex = Number(selected.value);
         const correctIndex = Number(question?.risposta_corretta || 0);
+        
+        console.log('Comparing - Selected:', selectedIndex, 'Correct:', correctIndex);
+        
         options[selectedIndex]?.classList.add('selected');
+        
         if (selectedIndex === correctIndex) {
           options[selectedIndex]?.classList.add('correct');
+          console.log('Answer is CORRECT');
         } else {
           options[selectedIndex]?.classList.add('incorrect');
           options[correctIndex]?.classList.add('correct');
+          console.log('Answer is INCORRECT - showing correct answer at index:', correctIndex);
         }
       });
     });
@@ -839,7 +1795,10 @@
         ...(analysisResults?.quiz?.domande || []).map((q, i) => `${i + 1}. ${q.domanda}`),
         '',
         'SCHEMA',
-        analysisResults.schema || ''
+        analysisResults.schema || '',
+        '',
+        'MERMAID',
+        getMermaidDiagramSource(analysisResults)
       ].join('\n');
       const blob = new Blob([payload], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
@@ -852,4 +1811,3 @@
   </script>
 </body>
 </html>
-

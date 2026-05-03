@@ -335,10 +335,59 @@
     </main>
   </div>
 
+  <!-- Schermata Riepilogo Soldi Vinti -->
+  <div id="gameOverModal" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  ">
+    <div style="
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
+      padding: 3rem;
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(255, 140, 0, 0.5);
+      border: 4px solid #FF4500;
+      max-width: 500px;
+      width: 90%;
+      animation: modalPop 0.5s ease;
+    ">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">💰</div>
+      <h2 style="color: white; font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">HAI VINTO!</h2>
+      <div id="earnedCoins" style="font-size: 3rem; font-weight: 700; color: white; margin: 1.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">+0 🪙</div>
+      <p id="gameResultMessage" style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-bottom: 2rem;">Complimenti per la partita!</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button onclick="closeGameOverModal()" class="toon-btn" style="background: white; color: #FF6B35; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 15px; cursor: pointer; font-weight: 700;">📋 MENU</button>
+        <button onclick="replayCurrentGame()" class="toon-btn" style="background: #0077BE; color: white; border: none; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 15px; cursor: pointer; font-weight: 700;">🔄 RIGIOCA</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes modalPop {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes coinFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+
   <script src="../js/modules/credits.js"></script>
   <script>
     let currentGame = null;
     let gameScores = { sudoku: 0, wordle: 0, math: 0, memory: 0, tetris: 0 };
+    let lastGamePlayed = null;
 
     document.addEventListener('DOMContentLoaded', () => {
         if (window.CreditsModule) window.CreditsModule.updateCreditDisplay();
@@ -355,7 +404,9 @@
     }
 
     function backToMenu() {
-        if (currentGame && gameScores[currentGame] > 0) finalizeGameScore();
+        if (currentGame && gameScores[currentGame] > 0) {
+            showGameOverModal(currentGame, gameScores[currentGame]);
+        }
         currentGame = null;
         document.getElementById('gamesMenu').style.display = 'grid';
         document.querySelectorAll('.game-area').forEach(a => a.style.display = 'none');
@@ -364,12 +415,43 @@
         if (memoryTimerInterval) clearInterval(memoryTimerInterval);
     }
 
-    function finalizeGameScore() {
-        const earned = Math.floor(gameScores[currentGame] / 10);
+    function showGameOverModal(gameType, score) {
+        const earned = Math.floor(score / 10);
+        lastGamePlayed = gameType;
+        
+        const modal = document.getElementById('gameOverModal');
+        const earnedDisplay = document.getElementById('earnedCoins');
+        const messageDisplay = document.getElementById('gameResultMessage');
+        
+        const gameNames = {
+            sudoku: 'Sudoku',
+            wordle: 'Wordle',
+            math: 'Calcolo Veloce',
+            memory: 'Memory',
+            tetris: 'Tetris'
+        };
+        
+        earnedDisplay.textContent = `+${earned} 🪙`;
+        messageDisplay.textContent = `Hai totalizzato ${score} punti in ${gameNames[gameType]}!`;
+        
+        modal.style.display = 'flex';
+        
+        // Salva i crediti
         if (earned > 0 && window.CreditsModule) {
-            window.CreditsModule.earnCrediti(earned, `Minigioco: ${currentGame.toUpperCase()}`);
+            window.CreditsModule.earnCrediti(earned, `Minigioco: ${gameType.toUpperCase()}`);
             const navCredits = document.getElementById('navCredits');
             if (navCredits) navCredits.textContent = window.CreditsModule.getCrediti();
+        }
+    }
+
+    function closeGameOverModal() {
+        document.getElementById('gameOverModal').style.display = 'none';
+    }
+
+    function replayCurrentGame() {
+        document.getElementById('gameOverModal').style.display = 'none';
+        if (lastGamePlayed) {
+            startGame(lastGamePlayed);
         }
     }
 
@@ -897,8 +979,22 @@
         if (tetrisInterval) clearInterval(tetrisInterval);
         tetrisInterval = setInterval(() => gameLoopTetris(Date.now()), 1000 / 60); // 60 FPS
         
-        // Aggiungi controlli tastiera
+        // Aggiungi controlli tastiera e mouse
         document.addEventListener('keydown', handleTetrisKeys);
+        board.addEventListener('mousedown', handleTetrisMouse);
+        board.style.cursor = 'pointer';
+        
+        // Aggiorna istruzioni
+        const instructions = document.querySelector('#tetrisGame .game-instructions');
+        if (instructions) {
+            instructions.innerHTML = `
+              <p style="font-size: 0.9rem;"><strong>WASD</strong>: Muovi i pezzi</p>
+              <p style="font-size: 0.9rem;"><strong>W</strong> o <strong>▲</strong>: Ruota</p>
+              <p style="font-size: 0.9rem;"><strong>CLICK MOUSE</strong>: Ruota pezzo</p>
+              <p style="font-size: 0.9rem;"><strong>SPACE</strong>: Drop immediato</p>
+              <p style="font-size: 0.9rem;"><strong>P</strong>: Pausa</p>
+            `;
+        }
         
         drawTetrisBoard();
     }
@@ -916,24 +1012,28 @@
     function handleTetrisKeys(e) {
         if (tetrisGameOver || tetrisPaused) return;
         
-        console.log('Tasto premuto:', e.key); // Debug
+        const key = e.key.toLowerCase();
         
-        switch(e.key) {
-            case 'ArrowLeft':
+        switch(key) {
+            case 'a':
+            case 'arrowleft':
                 e.preventDefault();
                 moveTetrisPiece(-1, 0);
                 break;
-            case 'ArrowRight':
+            case 'd':
+            case 'arrowright':
                 e.preventDefault();
                 moveTetrisPiece(1, 0);
                 break;
-            case 'ArrowDown':
+            case 's':
+            case 'arrowdown':
                 e.preventDefault();
                 moveTetrisPiece(0, 1);
                 tetrisScore += 1;
                 updateTetrisScore();
                 break;
-            case 'ArrowUp':
+            case 'w':
+            case 'arrowup':
                 e.preventDefault();
                 rotateTetrisPiece();
                 break;
@@ -941,6 +1041,17 @@
                 e.preventDefault();
                 dropTetrisPiece();
                 break;
+        }
+    }
+
+    // Rotazione con click del mouse
+    function handleTetrisMouse(e) {
+        if (tetrisGameOver || tetrisPaused) return;
+        
+        // Click sinistro = rotazione
+        if (e.button === 0) {
+            e.preventDefault();
+            rotateTetrisPiece();
         }
     }
 
@@ -1151,31 +1262,12 @@
 
     function showTetrisGameOver() {
         clearInterval(tetrisInterval);
+        gameScores.tetris = tetrisScore;
         
-        const message = document.createElement('div');
-        message.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #f59e0b;
-            color: white;
-            padding: 2rem 3rem;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            z-index: 1000;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            text-align: center;
-        `;
-        
-        message.innerHTML = `
-            <div style="margin-bottom: 1rem;">🎮 GAME OVER</div>
-            <div style="font-size: 0.9rem; margin-bottom: 1rem;">Punteggio: ${tetrisScore}</div>
-            <button class="toon-btn" onclick="initTetris(); this.parentElement.remove();">🔄 RIGIOCA</button>
-        `;
-        
-        document.body.appendChild(message);
+        // Usa la stessa schermata modale degli altri giochi
+        setTimeout(() => {
+            showGameOverModal('tetris', tetrisScore);
+        }, 500);
     }
 
   </script>
