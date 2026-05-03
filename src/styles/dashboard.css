@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+/* Font locali per evitare dipendenze esterne */
+@font-face {
+  font-family: 'Fredoka';
+  src: local('Arial Rounded MT Bold'), local('Arial Rounded'), local('Arial');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  src: local('Segoe UI'), local('Arial'), local('Helvetica');
+  font-weight: 500;
+}
 
 :root {
   /* Palette "Lovable Pastel Pop" */

@@ -430,23 +430,308 @@
         if (selectedSudokuCell) selectedSudokuCell.el.textContent = '';
     }
 
-    // --- WORDLE ---
-    let wordleTarget = "BRAIN";
+    // --- WORDLE COMPLETO ---
+    const WORDLE_WORDS = [
+        'ABETE', 'ABITO', 'ACETO', 'ACQUA', 'AGILE', 'AGLIO', 'AGONE', 'AIUTO', 'ALBERO', 'ALIBI',
+        'AMARO', 'AMICO', 'AMIDO', 'AMORE', 'ANGOLO', 'ANIMA', 'ANIMO', 'ANODO', 'APECE', 'APICE',
+        'ARARE', 'ARIDO', 'AROMA', 'ASILO', 'ASPRO', 'ASTRO', 'ATTIMO', 'AVERE', 'AVIDO', 'AVVIO',
+        'BACIO', 'BAITA', 'BALZO', 'BANCO', 'BARCA', 'BARCO', 'BARDO', 'BARRE', 'BASSO', 'BECCO',
+        'BEFFA', 'BELGA', 'BENDA', 'BIMBO', 'BOCCA', 'BOLLO', 'BORDO', 'BOSCO', 'BOTTA', 'BRAVO',
+        'BREVE', 'BRICI', 'BRUMA', 'BRUNO', 'BUONO', 'BURRO', 'CALDO', 'CALMA', 'CAMPO', 'CANTO',
+        'CAPRA', 'CARNE', 'CARRO', 'CARTA', 'CASCO', 'CASSA', 'CESTO', 'CICLO', 'CIELO', 'CINQUE',
+        'CIRCA', 'CIVILE', 'COCO', 'COLLE', 'COLPO', 'CONTO', 'CORNO', 'CORPO', 'CORSA', 'CORTE',
+        'COSMO', 'COSTA', 'CREDO', 'CRESC', 'CRINE', 'CROCE', 'CROMO', 'CUORE', 'DARDO', 'DENTE',
+        'DIETA', 'DITTA', 'DOGMA', 'DOLCE', 'DONNA', 'DORSO', 'DRITTO', 'DUOMO', 'EBANO', 'EDERA',
+        'ELITE', 'EREDE', 'EREMO', 'ESAME', 'ESITO', 'FANGO', 'FATTO', 'FELPA', 'FERRO', 'FETTA',
+        'FIABA', 'FIATO', 'FIENO', 'FIERA', 'FINTO', 'FIORE', 'FISSA', 'FIUME', 'FOGNA', 'FOLLA',
+        'FORNO', 'FORTE', 'FOSSO', 'FRASE', 'FREDD', 'FRENO', 'FRODE', 'FUMO', 'FURTO', 'GAMBA',
+        'GATTO', 'GENIO', 'GHIRO', 'GIOCO', 'GIUDA', 'GLOBO', 'GOCCE', 'GOMMA', 'GONNA', 'GRANO',
+        'GRAVE', 'GRECO', 'GRIDO', 'GRIFO', 'GUADO', 'GUIDA', 'ICONA', 'IDEA', 'IDOLO', 'IMENE',
+        'IMPAT', 'INCRO', 'INFER', 'INGHI', 'INNO', 'INVIA', 'ISOLA', 'LACCA', 'LAGO', 'LAMPO',
+        'LARGO', 'LATTE', 'LEGNO', 'LENTE', 'LESTO', 'LETTO', 'LIVRE', 'LOBBY', 'LOTTO', 'LUCE',
+        'LUME', 'MAGMA', 'MAMMA', 'MANGO', 'MAPPA', 'MARCA', 'MAREA', 'MARZO', 'MASSA', 'MATTO',
+        'MELEE', 'MENTE', 'MERLO', 'MIELE', 'MIGLIO', 'MINIMO', 'MIRTO', 'MISTO', 'MODEM', 'MOLTO',
+        'MONDO', 'MONTE', 'MOSSA', 'MOTTO', 'MURO', 'NAVE', 'NEVE', 'NIDO', 'NINJA', 'NOBILE',
+        'NOCE', 'NORMA', 'NOTTE', 'NUOTO', 'OCCHI', 'ODINE', 'OLIVE', 'OMBRA', 'ONICE', 'OPERA',
+        'OPERE', 'ORATA', 'ORDINE', 'OSARE', 'OSSEO', 'OSTRO', 'OTTIMO', 'OVEST', 'OVINO', 'PADRE',
+        'PAESE', 'PALCO', 'PALLA', 'PANNO', 'PAPPA', 'PARCO', 'PARTE', 'PASSO', 'PASTA', 'PATTO',
+        'PECIO', 'PENNA', 'PESCE', 'PETTO', 'PIAGA', 'PIANO', 'PIEDE', 'PIENO', 'PIETRA', 'PIGNA',
+        'PINNA', 'PINTA', 'PISTA', 'PIUMA', 'PIZZA', 'PLANO', 'POCHE', 'POKER', 'POLSO', 'PONTE',
+        'PORTA', 'POSTO', 'PRATO', 'PRESA', 'PREZZO', 'PRIMA', 'PROVA', 'PUNTO'
+    ];
+    
+    let wordleTarget = '';
     let wordleRow = 0;
     let wordleCol = 0;
+    let wordleGameOver = false;
+    let wordleKeyboard = {};
 
     function initWordle() {
         gameScores.wordle = 0;
-        wordleRow = 0; wordleCol = 0;
+        wordleRow = 0;
+        wordleCol = 0;
+        wordleGameOver = false;
+        wordleTarget = WORDLE_WORDS[Math.floor(Math.random() * WORDLE_WORDS.length)];
+        
         document.getElementById('wordleScore').textContent = '0';
+        
+        // Crea la griglia 6x5
         const grid = document.getElementById('wordleGrid');
         grid.innerHTML = '';
-        for(let i=0; i<30; i++) {
+        grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+        
+        for(let i = 0; i < 30; i++) {
             const cell = document.createElement('div');
             cell.className = 'wordle-cell';
+            cell.id = `wordle-${i}`;
             grid.appendChild(cell);
         }
+        
+        // Crea la tastiera virtuale
+        createWordleKeyboard();
+        
+        // Aggiungi event listener per la tastiera fisica
+        document.addEventListener('keydown', handleWordleKey);
     }
+
+    function createWordleKeyboard() {
+        const keyboardContainer = document.getElementById('wordleKeyboard');
+        keyboardContainer.innerHTML = '';
+        
+        const rows = [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
+        ];
+        
+        rows.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.style.display = 'flex';
+            rowDiv.style.gap = '6px';
+            rowDiv.style.justifyContent = 'center';
+            
+            row.forEach(key => {
+                const keyBtn = document.createElement('button');
+                keyBtn.textContent = key;
+                keyBtn.id = `key-${key}`;
+                keyBtn.className = 'wordle-key';
+                keyBtn.style.cssText = `
+                    padding: ${key === 'ENTER' || key === 'BACK' ? '0.8rem 1.2rem' : '0.8rem'};
+                    background: var(--card);
+                    border: 2px solid var(--ink);
+                    border-radius: 6px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    transition: all 0.1s;
+                    box-shadow: 0 3px 0 0 var(--ink);
+                    min-width: ${key === 'ENTER' || key === 'BACK' ? '60px' : '40px'};
+                `;
+                
+                keyBtn.onclick = () => handleWordleInput(key);
+                keyBtn.onmousedown = () => {
+                    keyBtn.style.transform = 'translateY(2px)';
+                    keyBtn.style.boxShadow = '0 1px 0 0 var(--ink)';
+                };
+                keyBtn.onmouseup = () => {
+                    keyBtn.style.transform = 'translateY(0)';
+                    keyBtn.style.boxShadow = '0 3px 0 0 var(--ink)';
+                };
+                
+                rowDiv.appendChild(keyBtn);
+                wordleKeyboard[key] = keyBtn;
+            });
+            
+            keyboardContainer.appendChild(rowDiv);
+        });
+    }
+
+    function handleWordleKey(e) {
+        if (wordleGameOver) return;
+        
+        if (e.key === 'Enter') {
+            handleWordleInput('ENTER');
+        } else if (e.key === 'Backspace') {
+            handleWordleInput('BACK');
+        } else if (/^[a-zA-Z]$/.test(e.key)) {
+            handleWordleInput(e.key.toUpperCase());
+        }
+    }
+
+    function handleWordleInput(key) {
+        if (wordleGameOver) return;
+        
+        if (key === 'ENTER') {
+            if (wordleCol === 5) {
+                checkWordleWord();
+            }
+        } else if (key === 'BACK') {
+            if (wordleCol > 0) {
+                wordleCol--;
+                const cellIndex = wordleRow * 5 + wordleCol;
+                const cell = document.getElementById(`wordle-${cellIndex}`);
+                cell.textContent = '';
+                cell.style.animation = '';
+            }
+        } else if (/^[A-Z]$/.test(key) && wordleCol < 5) {
+            const cellIndex = wordleRow * 5 + wordleCol;
+            const cell = document.getElementById(`wordle-${cellIndex}`);
+            cell.textContent = key;
+            cell.style.animation = 'flipIn 0.3s ease';
+            wordleCol++;
+        }
+    }
+
+    function checkWordleWord() {
+        const guess = [];
+        for (let i = 0; i < 5; i++) {
+            const cellIndex = wordleRow * 5 + i;
+            const cell = document.getElementById(`wordle-${cellIndex}`);
+            guess.push(cell.textContent);
+        }
+        
+        const guessWord = guess.join('');
+        const targetArray = wordleTarget.split('');
+        const guessArray = guessWord.split('');
+        const result = new Array(5).fill('absent');
+        
+        // Prima passata: lettere corrette
+        for (let i = 0; i < 5; i++) {
+            if (guessArray[i] === targetArray[i]) {
+                result[i] = 'correct';
+                targetArray[i] = null;
+                guessArray[i] = null;
+            }
+        }
+        
+        // Seconda passata: lettere presenti ma posizione sbagliata
+        for (let i = 0; i < 5; i++) {
+            if (guessArray[i] !== null) {
+                const targetIndex = targetArray.indexOf(guessArray[i]);
+                if (targetIndex !== -1) {
+                    result[i] = 'present';
+                    targetArray[targetIndex] = null;
+                }
+            }
+        }
+        
+        // Applica i risultati alla griglia
+        for (let i = 0; i < 5; i++) {
+            const cellIndex = wordleRow * 5 + i;
+            const cell = document.getElementById(`wordle-${cellIndex}`);
+            
+            setTimeout(() => {
+                cell.classList.add(result[i]);
+                cell.style.animation = `flipIn 0.5s ease, ${result[i] === 'correct' ? 'bounce' : 'shake'} 0.3s ease`;
+                
+                // Aggiorna la tastiera
+                const letter = guess[i];
+                const keyBtn = wordleKeyboard[letter];
+                if (keyBtn) {
+                    if (result[i] === 'correct') {
+                        keyBtn.style.background = '#6aaa64';
+                        keyBtn.style.color = 'white';
+                        keyBtn.style.borderColor = '#6aaa64';
+                    } else if (result[i] === 'present' && !keyBtn.style.background.includes('#6aaa64')) {
+                        keyBtn.style.background = '#c9b458';
+                        keyBtn.style.color = 'white';
+                        keyBtn.style.borderColor = '#c9b458';
+                    } else if (result[i] === 'absent' && !keyBtn.style.background.includes('#6aaa64') && !keyBtn.style.background.includes('#c9b458')) {
+                        keyBtn.style.background = '#787c7e';
+                        keyBtn.style.color = 'white';
+                        keyBtn.style.borderColor = '#787c7e';
+                    }
+                }
+            }, i * 100);
+        }
+        
+        // Controlla se ha vinto
+        if (guessWord === wordleTarget) {
+            setTimeout(() => {
+                wordleGameOver = true;
+                gameScores.wordle += 100;
+                document.getElementById('wordleScore').textContent = gameScores.wordle;
+                showWordleMessage('🎉 Complimenti! Hai indovinato!', 'success');
+            }, 600);
+        } else if (wordleRow === 5) {
+            setTimeout(() => {
+                wordleGameOver = true;
+                showWordleMessage(`😔 Game Over! La parola era: ${wordleTarget}`, 'error');
+            }, 600);
+        } else {
+            wordleRow++;
+            wordleCol = 0;
+        }
+    }
+
+    function showWordleMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: ${type === 'success' ? '#6aaa64' : '#f59e0b'};
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            messageDiv.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => messageDiv.remove(), 300);
+        }, 3000);
+    }
+
+    // Aggiungi animazioni CSS
+    const wordleStyles = document.createElement('style');
+    wordleStyles.textContent = `
+        @keyframes flipIn {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        
+        @keyframes slideOut {
+            from { opacity: 1; transform: translate(-50%, -50%); }
+            to { opacity: 0; transform: translate(-50%, -40%); }
+        }
+        
+        .wordle-key:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 0 0 var(--ink);
+        }
+        
+        .wordle-key:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 0 var(--ink);
+        }
+    `;
+    document.head.appendChild(wordleStyles);
 
     // --- MATH ---
     let mathAnswer = 0;
@@ -546,29 +831,352 @@
         }, 1000);
     }
 
-    // --- TETRIS ---
+    // --- TETRIS COMPLETO ---
     let tetrisBoard = [];
     let tetrisInterval;
     let tetrisCurrent = null;
     let tetrisNext = null;
+    let tetrisScore = 0;
+    let tetrisLines = 0;
+    let tetrisLevel = 1;
+    let tetrisGameOver = false;
+    let tetrisPaused = false;
+    let tetrisDropCounter = 0;
+    let tetrisLastTime = 0;
+
+    const TETRIS_PIECES = [
+        // I
+        { shape: [[1,1,1,1]], color: 'I' },
+        // O
+        { shape: [[1,1],[1,1]], color: 'O' },
+        // T
+        { shape: [[0,1,0],[1,1,1]], color: 'T' },
+        // S
+        { shape: [[0,1,1],[1,1,0]], color: 'S' },
+        // Z
+        { shape: [[1,1,0],[0,1,1]], color: 'Z' },
+        // J
+        { shape: [[1,0,0],[1,1,1]], color: 'J' },
+        // L
+        { shape: [[0,0,1],[1,1,1]], color: 'L' }
+    ];
 
     function initTetris() {
         const board = document.getElementById('tetrisBoard');
         board.innerHTML = '';
         tetrisBoard = Array(20).fill().map(() => Array(10).fill(0));
-        for(let i=0; i<200; i++) {
+        
+        // Crea le celle del tabellone
+        for(let i = 0; i < 200; i++) {
             const cell = document.createElement('div');
             cell.className = 'tetris-cell';
+            cell.id = `tetris-${i}`;
             board.appendChild(cell);
         }
-        gameScores.tetris = 0;
+        
+        // Resetta le statistiche
+        tetrisScore = 0;
+        tetrisLines = 0;
+        tetrisLevel = 1;
+        tetrisGameOver = false;
+        tetrisPaused = false;
+        tetrisDropCounter = 0;
+        tetrisLastTime = 0;
+        
+        // Aggiorna l'interfaccia
         document.getElementById('tetrisScore').textContent = '0';
-        // Simplified tetris start... 
-        // Real logic would be much longer, but this ensures no errors.
+        document.getElementById('tetrisLines').textContent = '0';
+        document.getElementById('tetrisLevel').textContent = '1';
+        
+        // Crea i primi pezzi
+        tetrisCurrent = createTetrisPiece();
+        tetrisNext = createTetrisPiece();
+        updateTetrisNext();
+        
+        // Avvia il game loop
+        if (tetrisInterval) clearInterval(tetrisInterval);
+        tetrisInterval = setInterval(() => gameLoopTetris(Date.now()), 1000 / 60); // 60 FPS
+        
+        // Aggiungi controlli tastiera
+        document.addEventListener('keydown', handleTetrisKeys);
+        
+        drawTetrisBoard();
     }
-    
-    function toggleTetrisPause() {}
-    function toggleTetrisFullscreen() {}
+
+    function createTetrisPiece() {
+        const piece = TETRIS_PIECES[Math.floor(Math.random() * TETRIS_PIECES.length)];
+        return {
+            shape: piece.shape.map(row => [...row]),
+            color: piece.color,
+            x: Math.floor((10 - piece.shape[0].length) / 2),
+            y: 0
+        };
+    }
+
+    function handleTetrisKeys(e) {
+        if (tetrisGameOver || tetrisPaused) return;
+        
+        console.log('Tasto premuto:', e.key); // Debug
+        
+        switch(e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                moveTetrisPiece(-1, 0);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                moveTetrisPiece(1, 0);
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                moveTetrisPiece(0, 1);
+                tetrisScore += 1;
+                updateTetrisScore();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                rotateTetrisPiece();
+                break;
+            case ' ':
+                e.preventDefault();
+                dropTetrisPiece();
+                break;
+        }
+    }
+
+    function moveTetrisPiece(dx, dy) {
+        if (!tetrisCurrent) return;
+        
+        const newX = tetrisCurrent.x + dx;
+        const newY = tetrisCurrent.y + dy;
+        
+        if (isValidTetrisPosition(tetrisCurrent.shape, newX, newY)) {
+            tetrisCurrent.x = newX;
+            tetrisCurrent.y = newY;
+            drawTetrisBoard();
+            return true;
+        }
+        return false;
+    }
+
+    function rotateTetrisPiece() {
+        if (!tetrisCurrent) return;
+        
+        const rotated = tetrisCurrent.shape[0].map((_, i) =>
+            tetrisCurrent.shape.map(row => row[i]).reverse()
+        );
+        
+        if (isValidTetrisPosition(rotated, tetrisCurrent.x, tetrisCurrent.y)) {
+            tetrisCurrent.shape = rotated;
+            drawTetrisBoard();
+        }
+    }
+
+    function dropTetrisPiece() {
+        if (!tetrisCurrent) return;
+        
+        while (moveTetrisPiece(0, 1)) {
+            tetrisScore += 2;
+        }
+        updateTetrisScore();
+    }
+
+    function isValidTetrisPosition(shape, x, y) {
+        for (let row = 0; row < shape.length; row++) {
+            for (let col = 0; col < shape[row].length; col++) {
+                if (shape[row][col]) {
+                    const boardX = x + col;
+                    const boardY = y + row;
+                    
+                    if (boardX < 0 || boardX >= 10 || boardY >= 20) {
+                        return false;
+                    }
+                    
+                    if (boardY >= 0 && tetrisBoard[boardY][boardX]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    function lockTetrisPiece() {
+        if (!tetrisCurrent) return;
+        
+        // Aggiungi il pezzo al tabellone
+        for (let row = 0; row < tetrisCurrent.shape.length; row++) {
+            for (let col = 0; col < tetrisCurrent.shape[row].length; col++) {
+                if (tetrisCurrent.shape[row][col]) {
+                    const boardY = tetrisCurrent.y + row;
+                    const boardX = tetrisCurrent.x + col;
+                    if (boardY >= 0) {
+                        tetrisBoard[boardY][boardX] = tetrisCurrent.color;
+                    }
+                }
+            }
+        }
+        
+        // Controlla le linee complete
+        const linesCleared = clearTetrisLines();
+        if (linesCleared > 0) {
+            tetrisLines += linesCleared;
+            tetrisScore += linesCleared * 100 * tetrisLevel;
+            tetrisLevel = Math.floor(tetrisLines / 10) + 1;
+            updateTetrisScore();
+        }
+        
+        // Controlla game over
+        if (tetrisCurrent.y <= 0) {
+            tetrisGameOver = true;
+            showTetrisGameOver();
+            return;
+        }
+        
+        // Prossimo pezzo
+        tetrisCurrent = tetrisNext;
+        tetrisNext = createTetrisPiece();
+        updateTetrisNext();
+        drawTetrisBoard();
+    }
+
+    function clearTetrisLines() {
+        let linesCleared = 0;
+        
+        for (let row = tetrisBoard.length - 1; row >= 0; row--) {
+            if (tetrisBoard[row].every(cell => cell !== 0)) {
+                tetrisBoard.splice(row, 1);
+                tetrisBoard.unshift(Array(10).fill(0));
+                linesCleared++;
+                row++; // Controlla di nuovo la stessa riga
+            }
+        }
+        
+        return linesCleared;
+    }
+
+    function drawTetrisBoard() {
+        // Pulisci il tabellone
+        for (let i = 0; i < 200; i++) {
+            const cell = document.getElementById(`tetris-${i}`);
+            const row = Math.floor(i / 10);
+            const col = i % 10;
+            
+            cell.className = 'tetris-cell';
+            
+            // Disegna il pezzo fisso
+            if (tetrisBoard[row][col]) {
+                cell.classList.add('filled');
+                cell.classList.add(tetrisBoard[row][col]);
+            }
+            
+            // Disegna il pezzo corrente
+            if (tetrisCurrent) {
+                const pieceRow = row - tetrisCurrent.y;
+                const pieceCol = col - tetrisCurrent.x;
+                
+                if (pieceRow >= 0 && pieceRow < tetrisCurrent.shape.length &&
+                    pieceCol >= 0 && pieceCol < tetrisCurrent.shape[0].length &&
+                    tetrisCurrent.shape[pieceRow][pieceCol]) {
+                    cell.classList.add('filled');
+                    cell.classList.add(tetrisCurrent.color);
+                }
+            }
+        }
+    }
+
+    function updateTetrisNext() {
+        const nextDiv = document.getElementById('tetrisNext');
+        nextDiv.innerHTML = '';
+        
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'tetris-cell';
+                
+                if (tetrisNext && row < tetrisNext.shape.length && col < tetrisNext.shape[0].length) {
+                    if (tetrisNext.shape[row][col]) {
+                        cell.classList.add('filled');
+                        cell.classList.add(tetrisNext.color);
+                    }
+                }
+                
+                nextDiv.appendChild(cell);
+            }
+        }
+    }
+
+    function updateTetrisScore() {
+        document.getElementById('tetrisScore').textContent = tetrisScore;
+        document.getElementById('tetrisLines').textContent = tetrisLines;
+        document.getElementById('tetrisLevel').textContent = tetrisLevel;
+        
+        const record = localStorage.getItem('tetrisRecord') || 0;
+        if (tetrisScore > record) {
+            localStorage.setItem('tetrisRecord', tetrisScore);
+            document.getElementById('tetrisRecord').textContent = tetrisScore;
+        }
+    }
+
+    function gameLoopTetris(time = 0) {
+        if (tetrisGameOver || tetrisPaused) return;
+        
+        const deltaTime = time - tetrisLastTime;
+        tetrisLastTime = time;
+        
+        tetrisDropCounter += deltaTime;
+        const dropInterval = Math.max(100, 1000 - (tetrisLevel - 1) * 100);
+        
+        if (tetrisDropCounter > dropInterval) {
+            if (!moveTetrisPiece(0, 1)) {
+                lockTetrisPiece();
+            }
+            tetrisDropCounter = 0;
+        }
+    }
+
+    function toggleTetrisPause() {
+        if (tetrisGameOver) return;
+        
+        tetrisPaused = !tetrisPaused;
+        const btn = document.getElementById('tetrisPauseBtn');
+        btn.textContent = tetrisPaused ? '▶️ RIPRENDI' : '⏸️ PAUSA';
+        
+        if (tetrisPaused) {
+            btn.style.background = '#6aaa64';
+        } else {
+            btn.style.background = 'var(--games)';
+        }
+    }
+
+    function showTetrisGameOver() {
+        clearInterval(tetrisInterval);
+        
+        const message = document.createElement('div');
+        message.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f59e0b;
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            text-align: center;
+        `;
+        
+        message.innerHTML = `
+            <div style="margin-bottom: 1rem;">🎮 GAME OVER</div>
+            <div style="font-size: 0.9rem; margin-bottom: 1rem;">Punteggio: ${tetrisScore}</div>
+            <button class="toon-btn" onclick="initTetris(); this.parentElement.remove();">🔄 RIGIOCA</button>
+        `;
+        
+        document.body.appendChild(message);
+    }
 
   </script>
 </body>

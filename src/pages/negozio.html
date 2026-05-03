@@ -50,278 +50,251 @@
             box-shadow: 10px 10px 0px var(--shop-border);
         }
 
-        .btn-exit {
-            background: #ef4444;
-            border: 4px solid var(--shop-border);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 15px;
-            text-decoration: none;
-            font-weight: 900;
-            box-shadow: 4px 4px 0px var(--shop-border);
+        .nav-left, .nav-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
-        .btn-exit:active {
-            transform: translate(2px, 2px);
-            box-shadow: 0px 0px 0px var(--shop-border);
+        .nav-center {
+            flex: 1;
+            text-align: center;
         }
 
         .shop-logo {
             font-size: 2rem;
             font-weight: 900;
-            color: var(--shop-primary);
-            -webkit-text-stroke: 1px var(--shop-border);
+            background: linear-gradient(135deg, var(--shop-primary), var(--shop-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-exit, .btn-theme {
+            background: var(--shop-secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        .btn-exit:hover, .btn-theme:hover {
+            transform: scale(1.05);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
         }
 
         .credits-capsule {
-            background: var(--shop-accent);
-            border: 4px solid var(--shop-border);
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            box-shadow: 4px 4px 0px var(--shop-border);
-        }
-
-        /* Card Prodotti stile Carte Collezionabili */
-        .product-card {
-            background: var(--shop-card);
-            border: 5px solid var(--shop-border);
-            border-radius: 25px;
-            box-shadow: var(--shop-shadow);
-            padding: 1rem;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px) rotate(2deg);
-            box-shadow: 12px 12px 0px var(--shop-border);
-        }
-
-        .product-visual {
-            background: var(--shop-bg);
-            border: 4px solid var(--shop-border);
-            border-radius: 15px;
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            margin-bottom: 1rem;
-        }
-
-        .btn-purchase {
             background: var(--shop-accent);
-            border: 4px solid var(--shop-border);
-            color: var(--shop-border);
-            padding: 1rem;
-            border-radius: 15px;
-            font-weight: 900;
-            text-transform: uppercase;
-            box-shadow: 4px 4px 0px var(--shop-border);
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .btn-purchase:active {
-            transform: translate(2px, 2px);
-            box-shadow: 0px 0px 0px var(--shop-border);
-        }
-
-        .rarity-tag {
             border: 3px solid var(--shop-border);
-            border-radius: 10px;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
-            width: fit-content;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            position: relative;
+            box-shadow: inset 0 -2px 8px rgba(0,0,0,0.1);
         }
 
         .coin-glow {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--shop-accent);
-            filter: blur(15px);
-            opacity: 0.2;
-            left: 0;
-            top: 0;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(251,191,36,0.8), transparent);
+            border-radius: 50%;
+            top: -5px;
+            left: -5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        .coin-icon {
+            width: 24px;
+            height: 24px;
+            background: #fbbf24;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #78350f;
+            font-weight: 900;
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
         }
 
         .credits-value {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--shop-accent);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .btn-theme {
-            background: var(--shop-card);
-            border: 1px solid var(--shop-border);
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-left: 1rem;
+            font-weight: 900;
             font-size: 1.2rem;
+            color: var(--shop-text);
+            margin-left: 0.5rem;
         }
 
-        /* Nuova Hero Section */
+        .page-shell {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
         .shop-hero {
             text-align: center;
-            padding: 4rem 0;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--shop-primary), var(--shop-secondary));
+            border-radius: 20px;
+            color: white;
             position: relative;
+            overflow: hidden;
+            box-shadow: var(--shop-shadow);
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(124,58,237,0.1), transparent);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .hero-main-title {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            margin: 0;
-            background: linear-gradient(to bottom, #fff, var(--shop-accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
         }
 
         .hero-sub-title {
-            color: var(--shop-muted);
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
-
-        /* Resto degli stili esistenti ottimizzati */
 
         .user-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto 4rem;
-            justify-content: center;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
             background: var(--shop-panel);
-            border-radius: 24px;
-            padding: 2rem;
+            border: 4px solid var(--shop-border);
+            border-radius: 15px;
+            padding: 1.5rem;
             text-align: center;
-            border: 5px solid var(--shop-border);
             box-shadow: var(--shop-shadow);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            min-width: 220px;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s;
         }
 
         .stat-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
             box-shadow: 12px 12px 0px var(--shop-border);
         }
 
         .stat-value {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            color: var(--shop-accent);
+            color: var(--shop-primary);
             margin-bottom: 0.5rem;
-            -webkit-text-stroke: 1px var(--shop-border);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .stat-label {
+            font-size: 0.9rem;
             color: var(--shop-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         .category-tabs {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 1rem;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
             background: var(--shop-panel);
-            border-radius: 20px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-            border: 4px solid var(--shop-border);
-            box-shadow: 6px 6px 0px var(--shop-border);
+            padding: 0.5rem;
+            border-radius: 15px;
+            border: 3px solid var(--shop-border);
+            box-shadow: var(--shop-shadow);
+            overflow-x: auto;
         }
 
         .category-tab {
-            background: transparent;
-            border: 3px solid transparent;
-            padding: 0.8rem 1.8rem;
-            border-radius: 15px;
+            background: var(--shop-bg);
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 900;
-            color: var(--shop-muted);
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 0.95rem;
+            gap: 0.5rem;
+            white-space: nowrap;
+            color: var(--shop-text);
         }
 
         .category-tab:hover {
-            color: var(--shop-text);
-            background: var(--shop-bg);
-            border-color: var(--shop-border);
+            background: var(--shop-secondary);
+            color: white;
+            transform: scale(1.05);
         }
 
         .category-tab.active {
-            background: var(--shop-accent);
-            color: var(--shop-border);
-            border-color: var(--shop-border);
-            box-shadow: 4px 4px 0px var(--shop-border);
-            transform: scale(1.05);
+            background: var(--shop-primary);
+            color: white;
+            box-shadow: inset 0 -3px 6px rgba(0,0,0,0.2);
         }
 
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2.5rem;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto 5rem;
-            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         .product-card {
-            background: var(--shop-panel);
-            border-radius: 32px;
-            padding: 0;
-            border: 2px solid var(--shop-border);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--shop-card);
+            border: 4px solid var(--shop-border);
+            border-radius: 15px;
+            overflow: hidden;
             position: relative;
+            box-shadow: var(--shop-shadow);
+            transition: all 0.3s;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .product-card:hover {
-            transform: translateY(-12px);
-            border-color: var(--shop-accent);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 12px 12px 0px var(--shop-border);
         }
 
         .product-visual {
-            height: 180px;
-            background: var(--shop-card);
+            background: linear-gradient(135deg, var(--shop-bg), var(--shop-panel));
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -527,20 +500,58 @@
         </main>
     </div>
 
-    <!-- Footer Component -->
+    <!-- Tasto Personalizzazione Avatar -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button class="toon-btn" onclick="openAvatarCustomization()" style="background: var(--shop-accent); color: white; padding: 1rem 1.5rem; font-size: 1rem; box-shadow: var(--shop-shadow); border-radius: 15px;">
+            👤 Personalizzazione Avatar
+        </button>
+    </div>
+
+    <!-- Modal Personalizzazione Avatar -->
+    <div id="avatarModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: var(--shop-panel); border: 5px solid var(--shop-border); border-radius: 20px; padding: 2rem; max-width: 800px; max-height: 80vh; overflow-y: auto; box-shadow: var(--shop-shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0; color: var(--shop-text); font-size: 1.8rem;">👤 Personalizzazione Avatar</h2>
+                <button class="toon-btn" onclick="closeAvatarCustomization()" style="background: var(--shop-muted); color: white; padding: 0.5rem 1rem;">✕ Chiudi</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Inventario Oggetti Acquistati -->
+                <div>
+                    <h3 style="color: var(--shop-text); margin-bottom: 1rem;">🎒 Inventario Acquistati</h3>
+                    <div id="ownedItems" style="background: var(--shop-bg); border: 3px solid var(--shop-border); border-radius: 15px; padding: 1rem; min-height: 300px; max-height: 400px; overflow-y: auto;">
+                        <!-- Gli oggetti acquistati verranno caricati qui -->
+                    </div>
+                </div>
+                
+                <!-- Avatar Preview e Equipaggiamento -->
+                <div>
+                    <h3 style="color: var(--shop-text); margin-bottom: 1rem;">👔 Avatar Attuale</h3>
+                    <div style="background: var(--shop-bg); border: 3px solid var(--shop-border); border-radius: 15px; padding: 1rem; text-align: center;">
+                        <div id="avatarPreview" style="width: 150px; height: 150px; margin: 0 auto 1rem; background: white; border: 3px solid var(--shop-border); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                            🧠
+                        </div>
+                        <div id="equippedItems" style="text-align: left; margin-top: 1rem;">
+                            <h4 style="color: var(--shop-text); margin-bottom: 0.5rem;">🎩 Equipaggiamento:</h4>
+                            <div id="equippedList" style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 0.5rem; min-height: 100px;">
+                                <!-- Gli oggetti equipaggiati verranno mostrati qui -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="toon-btn" onclick="saveAvatarCustomization()" style="background: var(--shop-primary); color: white; padding: 0.8rem 2rem; font-size: 1.1rem;">💾 Salva Modifiche</button>
+            </div>
+        </div>
+    </div>
+
     <div id="footer-container"></div>
 
-    <!-- Scripts -->
-    <script src="../js/env-config.js"></script>
-    <script src="../js/modules/auth.js"></script>
     <script src="../js/modules/credits.js"></script>
     <script src="../js/modules/notifications.js"></script>
-    <script src="../js/utils/utils.js"></script>
     <script src="../js/modules/shop.js"></script>
-    <script src="../js/animated-avatar.js"></script>
-    <script src="../js/theme-manager.js"></script>
-    <script src="../js/sidebar.js"></script>
-
     <script>
         // Shop Page Controller
         class ShopController {
@@ -551,8 +562,7 @@
             }
 
             init() {
-                if (!AuthModule.checkAuthentication()) return;
-                
+                // Initialize shop immediately without auth check
                 this.loadComponents();
                 this.setupEventListeners();
                 this.initializeSystems();
@@ -560,12 +570,16 @@
 
             async loadComponents() {
                 try {
-                    // Header personalizzato già presente nel body per stile gaming
-                    // Carichiamo solo il footer
-                    const footerResponse = await fetch('../components/footer.html');
-                    const footerHtml = await footerResponse.text();
-                    document.getElementById('footer-container').innerHTML = footerHtml;
-
+                    // Load footer if exists
+                    try {
+                        const footerResponse = await fetch('../components/footer.html');
+                        const footerHtml = await footerResponse.text();
+                        if (document.getElementById('footer-container')) {
+                            document.getElementById('footer-container').innerHTML = footerHtml;
+                        }
+                    } catch (e) {
+                        console.log('Footer not found, continuing...');
+                    }
                 } catch (error) {
                     console.error('Error loading components:', error);
                 }
@@ -582,13 +596,6 @@
                         }
                     });
                 }
-
-                // Aggiorna info utente (sidebar rimosso ma teniamo per compatibilità se serve)
-                setTimeout(() => {
-                    if (window.sidebarManager) {
-                        window.sidebarManager.updateUserInfo();
-                    }
-                }, 100);
             }
 
             updateThemeIcon() {
@@ -707,17 +714,28 @@
                     // Update stats
                     this.updateStats();
                     
-                    // Show success message
-                    NotificationsModule.showSuccess(result.message);
+                    // Show VIP success message for VIP purchases
+                    const product = this.shop.getProduct(productId);
+                    if (product && product.vip) {
+                        if (window.NotificationsModule) {
+                            window.NotificationsModule.showSuccess(`🎉 Congratulazioni! Ora sei ${this.shop.getVipLevel()} VIP!`);
+                        }
+                    } else {
+                        if (window.NotificationsModule) {
+                            window.NotificationsModule.showSuccess(result.message);
+                        }
+                    }
                 } else {
                     // Show error message
-                    NotificationsModule.showError(result.message);
+                    if (window.NotificationsModule) {
+                        window.NotificationsModule.showError(result.message);
+                    }
                 }
             }
 
             updateStats() {
                 const stats = this.shop.getUserStats();
-                const credits = CreditsModule.getCrediti();
+                const credits = window.CreditsModule ? window.CreditsModule.getCrediti() : 0;
                 
                 document.getElementById('userCredits').textContent = credits;
                 document.getElementById('ownedProducts').textContent = stats.ownedProducts;
@@ -725,8 +743,163 @@
                 document.getElementById('completionRate').textContent = stats.completionRate + '%';
                 
                 // Update global credits display
-                CreditsModule.updateCreditDisplay();
+                if (window.CreditsModule && window.CreditsModule.updateCreditDisplay) {
+                    window.CreditsModule.updateCreditDisplay();
+                }
             }
+        }
+
+        // Avatar Customization Functions
+        function openAvatarCustomization() {
+            document.getElementById('avatarModal').style.display = 'flex';
+            loadOwnedItems();
+            loadEquippedItems();
+        }
+
+        function closeAvatarCustomization() {
+            document.getElementById('avatarModal').style.display = 'none';
+        }
+
+        function loadOwnedItems() {
+            const ownedItemsDiv = document.getElementById('ownedItems');
+            
+            if (!window.shopController || !window.shopController.shop) {
+                ownedItemsDiv.innerHTML = '<p style="color: var(--shop-muted); text-align: center; padding: 2rem;">Negozio non inizializzato</p>';
+                return;
+            }
+            
+            const ownedProducts = window.shopController.shop.getOwnedProducts();
+            
+            if (ownedProducts.length === 0) {
+                ownedItemsDiv.innerHTML = '<p style="color: var(--shop-muted); text-align: center; padding: 2rem;">Nessun oggetto acquistato</p>';
+                return;
+            }
+            
+            ownedItemsDiv.innerHTML = ownedProducts.map(product => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer;" onclick="equipItem('${product.id}')">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 1.5rem;">${product.icon}</span>
+                        <span style="color: var(--shop-text); font-weight: 600;">${product.name}</span>
+                    </div>
+                    <button class="toon-btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; background: ${product.equipped ? 'var(--shop-primary)' : 'var(--shop-accent)'};">
+                        ${product.equipped ? '✓ Equipaggiato' : 'Indossa'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadEquippedItems() {
+            const equippedDiv = document.getElementById('equippedList');
+            
+            if (!window.shopController || !window.shopController.shop) {
+                equippedDiv.innerHTML = '<p style="color: var(--shop-muted); text-align: center;">Negozio non inizializzato</p>';
+                return;
+            }
+            
+            const equippedItems = window.shopController.shop.getEquippedItems();
+            
+            if (equippedItems.length === 0) {
+                equippedDiv.innerHTML = '<p style="color: var(--shop-muted); text-align: center;">Nessun oggetto equipaggiato</p>';
+                return;
+            }
+            
+            equippedDiv.innerHTML = equippedItems.map(item => `
+                <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem; margin-bottom: 0.3rem; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                    <span style="font-size: 1.2rem;">${item.icon}</span>
+                    <span style="color: var(--shop-text); font-size: 0.9rem;">${item.name}</span>
+                    <button class="toon-btn" style="padding: 0.2rem 0.6rem; font-size: 0.7rem; background: var(--shop-muted);" onclick="unequipItem('${item.id}')">
+                        Rimuovi
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function equipItem(productId) {
+            if (!window.shopController || !window.shopController.shop) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showError('Negozio non inizializzato');
+                }
+                return;
+            }
+            
+            const result = window.shopController.shop.equipItem(productId);
+            
+            if (result.success) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showSuccess(`${result.item.name} equipaggiato!`);
+                }
+                loadOwnedItems();
+                loadEquippedItems();
+                updateAvatarPreview();
+            } else {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showError(result.message);
+                }
+            }
+        }
+
+        function unequipItem(productId) {
+            if (!window.shopController || !window.shopController.shop) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showError('Negozio non inizializzato');
+                }
+                return;
+            }
+            
+            const result = window.shopController.shop.unequipItem(productId);
+            
+            if (result.success) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showSuccess(`${result.item.name} rimosso!`);
+                }
+                loadOwnedItems();
+                loadEquippedItems();
+                updateAvatarPreview();
+            } else {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showError(result.message);
+                }
+            }
+        }
+
+        function updateAvatarPreview() {
+            const previewDiv = document.getElementById('avatarPreview');
+            
+            if (!window.shopController || !window.shopController.shop) {
+                previewDiv.innerHTML = '🧠';
+                previewDiv.style.fontSize = '4rem';
+                return;
+            }
+            
+            const equippedItems = window.shopController.shop.getEquippedItems();
+            
+            if (equippedItems.length > 0) {
+                // Mostra l'icona dell'ultimo oggetto equipaggiato come preview
+                const lastItem = equippedItems[equippedItems.length - 1];
+                previewDiv.innerHTML = lastItem.icon;
+                previewDiv.style.fontSize = '5rem';
+            } else {
+                previewDiv.innerHTML = '🧠';
+                previewDiv.style.fontSize = '4rem';
+            }
+        }
+
+        function saveAvatarCustomization() {
+            if (!window.shopController || !window.shopController.shop) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showError('Negozio non inizializzato');
+                }
+                return;
+            }
+            
+            // Salva le modifiche all'avatar
+            const equippedItems = window.shopController.shop.getEquippedItems();
+            localStorage.setItem('avatarEquipped', JSON.stringify(equippedItems));
+            
+            if (window.NotificationsModule) {
+                window.NotificationsModule.showSuccess('Avatar personalizzato salvato!');
+            }
+            closeAvatarCustomization();
         }
 
         // Initialize shop page
@@ -738,4 +911,3 @@
     </script>
 </body>
 </html>
-

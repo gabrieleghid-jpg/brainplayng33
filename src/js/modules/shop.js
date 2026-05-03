@@ -184,6 +184,265 @@ class ShopModule {
                 icon: '💎',
                 owned: false,
                 consumable: true
+            },
+            
+            // Accessori Extra
+            'necklace-gold': {
+                id: 'necklace-gold',
+                name: 'Collana d\'Oro',
+                price: 60,
+                category: 'accessories',
+                description: 'Collana preziosa per il tuo avatar',
+                icon: '📿',
+                owned: false
+            },
+            'watch-digital': {
+                id: 'watch-digital',
+                name: 'Orologio Digitale',
+                price: 80,
+                category: 'accessories',
+                description: 'Orologio smart con display digitale',
+                icon: '⌚',
+                owned: false
+            },
+            'backpack-school': {
+                id: 'backpack-school',
+                name: 'Zaino Scolastico',
+                price: 70,
+                category: 'accessories',
+                description: 'Zaino perfetto per la scuola',
+                icon: '🎒',
+                owned: false
+            },
+            'earbuds-wireless': {
+                id: 'earbuds-wireless',
+                name: 'Cuffie Wireless',
+                price: 90,
+                category: 'accessories',
+                description: 'Cuffie senza fili per ascoltare musica',
+                icon: '🎧',
+                owned: false
+            },
+            'ring-diamond': {
+                id: 'ring-diamond',
+                name: 'Anello Diamante',
+                price: 150,
+                category: 'accessories',
+                description: 'Anello con diamante scintillante',
+                icon: '💍',
+                owned: false
+            },
+            'bracelet-friendship': {
+                id: 'bracelet-friendship',
+                name: 'Bracciale Amicizia',
+                price: 45,
+                category: 'accessories',
+                description: 'Bracciale colorato dell\'amicizia',
+                icon: '🔗',
+                owned: false
+            },
+            
+            // Magliette Extra
+            'hoodie-cool': {
+                id: 'hoodie-cool',
+                name: 'Felpa con Cappuccio',
+                price: 100,
+                category: 'shirts',
+                description: 'Felpa comoda con cappuccio',
+                icon: '🧥',
+                owned: false
+            },
+            'jacket-leather': {
+                id: 'jacket-leather',
+                name: 'Giubbotto di Pelle',
+                price: 180,
+                category: 'shirts',
+                description: 'Giubbotto elegante in pelle sintetica',
+                icon: '🧥',
+                owned: false
+            },
+            'tshirt-vintage': {
+                id: 'tshirt-vintage',
+                name: 'T-Shirt Vintage',
+                price: 65,
+                category: 'shirts',
+                description: 'T-Shirt stile retrò',
+                icon: '👕',
+                owned: false
+            },
+            'polo-sport': {
+                id: 'polo-sport',
+                name: 'Polo Sport',
+                price: 85,
+                category: 'shirts',
+                description: 'Polo elegante per attività sportive',
+                icon: '👔',
+                owned: false
+            },
+            'sweater-winter': {
+                id: 'sweater-winter',
+                name: 'Maglione Invernale',
+                price: 120,
+                category: 'shirts',
+                description: 'Maglione caldo per l\'inverno',
+                icon: '🧤',
+                owned: false
+            },
+            
+            // Colori Extra
+            'skin-neon': {
+                id: 'skin-neon',
+                name: 'Pelle Neon',
+                price: 200,
+                category: 'colors',
+                description: 'Pelle fluorescente al neon',
+                icon: '🌟',
+                owned: false
+            },
+            'skin-galaxy': {
+                id: 'skin-galaxy',
+                name: 'Pelle Galassia',
+                price: 250,
+                category: 'colors',
+                description: 'Pelle con effetto galassia',
+                icon: '🌌',
+                owned: false
+            },
+            'skin-camouflage': {
+                id: 'skin-camouflage',
+                name: 'Pelle Camuffaggio',
+                price: 180,
+                category: 'colors',
+                description: 'Pelle mimetica militare',
+                icon: '🎯',
+                owned: false
+            },
+            'skin-metallic': {
+                id: 'skin-metallic',
+                name: 'Pelle Metallica',
+                price: 220,
+                category: 'colors',
+                description: 'Pelle con effetto metallico',
+                icon: '⚡',
+                owned: false
+            },
+            'skin-pastel': {
+                id: 'skin-pastel',
+                name: 'Pelle Pastello',
+                price: 160,
+                category: 'colors',
+                description: 'Pelle con colori pastello delicati',
+                icon: '🎨',
+                owned: false
+            },
+            
+            // Power-up Extra
+            'speed-boost': {
+                id: 'speed-boost',
+                name: 'Velocità+',
+                price: 150,
+                category: 'powerups',
+                description: 'Aumenta la velocità nei minigiochi',
+                icon: '⚡',
+                owned: false,
+                consumable: true
+            },
+            'time-freeze': {
+                id: 'time-freeze',
+                name: 'Tempo Congelato',
+                price: 200,
+                category: 'powerups',
+                description: 'Ferma il tempo per 10 secondi',
+                icon: '⏸',
+                owned: false,
+                consumable: true
+            },
+            'auto-solve': {
+                id: 'auto-solve',
+                name: 'Soluzione Automatica',
+                price: 500,
+                category: 'powerups',
+                description: 'Risolve automaticamente un puzzle difficile',
+                icon: '🤖',
+                owned: false,
+                consumable: true
+            },
+            'double-xp': {
+                id: 'double-xp',
+                name: 'Esperienza Doppia',
+                price: 350,
+                category: 'powerups',
+                description: 'Raddoppia i punti esperienza',
+                icon: '🌟',
+                owned: false,
+                consumable: true
+            },
+            'shield-protection': {
+                id: 'shield-protection',
+                name: 'Scudo Protettivo',
+                price: 300,
+                category: 'powerups',
+                description: 'Protegge da errori nei minigiochi',
+                icon: '🛡️',
+                owned: false,
+                consumable: true
+            },
+            
+            // Pacchetti Extra
+            'pack-mega': {
+                id: 'pack-mega',
+                name: 'Pacchetto Mega',
+                price: 2000,
+                category: 'packs',
+                description: '20 accessori leggendari + 1000 crediti bonus',
+                icon: '🏆',
+                owned: false,
+                consumable: true
+            },
+            'pack-vip': {
+                id: 'pack-vip',
+                name: 'Pacchetto VIP',
+                price: 5000,
+                category: 'packs',
+                description: 'Tutti gli accessori + 2000 crediti + status VIP',
+                icon: '👑',
+                owned: false,
+                consumable: true,
+                vip: true
+            },
+            'vip-status': {
+                id: 'vip-status',
+                name: 'Status VIP',
+                price: 10000,
+                category: 'vip',
+                description: 'Diventa VIP permanente con privilegi esclusivi',
+                icon: '👑',
+                owned: false,
+                consumable: false,
+                permanent: true,
+                vip: true
+            },
+            'vip-crown': {
+                id: 'vip-crown',
+                name: 'Corona VIP Esclusiva',
+                price: 2500,
+                category: 'vip',
+                description: 'Corona dorata con animazioni speciali per utenti VIP',
+                icon: '👑',
+                owned: false,
+                consumable: false,
+                vip: true
+            },
+            'vip-throne': {
+                id: 'vip-throne',
+                name: 'Trono VIP',
+                price: 5000,
+                category: 'vip',
+                description: 'Trono personale con effetti speciali nella home page',
+                icon: '👑',
+                owned: false,
+                consumable: false,
+                vip: true
             }
         };
     }
@@ -345,12 +604,13 @@ class ShopModule {
     getCategories() {
         return [
             { id: 'all', name: 'Tutti', icon: '🛍️' },
-            { id: 'accessories', name: 'Accessori', icon: '🎭' },
-            { id: 'colors', name: 'Colori Speciali', icon: '🎨' },
+            { id: 'accessories', name: 'Accessori', icon: '👓' },
+            { id: 'colors', name: 'Colori', icon: '🎨' },
             { id: 'hairstyles', name: 'Stili Capelli', icon: '💇‍♀️' },
             { id: 'shirts', name: 'Magliette', icon: '👕' },
             { id: 'powerups', name: 'Power-up', icon: '⚡' },
-            { id: 'packs', name: 'Pacchetti', icon: '🎁' }
+            { id: 'packs', name: 'Pacchetti', icon: '🎁' },
+            { id: 'vip', name: '👑 VIP', icon: '👑' }
         ];
     }
 
@@ -374,6 +634,101 @@ class ShopModule {
         Object.keys(this.products).forEach(productId => {
             this.products[productId].owned = this.isProductOwned(productId);
         });
+    }
+
+    equipItem(productId) {
+        const product = this.getProduct(productId);
+        if (!product) {
+            return { success: false, message: 'Prodotto non trovato' };
+        }
+
+        if (!this.isProductOwned(productId)) {
+            return { success: false, message: 'Devi prima acquistare questo oggetto!' };
+        }
+
+        // Carica gli oggetti equipaggiati
+        let equippedItems = JSON.parse(localStorage.getItem('equippedItems') || '[]');
+        
+        // Rimuovi l'oggetto se già equipaggiato
+        equippedItems = equippedItems.filter(id => id !== productId);
+        
+        // Aggiungi il nuovo oggetto
+        equippedItems.push(productId);
+        
+        // Salva
+        localStorage.setItem('equippedItems', JSON.stringify(equippedItems));
+        
+        // Aggiorna lo stato
+        this.refreshProductOwnership();
+        
+        return { success: true, item: product };
+    }
+
+    unequipItem(productId) {
+        const product = this.getProduct(productId);
+        if (!product) {
+            return { success: false, message: 'Prodotto non trovato' };
+        }
+
+        // Carica gli oggetti equipaggiati
+        let equippedItems = JSON.parse(localStorage.getItem('equippedItems') || '[]');
+        
+        // Rimuovi l'oggetto
+        equippedItems = equippedItems.filter(id => id !== productId);
+        
+        // Salva
+        localStorage.setItem('equippedItems', JSON.stringify(equippedItems));
+        
+        // Aggiorna lo stato
+        this.refreshProductOwnership();
+        
+        return { success: true, item: product };
+    }
+
+    getEquippedItems() {
+        const equippedIds = JSON.parse(localStorage.getItem('equippedItems') || '[]');
+        return equippedIds.map(id => this.getProduct(id)).filter(product => product !== null);
+    }
+
+    getOwnedProducts() {
+        return Object.keys(this.products)
+            .filter(productId => this.isProductOwned(productId))
+            .map(productId => ({
+                ...this.products[productId],
+                equipped: this.isEquipped(productId)
+            }));
+    }
+
+    isEquipped(productId) {
+        const equippedIds = JSON.parse(localStorage.getItem('equippedItems') || '[]');
+        return equippedIds.includes(productId);
+    }
+
+    isVip() {
+        const vipPurchases = Object.keys(this.userPurchases).filter(productId => {
+            const product = this.getProduct(productId);
+            return product && product.vip;
+        });
+        return vipPurchases.length > 0;
+    }
+
+    hasPermanentVip() {
+        return this.userPurchases['vip-status'] === true;
+    }
+
+    getVipLevel() {
+        if (this.hasPermanentVip()) return 'PERMANENT';
+        if (this.isVip()) return 'TEMPORARY';
+        return 'NORMAL';
+    }
+
+    getVipBadge() {
+        const level = this.getVipLevel();
+        switch(level) {
+            case 'PERMANENT': return '👑';
+            case 'TEMPORARY': return '🎖';
+            default: return '';
+        }
     }
 }
 
