@@ -1,0 +1,19 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Elmo vichingo metallico -->
+  <path d="M 110 60 Q 150 40 190 60 L 190 85 L 185 95 Q 150 85 115 95 L 110 85 Z" fill="#708090"/>
+  <path d="M 105 65 Q 150 45 195 65 L 195 90 L 190 100 Q 150 90 110 100 L 105 90 Z" fill="#778899"/>
+  <!-- Corna destra -->
+  <path d="M 190 60 L 210 55 L 215 65 L 210 75 L 195 70 Z" fill="#c0c0c0"/>
+  <path d="M 195 65 L 205 62 L 208 68 L 205 72 L 195 70 Z" fill="#ffd700"/>
+  <!-- Corna sinistra -->
+  <path d="M 110 60 L 90 55 L 85 65 L 90 75 L 105 70 Z" fill="#c0c0c0"/>
+  <path d="M 105 65 L 95 62 L 92 68 L 95 72 L 105 70 Z" fill="#ffd700"/>
+  <!-- Protezione naso -->
+  <rect x="145" y="75" width="10" height="15" fill="#696969"/>
+  <rect x="143" y="77" width="14" height="11" fill="#708090"/>
+  <!-- Dettagli -->
+  <circle cx="150" cy="70" r="3" fill="#ffd700"/>
+  <rect x="120" y="80" width="60" height="2" fill="#c0c0c0"/>
+  <!-- Bordo inferiore -->
+  <rect x="110" y="95" width="80" height="5" fill="#696969"/>
+</svg>

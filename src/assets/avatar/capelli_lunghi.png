@@ -1,0 +1,10 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Capelli lunghi neri -->
+  <path d="M 100 70 Q 150 40 200 70 L 200 150 Q 150 130 100 150 Z" fill="#2c2c2c"/>
+  <path d="M 90 75 Q 150 45 210 75 L 210 145 Q 150 125 90 145 Z" fill="#1a1a1a"/>
+  <!-- Frangia lunga -->
+  <path d="M 120 65 Q 150 60 180 65 L 180 90 Q 150 85 120 90 Z" fill="#2c2c2c"/>
+  <!-- Ciocche laterali -->
+  <path d="M 95 80 Q 80 120 85 160 L 90 150 Q 85 110 100 80 Z" fill="#2c2c2c"/>
+  <path d="M 205 80 Q 220 120 215 160 L 210 150 Q 215 110 200 80 Z" fill="#2c2c2c"/>
+</svg>

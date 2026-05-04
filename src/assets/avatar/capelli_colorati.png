@@ -1,0 +1,16 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Capelli colorati arcobaleno -->
+  <path d="M 100 70 Q 150 40 200 70 L 200 140 Q 150 120 100 140 Z" fill="#ff00ff"/>
+  <path d="M 90 75 Q 150 45 210 75 L 210 135 Q 150 115 90 135 Z" fill="#00ffff"/>
+  <!-- Strisce colorate -->
+  <path d="M 110 65 Q 150 55 190 65 L 190 85 Q 150 75 110 85 Z" fill="#ffff00"/>
+  <path d="M 105 70 Q 150 60 195 70 L 195 90 Q 150 80 105 90 Z" fill="#ff00ff"/>
+  <path d="M 100 75 Q 150 65 200 75 L 200 95 Q 150 85 100 95 Z" fill="#00ff00"/>
+  <path d="M 95 80 Q 150 70 205 80 L 205 100 Q 150 90 95 100 Z" fill="#ff0000"/>
+  <path d="M 90 85 Q 150 75 210 85 L 210 105 Q 150 95 90 105 Z" fill="#0000ff"/>
+  <!-- Ciocche laterali colorate -->
+  <circle cx="95" cy="95" r="12" fill="#ffff00"/>
+  <circle cx="205" cy="95" r="12" fill="#ff00ff"/>
+  <circle cx="90" cy="110" r="10" fill="#00ffff"/>
+  <circle cx="210" cy="110" r="10" fill="#00ff00"/>
+</svg>

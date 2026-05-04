@@ -1,0 +1,7 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Capelli corti castani -->
+  <path d="M 120 80 Q 150 60 180 80 L 180 120 Q 150 110 120 120 Z" fill="#8b4513"/>
+  <path d="M 110 85 Q 150 65 190 85 L 190 115 Q 150 105 110 115 Z" fill="#a0522d"/>
+  <!-- Frangia -->
+  <path d="M 125 75 Q 150 70 175 75 L 175 85 Q 150 80 125 85 Z" fill="#8b4513"/>
+</svg>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WindRider Avatar - BrainPlay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0f172a;
+            overflow-x: hidden;
+        }
+        
+        /* Back Button - Stile BrainPlay */
+        .bp-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .bp-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+        
+        #avatarContainer {
+            min-height: 100vh;
+        }
+        
+        /* Responsive per mobile */
+        @media (max-width: 768px) {
+            .bp-back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bottone Torna Indietro -->
+    <a href="home.html" class="bp-back-btn">
+        ← Torna alla Home
+    </a>
+    
+    <!-- Container Avatar -->
+    <div id="avatarContainer"></div>
+
+    <!-- Script WindRider -->
+    <script src="../js/windrider-avatar.js"></script>
+    
+    <script>
+        // Verifica autenticazione BrainPlay
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuth = sessionStorage.getItem('authenticated') === 'true' || 
+                          localStorage.getItem('bp_authenticated') === 'true';
+            
+            if (!isAuth) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Inizializza WindRider Avatar
+            const avatar = new WindRiderAvatar('avatarContainer');
+            
+            // Integrazione con crediti BrainPlay (opzionale)
+            const syncCredits = () => {
+                // Se vuoi sincronizzare i crediti con il sistema BrainPlay
+                // qui puoi aggiungere la logica
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- T-shirt blu casual -->
+  <rect x="120" y="150" width="60" height="80" fill="#4169e1"/>
+  <rect x="100" y="160" width="20" height="60" fill="#4169e1"/>
+  <rect x="180" y="160" width="20" height="60" fill="#4169e1"/>
+  <rect x="130" y="230" width="40" height="100" fill="#4169e1"/>
+  <rect x="120" y="310" width="15" height="80" fill="#4169e1"/>
+  <rect x="165" y="310" width="15" height="80" fill="#4169e1"/>
+  <!-- Stampa sul petto -->
+  <circle cx="150" cy="190" r="15" fill="white" opacity="0.8"/>
+  <text x="150" y="195" font-family="Arial" font-size="12" font-weight="bold" fill="#4169e1" text-anchor="middle">BP</text>
+</svg>

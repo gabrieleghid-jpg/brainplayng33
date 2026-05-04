@@ -1,0 +1,14 @@
+<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Berretto da baseball rosso -->
+  <ellipse cx="150" cy="75" rx="55" ry="25" fill="#dc143c"/>
+  <ellipse cx="150" cy="70" rx="55" ry="20" fill="#ff0000"/>
+  <!-- Visiera -->
+  <path d="M 95 75 Q 150 85 205 75 L 200 95 Q 150 105 100 95 Z" fill="#2c2c2c"/>
+  <path d="M 100 95 Q 150 100 200 95 L 195 98 Q 150 103 105 98 Z" fill="#4169e1"/>
+  <!-- Dettagli -->
+  <rect x="145" y="65" width="10" height="8" fill="white"/>
+  <circle cx="150" cy="69" r="2" fill="#dc143c"/>
+  <!-- Pulsanti laterali -->
+  <circle cx="110" cy="70" r="3" fill="white"/>
+  <circle cx="190" cy="70" r="3" fill="white"/>
+</svg>
