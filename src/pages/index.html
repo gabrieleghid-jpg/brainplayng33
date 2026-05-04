@@ -404,8 +404,10 @@
         sessionStorage.setItem('authenticated', 'true');
         sessionStorage.setItem('username', account.username);
         sessionStorage.setItem('email', account.email);
+        sessionStorage.setItem('role', 'user');
         localStorage.setItem('bp_authenticated', 'true');
         localStorage.setItem('bp_username', account.username);
+        localStorage.setItem('bp_role', 'user');
 
         showToast('Accesso eseguito! Benvenuto ' + account.username + '! 🌈');
         setTimeout(() => window.location.href = 'home.html', 1000);
@@ -430,14 +432,16 @@
           return;
         }
 
-        const account = { username: user, email, password: pass };
+        const account = { username: user, email, password: pass, role: 'user' };
         storeAccount(account);
         
         sessionStorage.setItem('authenticated', 'true');
         sessionStorage.setItem('username', user);
         sessionStorage.setItem('email', email);
+        sessionStorage.setItem('role', 'user');
         localStorage.setItem('bp_authenticated', 'true');
         localStorage.setItem('bp_username', user);
+        localStorage.setItem('bp_role', 'user');
 
         showToast('Account creato! Benvenuto nell\'avventura! ✨');
         setTimeout(() => window.location.href = 'home.html', 1000);
@@ -447,6 +451,9 @@
         sessionStorage.setItem('authenticated', 'true');
         sessionStorage.setItem('role', 'guest');
         sessionStorage.setItem('username', 'Ospite');
+        localStorage.setItem('bp_authenticated', 'true');
+        localStorage.setItem('bp_role', 'guest');
+        localStorage.setItem('bp_username', 'Ospite');
         showToast('Entrato come Ospite! 👤');
         setTimeout(() => window.location.href = 'home.html', 1000);
       });

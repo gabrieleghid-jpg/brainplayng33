@@ -227,12 +227,13 @@
   <script src="../js/modules/notifications.js"></script>
   <script src="../js/animated-avatar.js"></script>
   <script>
-    if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
-      window.location.href = 'index.html';
-    }
-
-    // Inizializzazione al caricamento
+    // Inizializzazione al caricamento - aspetta che tutti gli script siano pronti
     document.addEventListener('DOMContentLoaded', () => {
+      // Controllo autenticazione dopo che tutti i moduli sono caricati
+      if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
+        window.location.href = 'index.html';
+        return;
+      }
       // Il CreditsModule si inizializza da solo, qui possiamo aggiungere logica specifica se serve
       console.log('Home caricata, crediti attuali:', window.CreditsModule ? window.CreditsModule.getCrediti() : 'N/A');
     });
