@@ -227,6 +227,38 @@
   <script src="../js/modules/notifications.js"></script>
   <script src="../js/animated-avatar.js"></script>
   <script>
+    // Definizione accessori disponibili con categorie
+    const accessoriDisponibili = [
+      {
+        id: 'occhiali',
+        nome: 'Occhiali da Sole',
+        prezzo: 50,
+        categoria: 'occhi',
+        svg: '<circle cx="30" cy="25" r="8" fill="none" stroke="#333" stroke-width="2"/><circle cx="30" cy="35" r="8" fill="none" stroke="#333" stroke-width="2"/><path d="M22 25 L38 25 M22 35 L38 35" stroke="#333" stroke-width="2"/>'
+      },
+      {
+        id: 'cappello',
+        nome: 'Cappello da Viaggio',
+        prezzo: 75,
+        categoria: 'testa',
+        svg: '<path d="M15 20 Q30 10 45 20 L45 25 Q30 30 15 25 Z" fill="#8B4513" stroke="#654321" stroke-width="2"/><rect x="20" y="25" width="20" height="3" fill="#654321"/>'
+      },
+      {
+        id: 'sciarpa',
+        nome: 'Sciarpa Invernale',
+        prezzo: 40,
+        categoria: 'collo',
+        svg: '<path d="M25 15 Q30 25 35 15" fill="none" stroke="#FF0000" stroke-width="3"/><path d="M20 20 Q30 35 40 20" fill="none" stroke="#FF0000" stroke-width="3"/>'
+      },
+      {
+        id: 'orologio',
+        nome: 'Orologio da Polso',
+        prezzo: 60,
+        categoria: 'accessorio',
+        svg: '<circle cx="45" cy="30" r="6" fill="none" stroke="#333" stroke-width="2"/><circle cx="45" cy="30" r="1" fill="#333"/><rect x="40" y="28" width="10" height="4" fill="#8B4513"/>'
+      }
+    ];
+
     // Inizializzazione al caricamento - aspetta che tutti gli script siano pronti
     document.addEventListener('DOMContentLoaded', () => {
       // Controllo autenticazione dopo che tutti i moduli sono caricati
@@ -342,6 +374,74 @@
       // Per utenti registrati, usa localStorage (persistente)
       return JSON.parse(localStorage.getItem(STORAGE_ACCESSORI_KEY) || '[]');
     }
+
+    // Ottieni accessori equipaggiati
+    function getAccessoriEquipaggiati() {
+      // Controlla se l'utente è un ospite
+      const userData = window.AuthModule?.getUserData?.() || {};
+      if (userData.role === 'guest') {
+        // Per ospiti, usa sessionStorage (temporaneo)
+        return JSON.parse(sessionStorage.getItem('guest_equipped') || '[]');
+      }
+      
+      // Per utenti registrati, usa localStorage (persistente)
+      return JSON.parse(localStorage.getItem('equipped_accessori') || '[]');
+    }
+
+    // Equipaggia un accessorio
+    function equipaggiaAccessorio(accessorioId) {
+      const equipaggiati = getAccessoriEquipaggiati();
+      const acquistati = getAccessoriAcquistati();
+      
+      // Controlla se l'accessorio è stato acquistato
+      if (!acquistati.includes(accessorioId)) {
+        return false;
+      }
+      
+      // Rimuovi altri accessori della stessa categoria
+      const accessorio = accessoriDisponibili.find(a => a.id === accessorId);
+      if (accessorio) {
+        const categoria = accessorio.categoria;
+        const equipaggiatiFiltrati = equipaggiati.filter(id => {
+          const acc = accessoriDisponibili.find(a => a.id === id);
+          return acc && acc.categoria !== categoria;
+        });
+        
+        equipaggiatiFiltrati.push(accessorioId);
+        
+        // Salva negli storage corretti
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.role === 'guest') {
+          sessionStorage.setItem('guest_equipped', JSON.stringify(equipaggiatiFiltrati));
+        } else {
+          localStorage.setItem('equipped_accessori', JSON.stringify(equipaggiatiFiltrati));
+        }
+        
+        updateAvatarDisplay();
+        renderShopAvatar();
+        return true;
+      }
+      
+      return false;
+    }
+
+    // Disequipaggia un accessorio
+    function disequipaggiaAccessorio(accessorioId) {
+      const equipaggiati = getAccessoriEquipaggiati();
+      const nuoviEquipaggiati = equipaggiati.filter(id => id !== accessorioId);
+      
+      // Salva negli storage corretti
+      const userData = window.AuthModule?.getUserData?.() || {};
+      if (userData.role === 'guest') {
+        sessionStorage.setItem('guest_equipped', JSON.stringify(nuoviEquipaggiati));
+      } else {
+        localStorage.setItem('equipped_accessori', JSON.stringify(nuoviEquipaggiati));
+      }
+      
+      updateAvatarDisplay();
+      renderShopAvatar();
+      return true;
+    }
     
     // Controlla se un accessorio è acquistato
     function isAccessorioAcquistato(accessorioId) {
@@ -451,48 +551,58 @@
       
       const crediti = getCrediti();
       const accessoriAcquistati = getAccessoriAcquistati();
+      const accessoriEquipaggiati = getAccessoriEquipaggiati();
       
       let shopHTML = '<div style="display: grid; gap: 0.5rem;">';
       
       accessoriDisponibili.forEach(accessorio => {
         const isAcquistato = accessoriAcquistati.includes(accessorio.id);
+        const isEquipaggiato = accessoriEquipaggiati.includes(accessorio.id);
         const puoAcquistare = crediti >= accessorio.prezzo && !isAcquistato;
         
         shopHTML += `
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: ${isAcquistato ? 'rgba(76, 175, 80, 0.1)' : 'rgba(79, 70, 229, 0.05)'}; border-radius: 12px; border: 1px solid ${isAcquistato ? '#4CAF50' : 'var(--border)'};">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: ${isEquipaggiato ? 'rgba(59, 130, 246, 0.1)' : isAcquistato ? 'rgba(76, 175, 80, 0.1)' : 'rgba(79, 70, 229, 0.05)'}; border-radius: 12px; border: 1px solid ${isEquipaggiato ? '#3B82F6' : isAcquistato ? '#4CAF50' : 'var(--border)'};">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <svg width="40" height="40" viewBox="0 0 60 60" style="fill: none;">
+                <svg width="40" height="40" viewBox="0 0 60 60">
                   ${accessorio.svg}
                 </svg>
               </div>
               <div>
-                <div style="font-weight: 600; color: var(--text); font-size: 0.9rem;">${accessorio.nome}</div>
-                <div style="color: ${isAcquistato ? '#4CAF50' : 'var(--accent)'}; font-size: 0.8rem; font-weight: 500;">
-                  ${isAcquistato ? '?? Acquistato' : `${accessorio.prezzo} crediti`}
-                </div>
+                <div style="font-weight: 700; font-size: 0.9rem;">${accessorio.nome}</div>
+                <div style="font-size: 0.8rem; opacity: 0.7;">${accessorio.categoria}</div>
+                ${isEquipaggiato ? '<div style="font-size: 0.7rem; color: #3B82F6; font-weight: 600;">✓ Equipaggiato</div>' : ''}
               </div>
             </div>
             ${!isAcquistato ? `
               <button 
-                onclick="handleAcquista('${accessorio.id}', ${accessorio.prezzo})"
-                style="
-                  padding: 0.4rem 0.8rem;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 0.8rem;
-                  font-weight: 600;
-                  cursor: ${puoAcquistare ? 'pointer' : 'not-allowed'};
-                  background: ${puoAcquistare ? 'linear-gradient(135deg, var(--accent), #818cf8)' : 'rgba(156, 163, 175, 0.3)'};
-                  color: ${puoAcquistare ? 'white' : '#9CA3AF'};
-                  transition: all 0.2s ease;
-                "
+                class="toon-btn" 
+                style="padding: 0.5rem 1rem; font-size: 0.8rem; min-width: 100px; background: var(--study); color: white;"
+                onclick="acquistaAccessorio('${accessorio.id}', ${accessorio.prezzo})"
                 ${!puoAcquistare ? 'disabled' : ''}
               >
-                ${puoAcquistare ? 'Acquista' : crediti < accessorio.prezzo ? 'Crediti insufficienti' : 'Già tuo'}
+                ${puoAcquistare ? `🛍️ ${accessorio.prezzo} 🪙` : crediti < accessorio.prezzo ? 'Crediti insufficienti' : 'Non disponibile'}
               </button>
             ` : `
-              <div style="color: #4CAF50; font-size: 0.8rem; font-weight: 600;">??</div>
+              <div style="display: flex; gap: 0.5rem;">
+                ${!isEquipaggiato ? `
+                  <button 
+                    class="toon-btn" 
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--xp); color: white;"
+                    onclick="equipaggiaAccessorio('${accessorio.id}')"
+                  >
+                    ⚡ Equipaggia
+                  </button>
+                ` : `
+                  <button 
+                    class="toon-btn" 
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #ef4444; color: white;"
+                    onclick="disequipaggiaAccessorio('${accessorio.id}')"
+                  >
+                    ❌ Disequipaggia
+                  </button>
+                `}
+              </div>
             `}
           </div>
         `;
