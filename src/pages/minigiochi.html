@@ -385,6 +385,8 @@
 
   <script src="../js/modules/auth.js"></script>
   <script src="../js/modules/credits.js"></script>
+  <script src="../js/modules/exp-system.js"></script>
+  <script src="../js/modules/study-tracker.js"></script>
   <script>
     let currentGame = null;
     let gameScores = { sudoku: 0, wordle: 0, math: 0, memory: 0, tetris: 0 };
@@ -458,6 +460,50 @@
             window.CreditsModule.earnCrediti(earned, `Minigioco: ${gameType.toUpperCase()}`);
             const navCredits = document.getElementById('navCredits');
             if (navCredits) navCredits.textContent = window.CreditsModule.getCrediti();
+        }
+        
+        // Traccia minigioco completato per la sezione OGGI
+        if (window.StudyTrackerModule && score > 0) {
+            window.StudyTrackerModule.addMinigameCompleted();
+            console.log(`DEBUG: Minigioco tracciato per oggi: ${gameType}`);
+        }
+        
+        // Assegna EXP per aver completato il minigioco
+        console.log(`DEBUG: Tentativo assegnazione EXP - gameType: ${gameType}, score: ${score}`);
+        console.log(`DEBUG: ExpSystemModule disponibile:`, !!window.ExpSystemModule);
+        
+        if (window.ExpSystemModule && score > 0) {
+            // EXP base in base al tipo di gioco
+            const expPerGame = {
+                sudoku: 15,
+                wordle: 20,
+                math: 10,
+                memory: 12,
+                tetris: 18
+            };
+            
+            const expGained = expPerGame[gameType] || 10;
+            console.log(`DEBUG: EXP da assegnare: ${expGained}`);
+            
+            const result = window.ExpSystemModule.addExp(expGained);
+            console.log(`DEBUG: Risultato addExp:`, result);
+            
+            // Mostra notifica EXP
+            if (window.NotificationsModule) {
+                window.NotificationsModule.showSuccess(`+${expGained} EXP per ${gameNames[gameType]}!`);
+                console.log(`DEBUG: Notifica EXP inviata`);
+            } else {
+                console.log(`DEBUG: NotificationsModule non disponibile`);
+            }
+            
+            // Se l'utente è salito di livello, mostra messaggio speciale
+            if (result && result.levelUp) {
+                if (window.NotificationsModule) {
+                    window.NotificationsModule.showSuccess(`🎉 Livello ${result.newLevel}! Sei ora un ${result.newTitle}!`);
+                }
+            }
+        } else {
+            console.log(`DEBUG: Condizioni per EXP non soddisfatte - ExpSystemModule: ${!!window.ExpSystemModule}, score: ${score}`);
         }
     }
 
@@ -538,7 +584,7 @@
         'BEFFA', 'BELGA', 'BENDA', 'BIMBO', 'BOCCA', 'BOLLO', 'BORDO', 'BOSCO', 'BOTTA', 'BRAVO',
         'BREVE', 'BRICI', 'BRUMA', 'BRUNO', 'BUONO', 'BURRO', 'CALDO', 'CALMA', 'CAMPO', 'CANTO',
         'CAPRA', 'CARNE', 'CARRO', 'CARTA', 'CASCO', 'CASSA', 'CESTO', 'CICLO', 'CIELO', 'CINQUE',
-        'CIRCA', 'CIVILE', 'COCO', 'COLLE', 'COLPO', 'CONTO', 'CORNO', 'CORPO', 'CORSA', 'CORTE',
+        'CIRCA', 'CIVILE', 'COLLE', 'COLPO', 'CONTO', 'CORNO', 'CORPO', 'CORSA', 'CORTE',
         'COSMO', 'COSTA', 'CREDO', 'CRESC', 'CRINE', 'CROCE', 'CROMO', 'CUORE', 'DARDO', 'DENTE',
         'DIETA', 'DITTA', 'DOGMA', 'DOLCE', 'DONNA', 'DORSO', 'DRITTO', 'DUOMO', 'EBANO', 'EDERA',
         'ELITE', 'EREDE', 'EREMO', 'ESAME', 'ESITO', 'FANGO', 'FATTO', 'FELPA', 'FERRO', 'FETTA',
@@ -909,7 +955,13 @@
                         document.getElementById('memoryPairs').textContent = `${memoryPairs}/8`;
                         document.getElementById('memoryScore').textContent = gameScores.memory;
                         memoryFlipped = [];
-                        if (memoryPairs === 8) clearInterval(memoryTimerInterval);
+                        if (memoryPairs === 8) {
+                            clearInterval(memoryTimerInterval);
+                            // Mostra il modal di game over con EXP e crediti
+                            setTimeout(() => {
+                                showGameOverModal('memory', gameScores.memory);
+                            }, 500);
+                        }
                     } else {
                         setTimeout(() => {
                             memoryFlipped.forEach(c => c.el.classList.remove('flipped'));

@@ -65,13 +65,16 @@ class AuthModule {
         const isAuthenticated = sessionStorage.getItem('authenticated') === 'true' || 
                               localStorage.getItem('bp_authenticated') === 'true';
         
-        const role = sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user';
+        // Per gli ospiti, controlla solo sessionStorage (non localStorage)
+        const role = sessionStorage.getItem('role') || 
+                     (localStorage.getItem('bp_role') === 'guest' ? null : localStorage.getItem('bp_role')) || 
+                     'user';
         
         console.log('Valori calcolati:', { isAuthenticated, role });
         
-        // Se è un guest, usa "Sir Foxy"
+        // Se è un guest, usa "Sir Foxy" e solo dati temporanei
         if (role === 'guest') {
-            console.log('UTENTE RILEVATO COME GUEST - Sir Foxy');
+            console.log('UTENTE RILEVATO COME GUEST - Sir Foxy (session only)');
             return {
                 username: 'Sir Foxy',
                 email: '',
@@ -80,7 +83,7 @@ class AuthModule {
             };
         }
         
-        // Se è un utente registrato, usa i dati reali
+        // Se è un utente registrato, usa i dati reali da localStorage per persistenza
         const username = sessionStorage.getItem('username') || localStorage.getItem('bp_username');
         
         console.log('UTENTE REGISTRATO - Username:', username);

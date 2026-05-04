@@ -690,7 +690,7 @@
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
               <input type="file" id="fileInput" accept="image/*" style="display:none" />
               <button class="toon-btn" id="selectBtn" style="background: var(--card); color: var(--foreground); font-size: 1.2rem; padding: 1rem;">📂 Seleziona Foto</button>
-              <button class="toon-btn" id="analyzeBtn" disabled style="background: var(--study); color: white; font-size: 1.2rem; padding: 1rem;">🔍 Analizza con AI</button>
+              <button class="toon-btn" id="analyzeBtn" disabled style="background: var(--study); color: white; font-size: 1.2rem; padding: 1rem;">🔍 Analizza Foto</button>
               <button class="toon-btn" id="clearBtn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444; display:none; font-size: 1.2rem; padding: 1rem;">🗑️ Rimuovi</button>
             </div>
           </div>
@@ -719,7 +719,7 @@
                 <li>Sii specifico: "La Seconda Guerra Mondiale" invece di "Guerra"</li>
                 <li>Puoi includere dettagli: "La Fotosintesi clorofilliana nelle piante superiori"</li>
                 <li>Funziona per qualsiasi materia: storia, scienze, matematica, letteratura...</li>
-                <li>L'AI genererà schemi, flashcard, riassunti e domande personalizzati</li>
+                <li>Il sistema genererà schemi, flashcard, riassunti e domande personalizzati</li>
               </ul>
             </div>
           </div>
@@ -767,6 +767,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/modules/auth.js"></script>
+  <script src="../js/modules/credits.js"></script>
+  <script src="../js/modules/exp-system.js"></script>
+  <script src="../js/modules/notifications.js"></script>
   <script>
     if (!checkAuthentication()) {
       window.location.href = 'index.html';
@@ -884,6 +887,24 @@
 
         displayResults(analysisResults);
         resultsSection.style.display = 'block';
+        
+        // Assegna EXP per aver generato schemi
+        if (window.ExpSystemModule && analysisResults) {
+          const expGained = 25; // 25 EXP per ogni schema generato
+          const result = window.ExpSystemModule.addExp(expGained);
+          
+          // Mostra notifica EXP
+          if (window.NotificationsModule) {
+            window.NotificationsModule.showSuccess(`+${expGained} EXP per aver generato schemi!`);
+          }
+          
+          // Se l'utente è salito di livello, mostra messaggio speciale
+          if (result && result.levelUp) {
+            if (window.NotificationsModule) {
+              window.NotificationsModule.showSuccess(`🎉 Livello ${result.newLevel}! Sei ora un ${result.newTitle}!`);
+            }
+          }
+        }
       } catch (error) {
         console.error('Errore generazione:', error);
         if (/network|failed to fetch|502|504/i.test(String(error.message || ''))) {

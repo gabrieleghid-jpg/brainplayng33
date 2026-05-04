@@ -3,13 +3,30 @@ class CreditsModule {
     static STORAGE_KEY = 'bp_global_credits';
     
     static getCrediti() {
-        // Legge sempre dal localStorage per garantire coerenza
+        // Controlla se l'utente è un ospite
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.role === 'guest') {
+            // Per ospiti, usa sessionStorage (temporaneo)
+            const saved = sessionStorage.getItem('bp_guest_credits');
+            return saved ? parseInt(saved) : 0;
+        }
+        
+        // Per utenti registrati, usa localStorage (persistente)
         const saved = localStorage.getItem(this.STORAGE_KEY);
         return saved ? parseInt(saved) : 0;
     }
     
     static setCrediti(crediti) {
-        localStorage.setItem(this.STORAGE_KEY, crediti.toString());
+        // Controlla se l'utente è un ospite
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.role === 'guest') {
+            // Per ospiti, salva in sessionStorage (temporaneo)
+            sessionStorage.setItem('bp_guest_credits', crediti.toString());
+        } else {
+            // Per utenti registrati, salva in localStorage (persistente)
+            localStorage.setItem(this.STORAGE_KEY, crediti.toString());
+        }
+        
         this.updateCreditDisplay();
         
         // Notifica altre schede aperte dello stesso sito

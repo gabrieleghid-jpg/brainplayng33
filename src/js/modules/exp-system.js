@@ -15,6 +15,18 @@ class ExpSystemModule {
     }
 
     static getExpData() {
+        // Controlla se l'utente è un ospite
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.role === 'guest') {
+            return {
+                level: 0,
+                currentExp: 0,
+                totalExp: 0,
+                title: 'Ospite',
+                achievements: []
+            };
+        }
+        
         const data = JSON.parse(localStorage.getItem('expData') || '{}');
         return {
             level: data.level || 1,
@@ -26,6 +38,22 @@ class ExpSystemModule {
     }
 
     static addExp(amount) {
+        // Controlla se l'utente è un ospite
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.role === 'guest') {
+            console.log('EXP: Ospite detected, dati non salvati');
+            // Per ospiti, non salvare nulla ma aggiorna temporaneamente l'UI
+            this.updateUI();
+            return { 
+                level: 0, 
+                currentExp: 0, 
+                totalExp: 0, 
+                title: 'Ospite',
+                achievements: [],
+                guest: true
+            };
+        }
+        
         const data = JSON.parse(localStorage.getItem('expData') || '{}');
         data.currentExp = (data.currentExp || 0) + amount;
         data.totalExp = (data.totalExp || 0) + amount;
