@@ -188,6 +188,7 @@
 
   <script src="../js/modules/auth.js"></script>
   <script src="../js/modules/credits.js"></script>
+  <script src="../js/modules/study-tracker.js"></script>
   <script>
     // Inizializzazione
     document.addEventListener('DOMContentLoaded', () => {
@@ -204,14 +205,14 @@
         document.getElementById('usernameInput').value = username;
         document.getElementById('displayEmail').textContent = email;
         
-        // Stats reali basate sull'utente
-        if (userData.role === 'guest') {
+        // Inizializza StudyTracker per utenti reali
+        if (userData.role !== 'guest') {
+            window.StudyTrackerModule.init();
+            window.StudyTrackerModule.updateUI();
+        } else {
+            // Per ospiti, mostra 0
             document.getElementById('statStudyTime').textContent = '0h';
             document.getElementById('statStreak').textContent = '0🔥';
-        } else {
-            // Per utenti reali, carica stats reali o default
-            document.getElementById('statStudyTime').textContent = localStorage.getItem('studyTime') || '2.5h';
-            document.getElementById('statStreak').textContent = localStorage.getItem('streak') || '3🔥';
         }
     });
 

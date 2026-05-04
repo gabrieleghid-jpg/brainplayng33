@@ -60,7 +60,7 @@
                             <div class="level-badge">Lv.<span id="playerLevel">1</span></div>
                         </div>
                         <div class="character-info">
-                            <h3>Studente</h3>
+                            <h3 id="playerName">Studente</h3>
                             <div class="health-bar">
                                 <div class="health-label">Concentrazione</div>
                                 <div class="health-bar-container">
@@ -201,6 +201,16 @@
     <script src="../js/battle-animations.js"></script>
     <script src="../js/env-config.js"></script>
     <script src="../js/modules/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carica dati utente
+            const userData = window.AuthModule?.getUserData?.() || {};
+            const playerName = document.getElementById('playerName');
+            if (playerName && userData.username) {
+                playerName.textContent = userData.username;
+            }
+        });
+    </script>
 </body>
 </html>
 

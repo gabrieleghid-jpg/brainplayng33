@@ -394,7 +394,7 @@
         // Carica dati utente
         const userData = window.AuthModule?.getUserData?.() || {};
         const user = {
-            username: userData.username || 'Giocatore',
+            username: userData.username,
             profileImage: userData.profileImage || '',
             role: userData.role || 'user'
         };

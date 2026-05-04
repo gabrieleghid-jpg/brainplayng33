@@ -145,7 +145,7 @@
     const navAvatar = document.getElementById('navAvatar');
     const userData = window.AuthModule?.getUserData?.() || {};
     const user = {
-      username: userData.username || 'Studente',
+      username: userData.username,
       profileImage: userData.profileImage || ''
     };
 
