@@ -332,6 +332,14 @@
     
     // Ottieni accessori acquistati
     function getAccessoriAcquistati() {
+      // Controlla se l'utente è un ospite
+      const userData = window.AuthModule?.getUserData?.() || {};
+      if (userData.role === 'guest') {
+        // Per ospiti, usa sessionStorage (temporaneo)
+        return JSON.parse(sessionStorage.getItem('guest_accessori') || '[]');
+      }
+      
+      // Per utenti registrati, usa localStorage (persistente)
       return JSON.parse(localStorage.getItem(STORAGE_ACCESSORI_KEY) || '[]');
     }
     
@@ -348,11 +356,20 @@
         const nuoviCrediti = crediti - prezzo;
         localStorage.setItem(STORAGE_CREDITI_KEY, nuoviCrediti.toString());
         
-        // Aggiungi accessorio
+        // Aggiungi accessorio allo storage corretto
         const accessori = getAccessoriAcquistati();
         if (!accessori.includes(accessorioId)) {
           accessori.push(accessorioId);
-          localStorage.setItem(STORAGE_ACCESSORI_KEY, JSON.stringify(accessori));
+          
+          // Controlla se l'utente è un ospite
+          const userData = window.AuthModule?.getUserData?.() || {};
+          if (userData.role === 'guest') {
+            // Per ospiti, salva in sessionStorage (temporaneo)
+            sessionStorage.setItem('guest_accessori', JSON.stringify(accessori));
+          } else {
+            // Per utenti registrati, salva in localStorage (persistente)
+            localStorage.setItem(STORAGE_ACCESSORI_KEY, JSON.stringify(accessori));
+          }
         }
         
         updateAvatarDisplay();
