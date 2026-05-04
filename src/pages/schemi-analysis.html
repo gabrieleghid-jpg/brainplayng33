@@ -671,11 +671,7 @@
           <button class="tab-btn" data-input-mode="text" style="font-size: 1rem;">✏️ Da Testo</button>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap;">
-          <button class="tab-btn active" data-view="tree" style="font-size: 1rem;">🌳 Albero</button>
-          <button class="tab-btn" data-view="list" style="font-size: 1rem;">📋 Lista</button>
-        </div>
-
+        
         <!-- Photo Input Section -->
         <div id="photoInputSection" class="input-section active">
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
@@ -771,6 +767,40 @@
   <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/notifications.js"></script>
   <script>
+    // Funzione apiFetch mancante
+    async function apiFetch(endpoint, options = {}) {
+      const baseUrl = ENV.BACKEND_URL || 'http://localhost:3010';
+      const url = baseUrl + endpoint;
+      
+      const defaultOptions = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      
+      const finalOptions = {
+        ...defaultOptions,
+        ...options,
+        headers: {
+          ...defaultOptions.headers,
+          ...options.headers,
+        },
+      };
+      
+      try {
+        const response = await fetch(url, finalOptions);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('API Fetch Error:', error);
+        throw error;
+      }
+    }
+
     if (!checkAuthentication()) {
       window.location.href = 'index.html';
     }
@@ -810,33 +840,7 @@
     let currentInputMode = 'photo'; // 'photo' or 'text'
     let currentViewMode = 'tree'; // 'tree' or 'list'
 
-    // View mode switching
-    document.querySelectorAll('[data-view]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const view = btn.dataset.view;
-        currentViewMode = view;
-        
-        // Update button states
-        document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Update schema container class
-        const schemaFlow = schemaContainer?.querySelector('.schema-flow');
-        if (schemaFlow) {
-          if (view === 'list') {
-            schemaFlow.classList.add('list-view');
-          } else {
-            schemaFlow.classList.remove('list-view');
-          }
-          
-          // Re-render schema if we have results
-          if (analysisResults && analysisResults.schema) {
-            renderSchema();
-          }
-        }
-      });
-    });
-
+    
     // Input mode switching
     document.querySelectorAll('[data-input-mode]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1244,11 +1248,7 @@
     }
 
     function schemaMermaidSectionHtml() {
-      return `
-        <div class="schema-mermaid-section" id="schemaMermaidSection">
-          <h4 class="schema-mermaid-heading">Diagramma di flusso (Mermaid)</h4>
-          <div id="schemaMermaidMount" class="schema-mermaid-mount"></div>
-        </div>`;
+      return ''; // Rimuovo la sezione Mermaid
     }
 
     function renderSchema() {
