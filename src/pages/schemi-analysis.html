@@ -771,6 +771,40 @@
   <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/notifications.js"></script>
   <script>
+    // Funzione apiFetch mancante
+    async function apiFetch(endpoint, options = {}) {
+      const baseUrl = ENV.BACKEND_URL || 'http://localhost:3010';
+      const url = baseUrl + endpoint;
+      
+      const defaultOptions = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      
+      const finalOptions = {
+        ...defaultOptions,
+        ...options,
+        headers: {
+          ...defaultOptions.headers,
+          ...options.headers,
+        },
+      };
+      
+      try {
+        const response = await fetch(url, finalOptions);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('API Fetch Error:', error);
+        throw error;
+      }
+    }
+
     if (!checkAuthentication()) {
       window.location.href = 'index.html';
     }
