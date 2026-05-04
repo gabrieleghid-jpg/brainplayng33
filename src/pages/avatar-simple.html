@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizzazione Avatar - BrainPlay</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <style>
+        :root {
+            --avatar-primary: #7c3aed;
+            --avatar-secondary: #4c1d95;
+            --avatar-bg: #fdf4ff;
+            --avatar-panel: #ffffff;
+            --avatar-border: #4c1d95;
+            --avatar-text: #4c1d95;
+            --avatar-muted: #7c3aed;
+            --avatar-accent: #fbbf24;
+            --avatar-shadow: 8px 8px 0px #4c1d95;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: var(--avatar-bg);
+            font-family: 'Fredoka', sans-serif;
+            min-height: 100vh;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--avatar-text);
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            font-weight: 900;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin: 0.5rem 0 0;
+            color: var(--avatar-muted);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--avatar-secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Avatar Preview Section */
+        .avatar-preview-section {
+            background: var(--avatar-panel);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--avatar-shadow);
+            border: 4px solid var(--avatar-border);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .avatar-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .avatar-base {
+            position: relative;
+            z-index: 2;
+            font-size: 5rem;
+            color: white;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .avatar-accessory {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            z-index: 3;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* Specific positioning for different accessories */
+        .avatar-accessory.glasses {
+            top: 15px;
+            font-size: 1.8rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.crown {
+            top: -25px;
+            font-size: 2rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.hat {
+            top: -20px;
+            font-size: 2.2rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.cap {
+            top: -15px;
+            font-size: 2rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.helmet {
+            top: -18px;
+            font-size: 2.1rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.mask {
+            top: 10px;
+            font-size: 2.5rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-accessory.earrings {
+            top: 20px;
+            font-size: 1.5rem;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .avatar-body {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            z-index: 2;
+        }
+
+        .user-info {
+            background: var(--avatar-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--avatar-border);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--avatar-border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--avatar-muted);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 800;
+            color: var(--avatar-text);
+            font-size: 1.1rem;
+        }
+
+        .equipped-items {
+            background: var(--avatar-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid var(--avatar-border);
+        }
+
+        .equipped-items h3 {
+            margin: 0 0 1rem;
+            color: var(--avatar-text);
+            font-size: 1.2rem;
+        }
+
+        .equipped-slot {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            border: 2px solid var(--avatar-border);
+        }
+
+        .slot-icon {
+            font-size: 1.5rem;
+        }
+
+        .slot-name {
+            font-weight: 600;
+            color: var(--avatar-text);
+            flex: 1;
+        }
+
+        .slot-empty {
+            color: var(--avatar-muted);
+            font-style: italic;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            background: var(--avatar-primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--avatar-muted);
+        }
+
+        .btn-success {
+            background: #10b981;
+            grid-column: 1 / -1;
+        }
+
+        /* Items Section */
+        .items-section {
+            background: var(--avatar-panel);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--avatar-shadow);
+            border: 4px solid var(--avatar-border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--avatar-text);
+            font-weight: 800;
+        }
+
+        .credits-display {
+            background: var(--avatar-accent);
+            color: var(--avatar-text);
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            background: white;
+            border: 3px solid var(--avatar-border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .category-tab:hover {
+            border-color: var(--avatar-primary);
+            transform: translateY(-2px);
+        }
+
+        .category-tab.active {
+            background: var(--avatar-primary);
+            color: white;
+            border-color: var(--avatar-primary);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .item-card {
+            background: white;
+            border: 3px solid var(--avatar-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--avatar-primary);
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .item-card.equipped {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), white);
+        }
+
+        .item-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .item-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--avatar-text);
+        }
+
+        .item-price {
+            font-size: 0.8rem;
+            color: var(--avatar-muted);
+            font-weight: 600;
+        }
+
+        .equipped-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #10b981;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .message {
+            text-align: center;
+            padding: 1.5rem;
+            background: #fef3c7;
+            border: 3px solid #f59e0b;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            color: #92400e;
+            font-weight: 600;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        .message.success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .avatar-preview-section {
+                position: static;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <a href="home.html" class="back-btn">
+                ← Torna alla Home
+            </a>
+            <h1>🎨 Personalizzazione Avatar</h1>
+            <p>Crea il tuo avatar unico e personalizzato</p>
+        </div>
+
+        <div id="messageArea"></div>
+
+        <div class="main-layout">
+            <!-- Avatar Preview Section -->
+            <div class="avatar-preview-section">
+                <div class="avatar-container">
+                    <div class="avatar-background" id="avatarBackground">🌟</div>
+                    <div class="avatar-base" id="avatarBase">🦊</div>
+                    <div class="avatar-accessory" id="avatarAccessory">👓</div>
+                    <div class="avatar-body" id="avatarBody">👕</div>
+                </div>
+
+                <div class="user-info">
+                    <div class="info-row">
+                        <span class="info-label">Username</span>
+                        <span class="info-value" id="usernameDisplay">Sir Foxy</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Livello</span>
+                        <span class="info-value" id="levelDisplay">1</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Crediti</span>
+                        <span class="info-value" id="creditsDisplay">0</span>
+                    </div>
+                </div>
+
+                <div class="equipped-items">
+                    <h3>🎒 Equipaggiamento</h3>
+                    <div class="equipped-slot">
+                        <span class="slot-icon">🎭</span>
+                        <span class="slot-name" id="equippedHead">Volpe</span>
+                    </div>
+                    <div class="equipped-slot">
+                        <span class="slot-icon">👔</span>
+                        <span class="slot-name" id="equippedBody">Maglietta</span>
+                    </div>
+                    <div class="equipped-slot">
+                        <span class="slot-icon">👓</span>
+                        <span class="slot-name" id="equippedAccessory">Occhiali</span>
+                    </div>
+                    <div class="equipped-slot">
+                        <span class="slot-icon">🌟</span>
+                        <span class="slot-name" id="equippedBackground">Stelle</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="randomizeAvatar()">🎲 Casuale</button>
+                    <button class="btn btn-secondary" onclick="resetAvatar()">🔄 Reset</button>
+                    <button class="btn btn-success" onclick="saveAvatar()">💾 Salva Avatar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Section -->
+        <div class="items-section">
+            <div class="section-header">
+                <h2 class="section-title">🛍️ Inventario Oggetti</h2>
+                <div class="credits-display">
+                    <span>🪙</span>
+                    <span id="creditsBadge">0</span>
+                </div>
+            </div>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" onclick="switchCategory('all')">🎯 Tutti</button>
+                <button class="category-tab" onclick="switchCategory('heads')">🎭 Testa</button>
+                <button class="category-tab" onclick="switchCategory('bodies')">👔 Corpo</button>
+                <button class="category-tab" onclick="switchCategory('accessories')">👓 Accessori</button>
+                <button class="category-tab" onclick="switchCategory('backgrounds')">🌟 Sfondi</button>
+            </div>
+
+            <div class="items-grid" id="itemsGrid">
+                <!-- Items will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/modules/auth.js"></script>
+    <script src="../js/modules/credits.js"></script>
+    <script src="../js/modules/exp-system.js"></script>
+    <script>
+        // Advanced Avatar Customization System
+        let currentAvatar = {
+            head: { icon: '🦊', name: 'Volpe', id: 'fox' },
+            body: { icon: '👕', name: 'Maglietta', id: 'shirt' },
+            accessory: { icon: '👓', name: 'Occhiali', id: 'glasses' },
+            background: { icon: '🌟', name: 'Stelle', id: 'stars' }
+        };
+
+        let equippedItems = {
+            head: null,
+            body: null,
+            accessory: null,
+            background: null
+        };
+
+        const items = {
+            heads: [
+                { id: 'fox', icon: '🦊', name: 'Volpe', price: 0, owned: true },
+                { id: 'cat', icon: '🐱', name: 'Gatto', price: 50, owned: false },
+                { id: 'dog', icon: '🐶', name: 'Cane', price: 50, owned: false },
+                { id: 'bear', icon: '🐻', name: 'Orso', price: 100, owned: false },
+                { id: 'panda', icon: '🐼', name: 'Panda', price: 150, owned: false },
+                { id: 'dragon', icon: '🐲', name: 'Drago', price: 500, owned: false },
+                { id: 'unicorn', icon: '🦄', name: 'Unicorno', price: 300, owned: false },
+                { id: 'phoenix', icon: '🔥', name: 'Fenice', price: 400, owned: false }
+            ],
+            bodies: [
+                { id: 'shirt', icon: '👕', name: 'Maglietta', price: 0, owned: true },
+                { id: 'dress', icon: '👗', name: 'Vestito', price: 100, owned: false },
+                { id: 'suit', icon: '🤵', name: 'Abito', price: 200, owned: false },
+                { id: 'armor', icon: '🛡️', name: 'Armatura', price: 300, owned: false },
+                { id: 'hoodie', icon: '🧥', name: 'Felpa', price: 80, owned: false },
+                { id: 'kimono', icon: '👘', name: 'Kimono', price: 150, owned: false }
+            ],
+            accessories: [
+                { id: 'glasses', icon: '👓', name: 'Occhiali', price: 0, owned: true },
+                { id: 'crown', icon: '👑', name: 'Corona', price: 250, owned: false },
+                { id: 'hat', icon: '🎩', name: 'Cappello', price: 80, owned: false },
+                { id: 'cap', icon: '🧢', name: 'Berretto', price: 60, owned: false },
+                { id: 'helmet', icon: '⛑️', name: 'Casco', price: 120, owned: false },
+                { id: 'mask', icon: '🎭', name: 'Maschera', price: 90, owned: false },
+                { id: 'earrings', icon: '👂', name: 'Orecchini', price: 70, owned: false }
+            ],
+            backgrounds: [
+                { id: 'stars', icon: '🌟', name: 'Stelle', price: 0, owned: true },
+                { id: 'fire', icon: '🔥', name: 'Fuoco', price: 100, owned: false },
+                { id: 'water', icon: '💧', name: 'Acqua', price: 100, owned: false },
+                { id: 'nature', icon: '🌿', name: 'Natura', price: 150, owned: false },
+                { id: 'space', icon: '🌌', name: 'Spazio', price: 200, owned: false },
+                { id: 'rainbow', icon: '🌈', name: 'Arcobaleno', price: 180, owned: false },
+                { id: 'lightning', icon: '⚡', name: 'Fulmine', price: 160, owned: false }
+            ]
+        };
+
+        let currentCategory = 'all';
+
+        function init() {
+            // Load user data
+            const userData = window.AuthModule?.getUserData?.() || {};
+            document.getElementById('usernameDisplay').textContent = userData.username || 'Ospite';
+            
+            // Load credits
+            const credits = window.CreditsModule?.getCrediti?.() || 0;
+            document.getElementById('creditsDisplay').textContent = credits;
+            document.getElementById('creditsBadge').textContent = credits;
+            
+            // Load level
+            const level = window.ExpSystemModule?.getExpData?.()?.level || 1;
+            document.getElementById('levelDisplay').textContent = level;
+            
+            // Load saved avatar
+            loadSavedAvatar();
+            
+            // Load items
+            loadItems();
+        }
+
+        function loadSavedAvatar() {
+            const saved = localStorage.getItem('avatarCustomization');
+            if (saved) {
+                try {
+                    const avatar = JSON.parse(saved);
+                    // Convert old format to new format if needed
+                    if (avatar.head && typeof avatar.head === 'string') {
+                        currentAvatar.head = { icon: avatar.head, name: 'Custom', id: 'custom' };
+                    }
+                    if (avatar.body && typeof avatar.body === 'string') {
+                        currentAvatar.body = { icon: avatar.body, name: 'Custom', id: 'custom' };
+                    }
+                    if (avatar.accessory && typeof avatar.accessory === 'string') {
+                        currentAvatar.accessory = { icon: avatar.accessory, name: 'Custom', id: 'custom' };
+                    }
+                    if (avatar.background && typeof avatar.background === 'string') {
+                        currentAvatar.background = { icon: avatar.background, name: 'Custom', id: 'custom' };
+                    }
+                    
+                    updateAvatarDisplay();
+                    updateEquippedList();
+                } catch (e) {
+                    console.log('No saved avatar found');
+                }
+            }
+        }
+
+        function loadItems() {
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+            
+            let itemsToShow = [];
+            if (currentCategory === 'all') {
+                itemsToShow = [...items.heads, ...items.bodies, ...items.accessories, ...items.backgrounds];
+            } else {
+                itemsToShow = items[currentCategory] || [];
+            }
+            
+            itemsToShow.forEach(item => {
+                const isEquipped = isItemEquipped(item);
+                const card = document.createElement('div');
+                card.className = `item-card ${isEquipped ? 'equipped' : ''}`;
+                card.innerHTML = `
+                    ${isEquipped ? '<div class="equipped-badge">Equipaggiato</div>' : ''}
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.owned ? '✅ Posseduto' : `💰 ${item.price}`}</div>
+                `;
+                card.onclick = () => toggleItem(item);
+                grid.appendChild(card);
+            });
+        }
+
+        function isItemEquipped(item) {
+            for (let slot in equippedItems) {
+                if (equippedItems[slot] && equippedItems[slot].id === item.id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function toggleItem(item) {
+            const userData = window.AuthModule?.getUserData?.() || {};
+            
+            // Guests can't save items
+            if (userData.role === 'guest') {
+                showMessage('Gli ospiti non possono salvare personalizzazioni! Registrati per salvare.', 'error');
+                return;
+            }
+            
+            // Check if owned or can purchase
+            if (!item.owned) {
+                const credits = window.CreditsModule?.getCrediti?.() || 0;
+                if (credits < item.price) {
+                    showMessage('Crediti insufficienti!', 'error');
+                    return;
+                }
+                
+                // Purchase item
+                if (window.CreditsModule && window.CreditsModule.spendCrediti) {
+                    window.CreditsModule.spendCrediti(item.price);
+                    item.owned = true;
+                    
+                    // Update credits display
+                    const newCredits = window.CreditsModule.getCrediti();
+                    document.getElementById('creditsDisplay').textContent = newCredits;
+                    document.getElementById('creditsBadge').textContent = newCredits;
+                    
+                    showMessage(`${item.name} acquistato!`, 'success');
+                }
+            }
+            
+            // Find which category this item belongs to
+            let category = null;
+            for (let cat in items) {
+                if (items[cat].find(i => i.id === item.id)) {
+                    category = cat;
+                    break;
+                }
+            }
+            
+            if (category) {
+                const slot = category.slice(0, -1); // Remove 's' from plural
+                
+                // Equip new item
+                equippedItems[slot] = item;
+                currentAvatar[slot] = item;
+                
+                updateAvatarDisplay();
+                updateEquippedList();
+                loadItems(); // Refresh items grid
+                
+                showMessage(`${item.name} equipaggiato!`, 'success');
+            }
+        }
+
+        function updateAvatarDisplay() {
+            // Update avatar visual elements
+            document.getElementById('avatarBase').textContent = currentAvatar.head.icon;
+            document.getElementById('avatarBody').textContent = currentAvatar.body.icon;
+            document.getElementById('avatarBackground').textContent = currentAvatar.background.icon;
+            
+            // Update accessory with specific positioning
+            const accessoryEl = document.getElementById('avatarAccessory');
+            accessoryEl.textContent = currentAvatar.accessory.icon;
+            
+            // Remove all accessory classes
+            accessoryEl.className = 'avatar-accessory';
+            
+            // Add specific class for the current accessory
+            const accessoryId = currentAvatar.accessory.id;
+            if (accessoryId) {
+                accessoryEl.classList.add(accessoryId);
+            }
+            
+            // Add animation effect
+            const avatarContainer = document.querySelector('.avatar-container');
+            avatarContainer.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                avatarContainer.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function updateEquippedList() {
+            // Update equipped items list
+            document.getElementById('equippedHead').textContent = currentAvatar.head.name;
+            document.getElementById('equippedBody').textContent = currentAvatar.body.name;
+            document.getElementById('equippedAccessory').textContent = currentAvatar.accessory.name;
+            document.getElementById('equippedBackground').textContent = currentAvatar.background.name;
+        }
+
+        function switchCategory(category) {
+            currentCategory = category;
+            
+            // Update tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadItems();
+        }
+
+        function randomizeAvatar() {
+            const userData = window.AuthModule?.getUserData?.() || {};
+            
+            if (userData.role === 'guest') {
+                showMessage('Gli ospiti non possono salvare personalizzazioni! Registrati per salvare.', 'error');
+                return;
+            }
+            
+            const categories = ['heads', 'bodies', 'accessories', 'backgrounds'];
+            categories.forEach(cat => {
+                const availableItems = items[cat].filter(item => item.owned);
+                if (availableItems.length > 0) {
+                    const randomItem = availableItems[Math.floor(Math.random() * availableItems.length)];
+                    const slot = cat.slice(0, -1);
+                    equippedItems[slot] = randomItem;
+                    currentAvatar[slot] = randomItem;
+                }
+            });
+            updateAvatarDisplay();
+            updateEquippedList();
+            loadItems();
+            showMessage('Avatar randomizzato! 🎲', 'success');
+        }
+
+        function resetAvatar() {
+            // Reset to default items
+            currentAvatar = {
+                head: { icon: '🦊', name: 'Volpe', id: 'fox' },
+                body: { icon: '👕', name: 'Maglietta', id: 'shirt' },
+                accessory: { icon: '👓', name: 'Occhiali', id: 'glasses' },
+                background: { icon: '🌟', name: 'Stelle', id: 'stars' }
+            };
+            
+            equippedItems = {
+                head: items.heads[0],
+                body: items.bodies[0],
+                accessory: items.accessories[0],
+                background: items.backgrounds[0]
+            };
+            
+            updateAvatarDisplay();
+            updateEquippedList();
+            loadItems();
+            showMessage('Avatar resettato! 🔄', 'success');
+        }
+
+        function saveAvatar() {
+            const userData = window.AuthModule?.getUserData?.() || {};
+            
+            if (userData.role === 'guest') {
+                showMessage('Gli ospiti non possono salvare personalizzazioni! Registrati per salvare.', 'error');
+                return;
+            }
+            
+            // Save only the icons for compatibility
+            const saveData = {
+                head: currentAvatar.head.icon,
+                body: currentAvatar.body.icon,
+                accessory: currentAvatar.accessory.icon,
+                background: currentAvatar.background.icon
+            };
+            
+            localStorage.setItem('avatarCustomization', JSON.stringify(saveData));
+            showMessage('Avatar salvato con successo! 💾', 'success');
+        }
+
+        function showMessage(text, type = 'info') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

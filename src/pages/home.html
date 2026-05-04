@@ -133,15 +133,20 @@
             🦊
           </div>
           <div style="text-align: left; flex: 1;">
-            <h3 style="margin: 0; font-size: 1.5rem;">Sir Foxy</h3>
-            <p style="margin: 0; font-size: 0.9rem; opacity: 0.7;">Lv. 7 · Avventuriero</p>
+            <h3 id="homeUsername" style="margin: 0; font-size: 1.5rem;">Sir Foxy</h3>
+            <p id="homeLevel" style="margin: 0; font-size: 0.9rem; opacity: 0.7;">Lv. 1 · Principiante</p>
             <div style="margin-top: 1rem;">
               <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 900; margin-bottom: 0.3rem;">
-                <span>EXP</span> <span>720 / 1000</span>
+                <span>EXP</span> <span id="homeExp">0 / 100</span>
               </div>
               <div style="height: 12px; background: white; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden;">
-                <div style="width: 72%; height: 100%; background: var(--xp);"></div>
+                <div id="homeExpBar" style="width: 0%; height: 100%; background: var(--xp);"></div>
               </div>
+            </div>
+            <div style="margin-top: 1rem;">
+              <button id="customizeAvatarBtn" class="toon-btn" style="width: 100%; background: var(--accent); color: white; font-size: 0.8rem; padding: 0.5rem;">
+                🎨 Personalizza Avatar
+              </button>
             </div>
           </div>
         </div>
@@ -224,6 +229,7 @@
   <script src="../js/env-config.js"></script>
   <script src="../js/modules/auth.js"></script>
   <script src="../js/modules/credits.js"></script>
+  <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/notifications.js"></script>
   <script src="../js/animated-avatar.js"></script>
   <script>
@@ -236,6 +242,90 @@
       }
       // Il CreditsModule si inizializza da solo, qui possiamo aggiungere logica specifica se serve
       console.log('Home caricata, crediti attuali:', window.CreditsModule ? window.CreditsModule.getCrediti() : 'N/A');
+      
+      // Carica dati utente e aggiorna UI
+      if (window.AuthModule) {
+        const userData = window.AuthModule.getUserData();
+        console.log('Home - Dati utente caricati:', userData);
+        
+        const user = {
+          username: userData.username,
+          profileImage: userData.profileImage || '',
+          role: userData.role || 'user'
+        };
+        
+        console.log('Home - User object:', user);
+        
+        // Aggiorna username nella sezione statistiche
+        const homeUsername = document.getElementById('homeUsername');
+        if (homeUsername && user.username) {
+          console.log('Home - Aggiornamento username da:', homeUsername.textContent, 'a:', user.username);
+          homeUsername.textContent = user.username;
+        } else {
+          console.log('Home - Username non trovato o vuoto:', { homeUsername: !!homeUsername, username: user.username });
+        }
+        
+        // Aggiorna avatar se presente
+        const navAvatar = document.getElementById('navAvatar');
+        if (navAvatar) {
+          if (user.profileImage) {
+            navAvatar.style.backgroundImage = `url(${user.profileImage})`;
+            navAvatar.textContent = '';
+          } else {
+            navAvatar.style.backgroundImage = '';
+            navAvatar.textContent = getInitials(user.username);
+          }
+        }
+        
+        // Gestione EXP e modalità guest
+        const guestNotice = document.getElementById('guestNotice');
+        const heroButton = document.querySelector('.cta-button.primary');
+        const secondaryButton = document.querySelector('.cta-button.secondary');
+        
+        if (user.role === 'guest') {
+          console.log('Home - Modalità guest attiva');
+          
+          // Dati per ospite - EXP zero, dati non salvati
+          const levelEl = document.getElementById('homeLevel');
+          const expEl = document.getElementById('homeExp');
+          const expBarEl = document.getElementById('homeExpBar');
+          
+          if (levelEl) levelEl.textContent = 'Lv. 0 · Ospite';
+          if (expEl) expEl.textContent = '0 / 100';
+          if (expBarEl) expBarEl.style.width = '0%';
+          
+          if (guestNotice) {
+            guestNotice.style.display = 'block';
+            guestNotice.textContent = 'Sei connesso come ospite: i dati non vengono salvati e EXP è zero.';
+          }
+          if (heroButton) {
+            heroButton.disabled = true;
+            heroButton.textContent = 'Non disponibile per ospiti';
+          }
+          if (secondaryButton) {
+            secondaryButton.disabled = true;
+            secondaryButton.textContent = 'Area riservata agli utenti';
+          }
+        } else {
+          // Utente registrato - carica dati EXP reali
+          console.log('Home - Modalità utente registrato');
+          if (window.ExpSystemModule) {
+            window.ExpSystemModule.init();
+            window.ExpSystemModule.updateUI();
+          }
+        }
+        
+        // Gestione pulsante personalizzazione avatar
+        const customizeAvatarBtn = document.getElementById('customizeAvatarBtn');
+        if (customizeAvatarBtn) {
+          customizeAvatarBtn.addEventListener('click', () => {
+            // Reindirizza alla pagina di personalizzazione avatar
+            window.location.href = 'avatar-simple.html';
+          });
+        }
+      } else {
+        console.error('Home - AuthModule non trovato!');
+      }
     });
 
     // Rimosse funzioni initCrediti() e initAccessori() locali per evitare conflitti con CreditsModule globali
@@ -493,9 +583,9 @@
 
     const userData = window.AuthModule?.getUserData?.() || {};
     const user = {
-      username: userData.username || sessionStorage.getItem('username') || localStorage.getItem('bp_username') || 'Studente',
-      profileImage: userData.profileImage || sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '',
-      role: userData.role || sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user'
+      username: userData.username,
+      profileImage: userData.profileImage || '',
+      role: userData.role || 'user'
     };
 
     function getInitials(name) {
@@ -508,6 +598,12 @@
     }
 
     function updateProfileUI() {
+      // Aggiorna username nella sezione statistiche
+      const homeUsername = document.getElementById('homeUsername');
+      if (homeUsername && user.username) {
+        homeUsername.textContent = user.username;
+      }
+      
       if (navAvatar) {
         if (user.profileImage) {
           navAvatar.style.backgroundImage = `url(${user.profileImage})`;
