@@ -117,13 +117,7 @@
           <span class="toon-pill" style="font-size: 0.7rem; background: var(--games-soft);">INTERATTIVO</span>
         </a>
 
-        <a href="battle-game.html" class="toon-card" style="border-top: 8px solid var(--games);">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">⚔️</div>
-          <h3 style="margin: 0 0 0.5rem;">Battle Learning</h3>
-          <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Combatti contro concetti didattici in stile roguelike.</p>
-          <span class="toon-pill" style="font-size: 0.7rem; background: var(--games-soft);">EPICO</span>
-        </a>
-      </div>
+              </div>
       </section>
 
       <!-- Statistiche Rapide -->
@@ -155,16 +149,16 @@
           <h3 style="margin: 0 0 1rem; font-size: 1.5rem;">📅 Oggi</h3>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
             <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 900;">45m</div>
+              <div id="todayStudyMinutes" style="font-weight: 900;">0m</div>
               <div style="font-size: 0.6rem; opacity: 0.7;">STUDIO</div>
             </div>
             <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 900;">3</div>
-              <div style="font-size: 0.6rem; opacity: 0.7;">SESSIONI</div>
+              <div id="todayGoal" style="font-weight: 900;">0%</div>
+              <div style="font-size: 0.6rem; opacity: 0.7;">GOAL</div>
             </div>
             <div style="background: white; border: 3px solid var(--ink); padding: 0.5rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 900;">85%</div>
-              <div style="font-size: 0.6rem; opacity: 0.7;">GOAL</div>
+              <div id="todayMinigames" style="font-weight: 900;">0</div>
+              <div style="font-size: 0.6rem; opacity: 0.7;">MINIGIOCHI</div>
             </div>
           </div>
         </div>
@@ -230,6 +224,7 @@
   <script src="../js/modules/auth.js"></script>
   <script src="../js/modules/credits.js"></script>
   <script src="../js/modules/exp-system.js"></script>
+  <script src="../js/modules/study-tracker.js"></script>
   <script src="../js/modules/notifications.js"></script>
   <script src="../js/animated-avatar.js"></script>
   <script>
@@ -242,6 +237,12 @@
       }
       // Il CreditsModule si inizializza da solo, qui possiamo aggiungere logica specifica se serve
       console.log('Home caricata, crediti attuali:', window.CreditsModule ? window.CreditsModule.getCrediti() : 'N/A');
+      
+      // Inizializza StudyTrackerModule per tracciamento tempo studio
+      if (window.StudyTrackerModule) {
+        window.StudyTrackerModule.init();
+        console.log('StudyTracker inizializzato');
+      }
       
       // Carica dati utente e aggiorna UI
       if (window.AuthModule) {
