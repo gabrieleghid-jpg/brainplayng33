@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Creator - BrainPlay</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <style>
+        .avatar-lovable-container {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='home.html'">
+        ← Torna alla Home
+    </button>
+    
+    <!-- Container per l'app React di Lovable -->
+    <div id="character-creator-root"></div>
+
+    <!-- Script per il Character Creator Adapter -->
+    <script src="../js/character-creator-adapter.js"></script>
+    
+    <script>
+        // Inizializza il CharacterCreator quando il DOM è pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica autenticazione
+            const isAuth = sessionStorage.getItem('authenticated') === 'true' || 
+                          localStorage.getItem('bp_authenticated') === 'true';
+            
+            if (!isAuth) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Carica i dati utente per passarli al CharacterCreator
+            const userData = {
+                username: sessionStorage.getItem('username') || localStorage.getItem('bp_username'),
+                email: sessionStorage.getItem('email'),
+                role: sessionStorage.getItem('role') || localStorage.getItem('bp_role')
+            };
+            
+            // Se il CharacterCreator è disponibile come funzione globale
+            if (window.CharacterCreator) {
+                window.CharacterCreator.init({
+                    container: '#character-creator-root',
+                    userData: userData,
+                    onSave: (avatarConfig) => {
+                        // Salva configurazione in localStorage
+                        localStorage.setItem('bp_avatar_config', JSON.stringify(avatarConfig));
+                        
+                        // Mostra notifica
+                        if (window.showToast) {
+                            window.showToast('Avatar salvato con successo! 🎨');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
