@@ -32,10 +32,26 @@ class AuthModule {
     }
 
     static getUserData() {
+        const isAuthenticated = sessionStorage.getItem('authenticated') === 'true' || 
+                              localStorage.getItem('bp_authenticated') === 'true';
+        
+        const role = sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user';
+        
+        // Se è un guest, usa "Sir Foxy"
+        if (role === 'guest') {
+            return {
+                username: 'Sir Foxy',
+                email: '',
+                role: 'guest',
+                profileImage: ''
+            };
+        }
+        
+        // Se è un utente registrato, usa i dati reali
         return {
             username: sessionStorage.getItem('username') || localStorage.getItem('bp_username') || 'BrainPlayer',
             email: sessionStorage.getItem('email') || localStorage.getItem('bp_email') || '',
-            role: sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user',
+            role: role,
             profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
         };
     }

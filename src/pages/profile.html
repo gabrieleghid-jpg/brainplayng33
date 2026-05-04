@@ -195,23 +195,31 @@
             window.CreditsModule.updateCreditDisplay();
         }
         
-        // Carica dati utente
-        const username = sessionStorage.getItem('username') || 'Studente';
-        const email = sessionStorage.getItem('email') || 'ospite@brainplaying.it';
+        // Carica dati utente usando AuthModule
+        const userData = window.AuthModule?.getUserData?.() || {};
+        const username = userData.username;
+        const email = userData.email;
         
         document.getElementById('displayUsername').textContent = username;
         document.getElementById('usernameInput').value = username;
         document.getElementById('displayEmail').textContent = email;
         
-        // Mock stats
-        document.getElementById('statStudyTime').textContent = '4.2h';
-        document.getElementById('statStreak').textContent = '5🔥';
+        // Stats reali basate sull'utente
+        if (userData.role === 'guest') {
+            document.getElementById('statStudyTime').textContent = '0h';
+            document.getElementById('statStreak').textContent = '0🔥';
+        } else {
+            // Per utenti reali, carica stats reali o default
+            document.getElementById('statStudyTime').textContent = localStorage.getItem('studyTime') || '2.5h';
+            document.getElementById('statStreak').textContent = localStorage.getItem('streak') || '3🔥';
+        }
     });
 
     function saveUsername() {
         const newUsername = document.getElementById('usernameInput').value;
         if (newUsername.trim()) {
             sessionStorage.setItem('username', newUsername);
+            localStorage.setItem('bp_username', newUsername);
             document.getElementById('displayUsername').textContent = newUsername;
             alert('Username aggiornato con successo!');
         }
@@ -219,8 +227,7 @@
 
     function logout() {
         if (confirm('Sei sicuro di voler uscire?')) {
-            sessionStorage.clear();
-            window.location.href = 'index.html';
+            window.AuthModule.logout();
         }
     }
   </script>

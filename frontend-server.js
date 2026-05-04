@@ -20,7 +20,17 @@ const MIME_TYPES = {
 
 function resolvePath(urlPath) {
   const cleanPath = decodeURIComponent(urlPath.split('?')[0]);
-  const requestedPath = cleanPath === '/' ? '/pages/index.html' : cleanPath;
+  
+  // Se è un path diretto di una pagina .html, aggiungi /pages/
+  let requestedPath;
+  if (cleanPath === '/') {
+    requestedPath = '/pages/index.html';
+  } else if (cleanPath.endsWith('.html') && !cleanPath.startsWith('/pages/')) {
+    requestedPath = `/pages${cleanPath}`;
+  } else {
+    requestedPath = cleanPath;
+  }
+  
   const normalizedPath = path.normalize(requestedPath).replace(/^(\.\.[/\\])+/, '');
   return path.join(ROOT_DIR, normalizedPath);
 }

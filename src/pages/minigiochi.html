@@ -383,6 +383,7 @@
     }
   </style>
 
+  <script src="../js/modules/auth.js"></script>
   <script src="../js/modules/credits.js"></script>
   <script>
     let currentGame = null;
@@ -390,6 +391,22 @@
     let lastGamePlayed = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Carica dati utente
+        const userData = window.AuthModule?.getUserData?.() || {};
+        const user = {
+            username: userData.username || 'Giocatore',
+            profileImage: userData.profileImage || '',
+            role: userData.role || 'user'
+        };
+        
+        // Aggiorna username nella pagina se presente
+        const usernameElements = document.querySelectorAll('[id*="username"], [class*="username"]');
+        usernameElements.forEach(el => {
+            if (el.tagName === 'SPAN' || el.tagName === 'DIV') {
+                el.textContent = user.username;
+            }
+        });
+        
         if (window.CreditsModule) window.CreditsModule.updateCreditDisplay();
         const navCredits = document.getElementById('navCredits');
         if (navCredits) navCredits.textContent = window.CreditsModule ? window.CreditsModule.getCrediti() : 0;
@@ -533,7 +550,7 @@
         'LARGO', 'LATTE', 'LEGNO', 'LENTE', 'LESTO', 'LETTO', 'LIVRE', 'LOBBY', 'LOTTO', 'LUCE',
         'LUME', 'MAGMA', 'MAMMA', 'MANGO', 'MAPPA', 'MARCA', 'MAREA', 'MARZO', 'MASSA', 'MATTO',
         'MELEE', 'MENTE', 'MERLO', 'MIELE', 'MIGLIO', 'MINIMO', 'MIRTO', 'MISTO', 'MODEM', 'MOLTO',
-        'MONDO', 'MONTE', 'MOSSA', 'MOTTO', 'MURO', 'NAVE', 'NEVE', 'NIDO', 'NINJA', 'NOBILE',
+        'MONDO', 'MONTE', 'MOSSA', 'MOTTO', 'NINJA', 
         'NOCE', 'NORMA', 'NOTTE', 'NUOTO', 'OCCHI', 'ODINE', 'OLIVE', 'OMBRA', 'ONICE', 'OPERA',
         'OPERE', 'ORATA', 'ORDINE', 'OSARE', 'OSSEO', 'OSTRO', 'OTTIMO', 'OVEST', 'OVINO', 'PADRE',
         'PAESE', 'PALCO', 'PALLA', 'PANNO', 'PAPPA', 'PARCO', 'PARTE', 'PASSO', 'PASTA', 'PATTO',

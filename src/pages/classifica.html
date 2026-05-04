@@ -143,9 +143,10 @@
 
     // PROFILE UI
     const navAvatar = document.getElementById('navAvatar');
+    const userData = window.AuthModule?.getUserData?.() || {};
     const user = {
-      username: sessionStorage.getItem('username') || 'Studente',
-      profileImage: sessionStorage.getItem('profileImage') || ''
+      username: userData.username || 'Studente',
+      profileImage: userData.profileImage || ''
     };
 
     function getInitials(name) {

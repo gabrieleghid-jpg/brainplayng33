@@ -492,9 +492,9 @@
 
     const userData = window.AuthModule?.getUserData?.() || {};
     const user = {
-      username: userData.username || sessionStorage.getItem('username') || localStorage.getItem('bp_username') || 'Studente',
-      profileImage: userData.profileImage || sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '',
-      role: userData.role || sessionStorage.getItem('role') || localStorage.getItem('bp_role') || 'user'
+      username: userData.username || 'Studente',
+      profileImage: userData.profileImage || '',
+      role: userData.role || 'user'
     };
 
     function getInitials(name) {
