@@ -755,21 +755,26 @@ class WindRiderAvatar {
       .filter(Boolean)
       .sort((a, b) => a.z_index - b.z_index);
     
+    // Controlla se c'è un fullsuit equipaggiato (copre tutto il corpo)
+    const hasFullsuit = equippedItems.some(item => item.category === 'fullsuit');
+    
     stage.innerHTML = `
       <div class="wr-avatar-stack">
         <div class="wr-avatar-inner">
-          <!-- Base Body -->
+          <!-- Base Body - solo se non c'è fullsuit -->
+          ${!hasFullsuit ? `
           <img src="${CONFIG.ASSETS_BASE}base_body.png" 
                alt="Base" 
                class="wr-avatar-layer" 
-               style="z-index: 10">
+               style="z-index: 10 !important">
+          ` : ''}
           
           <!-- Equipped Layers -->
           ${equippedItems.map(item => `
             <img src="${CONFIG.ASSETS_BASE}${item.image_path}" 
                  alt="${item.name}" 
                  class="wr-avatar-layer" 
-                 style="z-index: ${item.z_index}">
+                 style="z-index: ${item.z_index} !important">
           `).join('')}
           
           <!-- Shadow -->
