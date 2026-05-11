@@ -394,6 +394,17 @@
     let lastGamePlayed = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Inizializza tutti i moduli
+        if (window.ExpSystemModule) {
+            window.ExpSystemModule.init();
+            console.log('ExpSystemModule inizializzato nei minigiochi');
+        }
+        
+        if (window.StudyTrackerModule) {
+            window.StudyTrackerModule.init();
+            console.log('StudyTrackerModule inizializzato nei minigiochi');
+        }
+        
         // Carica dati utente
         const userData = window.AuthModule?.getUserData?.() || {};
         const user = {
@@ -401,6 +412,8 @@
             profileImage: userData.profileImage || '',
             role: userData.role || 'user'
         };
+        
+        console.log('Dati utente nei minigiochi:', user);
         
         // Aggiorna username nella pagina se presente
         const usernameElements = document.querySelectorAll('[id*="username"], [class*="username"]');
@@ -420,6 +433,13 @@
         document.getElementById('gamesMenu').style.display = 'none';
         document.querySelectorAll('.game-area').forEach(a => a.style.display = 'none');
         document.getElementById(gameType + 'Game').style.display = 'block';
+        
+        // Inizia tracking del tempo solo quando si inizia a giocare
+        if (window.StudyTrackerModule) {
+            window.StudyTrackerModule.startTracking();
+            console.log('Tracking iniziato per gioco:', gameType);
+        }
+        
         window['init' + gameType.charAt(0).toUpperCase() + gameType.slice(1)]();
     }
 
@@ -430,6 +450,13 @@
         currentGame = null;
         document.getElementById('gamesMenu').style.display = 'grid';
         document.querySelectorAll('.game-area').forEach(a => a.style.display = 'none');
+        
+        // Ferma tracking quando si torna al menu
+        if (window.StudyTrackerModule) {
+            window.StudyTrackerModule.stopTracking();
+            console.log('Tracking fermato - ritorno al menu');
+        }
+        
         if (tetrisInterval) clearInterval(tetrisInterval);
         if (mathTimerInterval) clearInterval(mathTimerInterval);
         if (memoryTimerInterval) clearInterval(memoryTimerInterval);
@@ -472,6 +499,17 @@
         // Assegna EXP per aver completato il minigioco
         console.log(`DEBUG: Tentativo assegnazione EXP - gameType: ${gameType}, score: ${score}`);
         console.log(`DEBUG: ExpSystemModule disponibile:`, !!window.ExpSystemModule);
+        
+        // Assicurati che l'utente sia nel database
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (userData.email && userData.role !== 'guest' && window.AuthModule.saveRegisteredUser) {
+            window.AuthModule.saveRegisteredUser({
+                username: userData.username,
+                email: userData.email,
+                role: userData.role
+            });
+            console.log(`DEBUG: Utente ${userData.email} salvato nel database`);
+        }
         
         if (window.ExpSystemModule && score > 0) {
             // EXP base in base al tipo di gioco

@@ -27,7 +27,9 @@ class ExpSystemModule {
             };
         }
         
-        const data = JSON.parse(localStorage.getItem('expData') || '{}');
+        // Usa chiave specifica per l'email dell'utente
+        const userExpKey = userData.email ? `expData_${userData.email}` : 'expData';
+        const data = JSON.parse(localStorage.getItem(userExpKey) || '{}');
         return {
             level: data.level || 1,
             currentExp: data.currentExp || 0,
@@ -54,22 +56,51 @@ class ExpSystemModule {
             };
         }
         
-        const data = JSON.parse(localStorage.getItem('expData') || '{}');
-        data.currentExp = (data.currentExp || 0) + amount;
-        data.totalExp = (data.totalExp || 0) + amount;
+        // Usa chiave specifica per l'email dell'utente
+        const userExpKey = userData.email ? `expData_${userData.email}` : 'expData';
+        const data = JSON.parse(localStorage.getItem(userExpKey) || '{}');
+        const currentLevel = data.level || 1;
+        const currentExp = data.currentExp || 0;
+        const totalExp = data.totalExp || 0;
         
-        // Controlla se è salito di livello
-        const expNeeded = this.getExpNeeded(data.level || 1);
-        if (data.currentExp >= expNeeded) {
-            data.currentExp -= expNeeded;
-            data.level = (data.level || 1) + 1;
-            data.title = this.getTitle(data.level);
+        const newTotalExp = totalExp + amount;
+        const newCurrentExp = currentExp + amount;
+        
+        // Calcola nuovo livello
+        let newLevel = currentLevel;
+        let levelUp = false;
+        const expForNextLevel = currentLevel * 100;
+        
+        if (newCurrentExp >= expForNextLevel) {
+            newLevel++;
+            levelUp = true;
+            data.currentExp = newCurrentExp - expForNextLevel;
+        } else {
+            data.currentExp = newCurrentExp;
         }
         
-        localStorage.setItem('expData', JSON.stringify(data));
+        data.level = newLevel;
+        data.totalExp = newTotalExp;
+        
+        // Salva i dati con chiave specifica
+        localStorage.setItem(userExpKey, JSON.stringify(data));
+        
+        // Aggiorna attività utente
+        if (window.AuthModule && window.AuthModule.updateUserActivity) {
+            window.AuthModule.updateUserActivity(userData.email);
+        }
+        
+        // Aggiorna l'interfaccia
         this.updateUI();
         
-        return data;
+        return {
+            level: newLevel,
+            currentExp: data.currentExp,
+            totalExp: newTotalExp,
+            title: this.getTitle(newLevel),
+            levelUp: levelUp,
+            newLevel: newLevel
+        };
     }
 
     static getExpNeeded(level) {

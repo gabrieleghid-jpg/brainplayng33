@@ -1,7 +1,12 @@
 // Study Tracker Module
 class StudyTrackerModule {
     static init() {
-        // Inizializza i dati di studio se non esistono
+        // Controlla se l'utente è autenticato
+        if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
+            return;
+        }
+
+        // Inizializza dati di studio se non esistono
         if (!localStorage.getItem('studyData')) {
             const initialData = {
                 totalStudyTime: 0,
@@ -14,16 +19,19 @@ class StudyTrackerModule {
                 dailySessions: 0,
                 sessionStartTime: null,
                 dailyMinigames: 0,
-                lastSessionDuration: 0
+                lastSessionDuration: 0,
+                dailySchemi: 0,
+                siteTimeToday: 0,
+                lastSiteActivity: Date.now()
             };
             localStorage.setItem('studyData', JSON.stringify(initialData));
         }
-        
-        // Controlla se è un nuovo giorno e resetta i dati giornalieri
+
         this.checkDailyReset();
         
-        // Inizia a tracciare se l'utente è attivo
-        this.startTracking();
+        // Inizia tracking automatico del tempo sul sito
+        this.startSiteTracking();
+        console.log('StudyTracker inizializzato - tracking sito attivo');
     }
 
     static addStudySession(duration) {
@@ -85,6 +93,38 @@ class StudyTrackerModule {
             localStorage.setItem('studyData', JSON.stringify(data));
             console.log('StudyTracker: Reset giornaliero completato');
         }
+    }
+
+    static startSiteTracking() {
+        // Inizia a tracciare il tempo totale sul sito
+        if (!this.siteTrackingInterval) {
+            this.siteTrackingInterval = setInterval(() => {
+                this.updateSiteTime();
+            }, 60000); // Aggiorna ogni minuto
+            
+            // Inizia subito
+            const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+            if (!data.lastSiteActivity) {
+                data.lastSiteActivity = Date.now();
+                localStorage.setItem('studyData', JSON.stringify(data));
+            }
+        }
+    }
+
+    static updateSiteTime() {
+        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const now = Date.now();
+        
+        if (data.lastSiteActivity) {
+            const timeDiff = Math.floor((now - data.lastSiteActivity) / 1000 / 60); // minuti
+            
+            if (timeDiff > 0 && timeDiff < 5) { // Solo se l'utente è attivo (meno di 5 minuti di inattività)
+                data.siteTimeToday = (data.siteTimeToday || 0) + 1;
+            }
+        }
+        
+        data.lastSiteActivity = now;
+        localStorage.setItem('studyData', JSON.stringify(data));
     }
 
     static startTracking() {
@@ -151,17 +191,76 @@ class StudyTrackerModule {
     }
 
     static addMinigameCompleted() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
-        this.checkDailyReset(); // Assicura che i dati siano del giorno corrente
+        // Usa chiave specifica per utente come gli EXP
+        const userData = window.AuthModule?.getUserData?.() || {};
+        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
         
-        // Incrementa i minigiochi completati oggi
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        const today = new Date().toDateString();
+        
+        // Reset giornaliero se necessario
+        this.checkDailyReset();
+        
+        // Incrementa minigiochi completati oggi
         data.dailyMinigames = (data.dailyMinigames || 0) + 1;
-        localStorage.setItem('studyData', JSON.stringify(data));
         
-        // Aggiorna UI
-        this.updateTodayUI();
+        // Aggiorna streak giornaliero
+        if (data.lastStudyDate !== today) {
+            data.currentStreak++;
+            data.lastStudyDate = today;
+        }
         
-        console.log(`Minigioco completato! Totali oggi: ${data.dailyMinigames}`);
+        // Salva i dati con chiave specifica
+        localStorage.setItem(studyKey, JSON.stringify(data));
+        
+        console.log(`Minigioco completato: ${userData.email}, chiave: ${studyKey}, total: ${data.dailyMinigames}`);
+        
+        // Aggiorna UI se presente
+        this.updateUI();
+    }
+
+    static addSchemaCompleted() {
+        // Usa chiave specifica per utente come gli EXP
+        const userData = window.AuthModule?.getUserData?.() || {};
+        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
+        
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        const today = new Date().toDateString();
+        
+        // Reset giornaliero se necessario
+        this.checkDailyReset();
+        
+        // Incrementa schemi completati oggi
+        data.dailySchemi = (data.dailySchemi || 0) + 1;
+        
+        // Aggiorna streak giornaliero
+        if (data.lastStudyDate !== today) {
+            data.currentStreak++;
+            data.lastStudyDate = today;
+        }
+        
+        // Salva i dati con chiave specifica
+        localStorage.setItem(studyKey, JSON.stringify(data));
+        
+        console.log(`Schema completato: ${userData.email}, chiave: ${studyKey}, total: ${data.dailySchemi}`);
+        
+        // Aggiorna UI se presente
+        this.updateUI();
+    }
+
+    static getDailyStats() {
+        // Usa chiave specifica per utente come gli EXP
+        const userData = window.AuthModule?.getUserData?.() || {};
+        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
+        
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        return {
+            siteTimeMinutes: data.siteTimeToday || 0,
+            minigamesCompleted: data.dailyMinigames || 0,
+            schemiCompleted: data.dailySchemi || 0,
+            currentStreak: data.currentStreak || 0,
+            lastActiveDate: data.lastStudyDate
+        };
     }
 
     static getTodayStats() {

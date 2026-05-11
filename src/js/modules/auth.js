@@ -72,9 +72,9 @@ class AuthModule {
         
         console.log('Valori calcolati:', { isAuthenticated, role });
         
-        // Se è un guest, usa "Sir Foxy" e solo dati temporanei
+        // Se è un guest, usa "Sir Foxy"
         if (role === 'guest') {
-            console.log('UTENTE RILEVATO COME GUEST - Sir Foxy (session only)');
+            console.log('UTENTE RILEVATO COME GUEST - Sir Foxy');
             return {
                 username: 'Sir Foxy',
                 email: '',
@@ -94,6 +94,45 @@ class AuthModule {
             role: role,
             profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
         };
+    }
+
+    // Salva utente registrato nel database condiviso
+    static saveRegisteredUser(userData) {
+        if (!userData.email || userData.role === 'guest') {
+            return false;
+        }
+
+        // Recupera database utenti esistente
+        const usersDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        
+        // Aggiungi o aggiorna utente
+        usersDatabase[userData.email] = {
+            email: userData.email,
+            username: userData.username,
+            role: userData.role,
+            profileImage: userData.profileImage || '',
+            registeredAt: userData.registeredAt || new Date().toISOString(),
+            lastActive: new Date().toISOString(),
+            streak: userData.streak || 1
+        };
+        
+        // Salva database aggiornato
+        localStorage.setItem('brainplayng_users_database', JSON.stringify(usersDatabase));
+        console.log('Utente salvato nel database:', userData.email);
+        return true;
+    }
+
+    // Aggiorna lastActive per utente
+    static updateUserActivity(email) {
+        if (!email) return false;
+        
+        const usersDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        if (usersDatabase[email]) {
+            usersDatabase[email].lastActive = new Date().toISOString();
+            localStorage.setItem('brainplayng_users_database', JSON.stringify(usersDatabase));
+            return true;
+        }
+        return false;
     }
 }
 

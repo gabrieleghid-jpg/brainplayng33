@@ -114,10 +114,11 @@
       </header>
 
       <div class="toon-card" style="width: 100%; border-top: 10px solid var(--coin) !important; padding: 2.5rem;">
-        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
-          <button class="toon-pill filter-btn active" data-period="week" style="cursor:pointer;">Settimana</button>
-          <button class="toon-pill filter-btn" data-period="month" style="cursor:pointer;">Mese</button>
-          <button class="toon-pill filter-btn" data-period="all" style="cursor:pointer;">Sempre</button>
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;">
+          <button class="tab-btn active" data-period="week" style="font-size: 1rem;">📅 Questa Settimana</button>
+          <button class="tab-btn" data-period="month" style="font-size: 1rem;">📆 Questo Mese</button>
+          <button class="tab-btn" data-period="all" style="font-size: 1rem;">🏆 Sempre</button>
+          <button class="toon-btn" onclick="debugLocalStorage()" style="background: #ef4444; color: white; font-size: 0.8rem;">🔍 DEBUG LOCALSTORAGE</button>
         </div>
 
         <div id="leaderboardGrid" style="display: flex; flex-direction: column; gap: 1.2rem;">
@@ -166,44 +167,76 @@
 
     // Sistema classifica basato su dati reali
     function getRealUsersData() {
+        console.log('=== DEBUG COMPLETO CLASSIFICA ===');
+        
         // Controlla se l'utente corrente è un ospite
         const currentUser = window.AuthModule?.getUserData?.() || {};
+        console.log('1. Utente corrente:', currentUser);
         
         if (currentUser.role === 'guest') {
-            // Mostra messaggio per ospiti
+            console.log('2. Utente è guest - classifica vuota');
             return [];
         }
         
-        // Recupera dati degli utenti registrati da localStorage
-        const allUsers = [];
-        const expData = JSON.parse(localStorage.getItem('expData') || '{}');
-        const creditsData = JSON.parse(localStorage.getItem('creditsData') || '{}');
-        
-        // Dati utente corrente
-        if (currentUser.email) {
-            allUsers.push({
-                email: currentUser.email,
-                name: currentUser.username,
-                points: expData.totalExp || 0,
-                studyHours: Math.floor((expData.totalExp || 0) / 50), // 1 ora ogni 50 EXP
-                sessions: Math.floor((expData.totalExp || 0) / 100), // 1 sessione ogni 100 EXP
-                streak: parseInt(localStorage.getItem('streak') || '1'),
-                level: expData.level || 1
-            });
+        // MOSTRA TUTTO IL LOCALSTORAGE
+        console.log('3. Tutto il localStorage:');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            console.log(`   ${key}:`, value);
         }
         
-        // Dati mock altri utenti (in produzione verrà dal backend)
-        const mockUsers = [
-            { email: 'federico@example.com', name: 'Federico', points: 2850, studyHours: 45, sessions: 28, streak: 12, level: 14 },
-            { email: 'chris@example.com', name: 'Chris', points: 2720, studyHours: 42, sessions: 25, streak: 10, level: 13 },
-            { email: 'gabriele1@example.com', name: 'Gabriele1', points: 2680, studyHours: 40, sessions: 24, streak: 9, level: 13 },
-            { email: 'gabriele2@example.com', name: 'Gabriele2', points: 2650, studyHours: 38, sessions: 23, streak: 8, level: 12 },
-            { email: 'nenna@example.com', name: 'Nenna', points: 2620, studyHours: 37, sessions: 22, streak: 7, level: 12 },
-            { email: 'campanale@example.com', name: 'Campanale', points: 2590, studyHours: 36, sessions: 21, streak: 6, level: 11 },
-            { email: 'sara@example.com', name: 'Sara', points: 2560, studyHours: 35, sessions: 20, streak: 5, level: 11 }
-        ];
+        // Recupera dati di tutti gli utenti registrati dal database condiviso
+        const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        console.log('4. Database utenti:', allUsersData);
+        console.log('5. Chiavi database:', Object.keys(allUsersData));
         
-        return [...allUsers, ...mockUsers];
+        const allUsers = [];
+        
+        // Aggiungi dati per ogni utente registrato
+        Object.keys(allUsersData).forEach(email => {
+            const userData = allUsersData[email];
+            console.log(`6. Analisi utente ${email}:`, userData);
+            
+            if (userData.email && userData.role !== 'guest') {
+                // Recupera EXP per questo utente
+                const userExpKey = `expData_${email}`;
+                const expData = JSON.parse(localStorage.getItem(userExpKey) || '{}');
+                
+                // Recupera dati di studio per questo utente
+                const studyDataKey = `studyData_${email}`;
+                const studyData = JSON.parse(localStorage.getItem(studyDataKey) || '{}');
+                
+                console.log(`7. Utente ${email}:`);
+                console.log('   - Chiave EXP:', userExpKey);
+                console.log('   - Dati EXP:', expData);
+                console.log('   - Chiave studio:', studyDataKey);
+                console.log('   - Dati studio:', studyData);
+                
+                // Calcola statistiche basate su EXP reali
+                const totalExp = expData.totalExp || 0;
+                
+                allUsers.push({
+                    email: userData.email,
+                    name: userData.username || userData.email.split('@')[0],
+                    points: totalExp,
+                    studyHours: Math.floor(totalExp / 50), // 1 ora ogni 50 EXP
+                    sessions: Math.floor(totalExp / 100), // 1 sessione ogni 100 EXP
+                    streak: studyData.currentStreak || userData.streak || 1,
+                    level: expData.level || 1,
+                    siteTimeMinutes: studyData.siteTimeToday || 0,
+                    minigamesCompleted: studyData.dailyMinigames || 0,
+                    schemiCompleted: studyData.dailySchemi || 0,
+                    lastActive: userData.lastActive || new Date().toISOString()
+                });
+            }
+        });
+        
+        console.log('8. Classifica finale:', allUsers);
+        console.log('9. Numero utenti in classifica:', allUsers.length);
+        
+        // Ordina per EXP decrescente
+        return allUsers.sort((a, b) => b.points - a.points);
     }
 
     function renderLeaderboard(period) {
@@ -258,11 +291,14 @@
                 <div style="font-weight: 700; font-size: 1.1rem;">
                   ${user.name} ${isCurrentUser ? '(Tu)' : ''}
                 </div>
-                <div style="display: flex; gap: 1rem; margin-top: 0.3rem;">
+                <div style="display: flex; gap: 1rem; margin-top: 0.3rem; flex-wrap: wrap;">
                   <span style="font-size: 0.8rem; opacity: 0.7;">📚 ${user.studyHours}h</span>
                   <span style="font-size: 0.8rem; opacity: 0.7;">🎯 ${user.sessions} sessioni</span>
                   <span style="font-size: 0.8rem; opacity: 0.7;">🔥 ${user.streak} streak</span>
                   <span style="font-size: 0.8rem; opacity: 0.7;">⭐ Lv.${user.level}</span>
+                  <span style="font-size: 0.8rem; opacity: 0.7;">⏱️ ${user.siteTimeMinutes || 0}min</span>
+                  <span style="font-size: 0.8rem; opacity: 0.7;">🎮 ${user.minigamesCompleted || 0}</span>
+                  <span style="font-size: 0.8rem; opacity: 0.7;">🗺️ ${user.schemiCompleted || 0}</span>
                 </div>
               </div>
             </div>
@@ -286,10 +322,92 @@
       });
     });
 
+    // Funzione di debug per localStorage
+    function debugLocalStorage() {
+        console.log('=== DEBUG LOCALSTORAGE COMPLETO ===');
+        
+        // Mostra tutti i dati localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.includes('expData') || key.includes('brainplayng_users')) {
+                const value = localStorage.getItem(key);
+                console.log(`${key}:`, value);
+            }
+        }
+        
+        // Mostra dati utente corrente
+        const currentUser = window.AuthModule?.getUserData?.() || {};
+        console.log('Utente corrente:', currentUser);
+        
+        // FORZA SINCRONIZZAZIONE ESP
+        forceSyncEXPData();
+        
+        // Ricarica la classifica
+        renderLeaderboard(currentPeriod);
+    }
+
+    // Funzione per sincronizzare forzatamente i dati EXP
+    function forceSyncEXPData() {
+        const currentUser = window.AuthModule?.getUserData?.() || {};
+        
+        if (currentUser.email && currentUser.role !== 'guest') {
+            console.log('=== SINCRONIZZAZIONE ESP FORZATA ===');
+            
+            // 1. Trova tutti i dati EXP per questa email (case-insensitive)
+            const email = currentUser.email.toLowerCase();
+            const allExpKeys = [];
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.toLowerCase().includes('expdata_')) {
+                    allExpKeys.push(key);
+                }
+            }
+            
+            console.log('Chiavi EXP trovate:', allExpKeys);
+            
+            // 2. Trova la chiave corretta per questa email
+            let correctExpKey = null;
+            let expData = null;
+            
+            allExpKeys.forEach(key => {
+                const keyEmail = key.toLowerCase().replace('expdata_', '');
+                if (keyEmail === email) {
+                    correctExpKey = key;
+                    expData = JSON.parse(localStorage.getItem(key) || '{}');
+                }
+            });
+            
+            if (correctExpKey) {
+                console.log('Chiave EXP corretta trovata:', correctExpKey);
+                console.log('Dati EXP:', expData);
+                
+                // 3. Assicurati che l'utente sia nel database
+                const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+                const userData = allUsersData[currentUser.email];
+                
+                if (!userData) {
+                    console.log('Utente non trovato nel database, lo aggiungo...');
+                    window.AuthModule.saveRegisteredUser({
+                        username: currentUser.username,
+                        email: currentUser.email,
+                        role: currentUser.role
+                    });
+                }
+            } else {
+                console.log('NESSUNA CHIAVE EXP TROVATA PER:', email);
+            }
+        }
+    }
+
     // INIT
     if (window.CreditsModule) {
       window.CreditsModule.updateCreditDisplay();
     }
+    
+    // Sincronizzazione automatica all'avvio
+    forceSyncEXPData();
+    
     renderLeaderboard('week');
   </script>
 </body>

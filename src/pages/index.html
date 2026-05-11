@@ -417,33 +417,52 @@
         const user = document.getElementById('register-username').value.trim();
         const email = document.getElementById('register-email').value.trim();
         const pass = document.getElementById('register-password').value.trim();
-        const confirm = document.getElementById('register-confirm-password').value.trim();
 
         if (!user || !email || !pass) {
-          showToast('Compila tutti i campi! 📝');
-          return;
-        }
-        if (pass !== confirm) {
-          showToast('Le password non corrispondono! 🛡️');
-          return;
-        }
-        if (getAccountByEmail(email)) {
-          showToast('Email già registrata! ✉️');
+          showToast('Compila tutti i campi');
           return;
         }
 
-        const account = { username: user, email, password: pass, role: 'user' };
-        storeAccount(account);
-        
+        if (pass.length < 4) {
+          showToast('Password troppo corta (min 4 caratteri)');
+          return;
+        }
+
+        // Simulazione registrazione
+        const account = getAccountByEmail(email);
+        if (account) {
+          showToast('Email già registrata');
+          return;
+        }
+
+        // Salva account
+        const accounts = getAccounts();
+        accounts[email.toLowerCase()] = { username: user, email, password: pass };
+        saveAccounts(accounts);
+
+        // Imposta sessione
         sessionStorage.setItem('authenticated', 'true');
         sessionStorage.setItem('username', user);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('role', 'user');
+
+        // Salva anche in localStorage per persistenza
         localStorage.setItem('bp_authenticated', 'true');
         localStorage.setItem('bp_username', user);
+        localStorage.setItem('bp_email', email);
         localStorage.setItem('bp_role', 'user');
 
-        showToast('Account creato! Benvenuto nell\'avventura! ✨');
+        // Salva utente nel database condiviso per la classifica
+        if (window.AuthModule && window.AuthModule.saveRegisteredUser) {
+          window.AuthModule.saveRegisteredUser({
+            username: user,
+            email: email,
+            role: 'user',
+            registeredAt: new Date().toISOString()
+          });
+        }
+
+        showToast('Registrazione completata! Benvenuto ' + user);
         setTimeout(() => window.location.href = 'home.html', 1000);
       });
 
