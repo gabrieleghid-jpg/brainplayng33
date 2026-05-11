@@ -6,5 +6,8 @@
     "start": "node start-all.js"
   },
   "author": "brainplayng",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
 }

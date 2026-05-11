@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema a Frecce - Test</title>
+  <link rel="stylesheet" href="../styles/dashboard.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .test-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    .json-input {
+      width: 100%;
+      min-height: 200px;
+      padding: 1rem;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 1rem;
+      margin-top: 1rem;
+      transition: transform 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: #64748b;
+    }
+    #schemaContainer {
+      width: 100%;
+      height: 600px;
+      background: var(--card);
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      position: relative;
+      margin-top: 2rem;
+    }
+    .info-box {
+      background: #1e293b;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1 style="text-align: center; margin-bottom: 1rem;">🗺️ Schema a Frecce - Test D3.js</h1>
+    <p style="text-align: center; color: var(--muted); margin-bottom: 2rem;">
+      Modifica il JSON qui sotto per testare il rendering dello schema. <br>
+      <strong>Nessuna AI, nessuna autenticazione</strong> - solo D3.js!
+    </p>
+    
+    <div class="info-box">
+      <strong>💡 Come funziona:</strong><br>
+      - <strong>principale</strong>: nodi principali (azzurro, più grandi)<br>
+      - <strong>secondario</strong>: nodi secondari (verde)<br>
+      - <strong>dettaglio</strong>: nodi dettaglio (arancione, più piccoli)<br>
+      - Trascina i nodi per muoverli, usa la rotella per zoomare
+    </div>
+
+    <label style="font-weight: 700; display: block; margin-bottom: 0.5rem;">JSON dello schema:</label>
+    <textarea id="jsonInput" class="json-input"></textarea>
+    
+    <div>
+      <button class="btn" id="renderBtn">🎨 Renderizza Schema</button>
+      <button class="btn btn-secondary" id="example1Btn">📚 Esempio: Divina Commedia</button>
+      <button class="btn btn-secondary" id="example2Btn">🏛️ Esempio: Storia Romana</button>
+      <button class="btn btn-secondary" id="example3Btn">🔄 Reset</button>
+    </div>
+    
+    <div id="schemaContainer"></div>
+  </div>
+
+  <script>
+    // Dati di esempio
+    const esempioDivinaCommedia = {
+      nodi: [
+        { id: "n1", label: "Divina Commedia", tipo: "principale" },
+        { id: "n2", label: "Inferno", tipo: "secondario" },
+        { id: "n3", label: "Purgatorio", tipo: "secondario" },
+        { id: "n4", label: "Paradiso", tipo: "secondario" },
+        { id: "n5", label: "Canto I", tipo: "dettaglio" },
+        { id: "n6", label: "Selva Oscura", tipo: "dettaglio" },
+        { id: "n7", label: "Virgilio", tipo: "dettaglio" },
+        { id: "n8", label: "Beatrice", tipo: "dettaglio" }
+      ],
+      frecce: [
+        { da: "n1", a: "n2", etichetta: "prima parte" },
+        { da: "n1", a: "n3", etichetta: "seconda parte" },
+        { da: "n1", a: "n4", etichetta: "terza parte" },
+        { da: "n2", a: "n5" },
+        { da: "n5", a: "n6" },
+        { da: "n5", a: "n7", etichetta: "guida" },
+        { da: "n7", a: "n8", etichetta: "conduce a" }
+      ]
+    };
+
+    const esempioStoriaRomana = {
+      nodi: [
+        { id: "n1", label: "Roma Antica", tipo: "principale" },
+        { id: "n2", label: "Repubblica", tipo: "secondario" },
+        { id: "n3", label: "Impero", tipo: "secondario" },
+        { id: "n4", label: "Caduta", tipo: "secondario" },
+        { id: "n5", label: "Giulio Cesare", tipo: "dettaglio" },
+        { id: "n6", label: "Augusto", tipo: "dettaglio" },
+        { id: "n7", label: "Colosseo", tipo: "dettaglio" },
+        { id: "n8", label: "Legioni", tipo: "dettaglio" }
+      ],
+      frecce: [
+        { da: "n1", a: "n2", etichetta: "509 a.C." },
+        { da: "n2", a: "n3", etichetta: "27 a.C." },
+        { da: "n3", a: "n4", etichetta: "476 d.C." },
+        { da: "n2", a: "n5" },
+        { da: "n3", a: "n6", etichetta: "primo imperatore" },
+        { da: "n3", a: "n7" },
+        { da: "n3", a: "n8", etichetta: "esercito" }
+      ]
+    };
+
+    const esempioVuoto = {
+      nodi: [],
+      frecce: []
+    };
+
+    const jsonInput = document.getElementById('jsonInput');
+    const schemaContainer = document.getElementById('schemaContainer');
+
+    // Inizializza con esempio - costruisco il JSON manualmente per evitare errori
+    const jsonStr = `{
+  "nodi": [
+    { "id": "n1", "label": "Divina Commedia", "tipo": "principale" },
+    { "id": "n2", "label": "Inferno", "tipo": "secondario" },
+    { "id": "n3", "label": "Purgatorio", "tipo": "secondario" },
+    { "id": "n4", "label": "Paradiso", "tipo": "secondario" },
+    { "id": "n5", "label": "Canto I", "tipo": "dettaglio" },
+    { "id": "n6", "label": "Selva Oscura", "tipo": "dettaglio" },
+    { "id": "n7", "label": "Virgilio", "tipo": "dettaglio" },
+    { "id": "n8", "label": "Beatrice", "tipo": "dettaglio" }
+  ],
+  "frecce": [
+    { "da": "n1", "a": "n2", "etichetta": "prima parte" },
+    { "da": "n1", "a": "n3", "etichetta": "seconda parte" },
+    { "da": "n1", "a": "n4", "etichetta": "terza parte" },
+    { "da": "n2", "a": "n5" },
+    { "da": "n5", "a": "n6" },
+    { "da": "n5", "a": "n7", "etichetta": "guida" },
+    { "da": "n7", "a": "n8", "etichetta": "conduce a" }
+  ]
+}`;
+    jsonInput.value = jsonStr;
+
+    function renderSchema(data) {
+      const width = schemaContainer.clientWidth || 1350;
+      const height = 600;
+
+      const colors = {
+        principale: '#00d4ff',
+        secondario: '#00ff88', 
+        dettaglio: '#f59e0b'
+      };
+
+      schemaContainer.innerHTML = '';
+
+      const svg = d3.select('#schemaContainer')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', [0, 0, width, height]);
+
+      const g = svg.append('g');
+      
+      svg.call(d3.zoom()
+        .extent([[0, 0], [width, height]])
+        .scaleExtent([0.3, 4])
+        .on('zoom', (event) => {
+          g.attr('transform', event.transform);
+        }));
+
+      const simulation = d3.forceSimulation(data.nodi)
+        .force('link', d3.forceLink(data.frecce).id(d => d.id).distance(120))
+        .force('charge', d3.forceManyBody().strength(-400))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(60));
+
+      const link = g.append('g').selectAll('g').data(data.frecce).join('g');
+
+      link.append('line')
+        .attr('stroke', '#94a3b8')
+        .attr('stroke-opacity', 0.6)
+        .attr('stroke-width', 2)
+        .attr('marker-end', 'url(#arrowhead)');
+
+      link.append('text')
+        .attr('dy', -5)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#94a3b8')
+        .attr('font-size', '11px')
+        .text(d => d.etichetta || '');
+
+      svg.append('defs').append('marker')
+        .attr('id', 'arrowhead')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 28)
+        .attr('refY', 0)
+        .attr('markerWidth', 6)
+        .attr('markerHeight', 6)
+        .attr('orient', 'auto')
+        .append('path')
+        .attr('d', 'M0,-5L10,0L0,5')
+        .attr('fill', '#94a3b8');
+
+      const node = g.append('g')
+        .selectAll('g')
+        .data(data.nodi)
+        .join('g')
+        .call(d3.drag()
+          .on('start', (event, d) => {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          })
+          .on('drag', (event, d) => {
+            d.fx = event.x;
+            d.fy = event.y;
+          })
+          .on('end', (event, d) => {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+          }));
+
+      node.append('circle')
+        .attr('r', d => d.tipo === 'principale' ? 40 : d.tipo === 'secondario' ? 32 : 25)
+        .attr('fill', d => colors[d.tipo] || '#64748b')
+        .attr('stroke', '#0f172a')
+        .attr('stroke-width', 3)
+        .style('cursor', 'grab');
+
+      node.append('text')
+        .attr('dy', 4)
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#0f172a')
+        .attr('font-size', d => d.tipo === 'principale' ? '12px' : '10px')
+        .attr('font-weight', '700')
+        .style('pointer-events', 'none')
+        .text(d => d.label.length > 20 ? d.label.slice(0, 20) + '...' : d.label);
+
+      simulation.on('tick', () => {
+        link.selectAll('line')
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+
+        link.selectAll('text')
+          .attr('x', d => (d.source.x + d.target.x) / 2)
+          .attr('y', d => (d.source.y + d.target.y) / 2);
+
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+      });
+
+      const legend = svg.append('g').attr('transform', `translate(${width - 140}, 20)`);
+      
+      Object.entries(colors).forEach(([tipo, color], i) => {
+        const row = legend.append('g').attr('transform', `translate(0, ${i * 30})`);
+        row.append('circle').attr('r', 10).attr('fill', color);
+        row.append('text')
+          .attr('x', 20)
+          .attr('y', 4)
+          .attr('fill', '#e2e8f0')
+          .attr('font-size', '14px')
+          .attr('font-weight', '600')
+          .text(tipo.charAt(0).toUpperCase() + tipo.slice(1));
+      });
+    }
+
+    document.getElementById('renderBtn').addEventListener('click', () => {
+      try {
+        const data = JSON.parse(jsonInput.value);
+        if (!data.nodi || !data.frecce) {
+          alert('Il JSON deve contenere "nodi" e "frecce"');
+          return;
+        }
+        renderSchema(data);
+      } catch (e) {
+        alert('JSON non valido: ' + e.message);
+      }
+    });
+
+    document.getElementById('example1Btn').addEventListener('click', () => {
+      jsonInput.value = jsonStr;
+      renderSchema(JSON.parse(jsonStr));
+    });
+
+    document.getElementById('example2Btn').addEventListener('click', () => {
+      const romaStr = `{
+  "nodi": [
+    { "id": "n1", "label": "Roma Antica", "tipo": "principale" },
+    { "id": "n2", "label": "Repubblica", "tipo": "secondario" },
+    { "id": "n3", "label": "Impero", "tipo": "secondario" },
+    { "id": "n4", "label": "Caduta", "tipo": "secondario" },
+    { "id": "n5", "label": "Giulio Cesare", "tipo": "dettaglio" },
+    { "id": "n6", "label": "Augusto", "tipo": "dettaglio" },
+    { "id": "n7", "label": "Colosseo", "tipo": "dettaglio" },
+    { "id": "n8", "label": "Legioni", "tipo": "dettaglio" }
+  ],
+  "frecce": [
+    { "da": "n1", "a": "n2", "etichetta": "509 a.C." },
+    { "da": "n2", "a": "n3", "etichetta": "27 a.C." },
+    { "da": "n3", "a": "n4", "etichetta": "476 d.C." },
+    { "da": "n2", "a": "n5" },
+    { "da": "n3", "a": "n6", "etichetta": "primo imperatore" },
+    { "da": "n3", "a": "n7" },
+    { "da": "n3", "a": "n8", "etichetta": "esercito" }
+  ]
+}`;
+      jsonInput.value = romaStr;
+      renderSchema(JSON.parse(romaStr));
+    });
+
+    document.getElementById('example3Btn').addEventListener('click', () => {
+      jsonInput.value = '{\n  "nodi": [],\n  "frecce": []\n}';
+      schemaContainer.innerHTML = '<div style="padding: 3rem; text-align: center; color: var(--muted);">Schema vuoto. Scegli un esempio o inserisci il tuo JSON.</div>';
+    });
+
+    // Render iniziale
+    try {
+      renderSchema(JSON.parse(jsonStr));
+    } catch (e) {
+      console.error('Errore render iniziale:', e);
+    }
+  </script>
+</body>
+</html>

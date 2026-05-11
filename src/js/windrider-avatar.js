@@ -40,36 +40,18 @@ const ASSET_MAP = {
   'boom_classic.png': 'boom_classic.png',
   'glasses_sport.png': 'glasses_sport.png',
   'cap_red.png': 'cap_red.png',
+  'cap_red_fixed.png': 'cap_red_fixed.png',
   'sea_bg.jpg': 'sea_bg.jpg'
 };
 
 // ============== CATALOGO ITEMS ==============
+// Solo cappellino per test layering - le immagini rimangono nella cartella
 const CATALOG_ITEMS = [
   // DEFAULT (gratis)
   { id: 'base', name: 'Corpo Base', category: 'top', image_path: 'base_body.png', price: 0, is_default: true, z_index: 10 },
   
-  // TOP
-  { id: 'wetsuit_red', name: 'Muta Top Rossa', category: 'top', image_path: 'wetsuit_top_red.png', price: 100, is_default: false, z_index: 20 },
-  { id: 'wetsuit_blue', name: 'Muta Top Blu', category: 'top', image_path: 'wetsuit_top_blue.png', price: 100, is_default: false, z_index: 20 },
-  
-  // BOTTOM
-  { id: 'wetsuit_bottom', name: 'Muta Bottom Nera', category: 'bottom', image_path: 'wetsuit_bottom_black.png', price: 80, is_default: false, z_index: 15 },
-  { id: 'shorts', name: 'Shorts Gialli', category: 'bottom', image_path: 'shorts_yellow.png', price: 60, is_default: false, z_index: 15 },
-  
-  // FULLSUIT
-  { id: 'fullsuit_neon', name: 'Muta Intera Neon', category: 'fullsuit', image_path: 'fullsuit_neon.png', price: 200, is_default: false, z_index: 25 },
-  { id: 'fullsuit_pro', name: 'Muta Pro', category: 'fullsuit', image_path: 'fullsuit_pro.png', price: 300, is_default: false, z_index: 25 },
-  
-  // BOARD
-  { id: 'board_orange', name: 'Tavola Arancione', category: 'board', image_path: 'board_orange.png', price: 150, is_default: false, z_index: 5 },
-  { id: 'board_carbon', name: 'Tavola Carbon', category: 'board', image_path: 'board_carbon.png', price: 250, is_default: false, z_index: 5 },
-  
-  // BOOM
-  { id: 'boom_classic', name: 'Boma Classico', category: 'boom', image_path: 'boom_classic.png', price: 80, is_default: false, z_index: 30 },
-  
-  // ACCESSORY
-  { id: 'glasses', name: 'Occhiali Sport', category: 'accessory', image_path: 'glasses_sport.png', price: 50, is_default: false, z_index: 35 },
-  { id: 'cap', name: 'Berretto Rosso', category: 'accessory', image_path: 'cap_red.png', price: 40, is_default: false, z_index: 35 }
+  // ACCESSORY - solo cappellino per test (usa versione fixata con trasparenza)
+  { id: 'cap', name: 'Berretto Rosso', category: 'accessory', image_path: 'cap_red_fixed.png', price: 40, is_default: false, z_index: 35 }
 ];
 
 // ============== CLASSE PRINCIPALE ==============
@@ -749,40 +731,57 @@ class WindRiderAvatar {
   renderAvatar() {
     const stage = this.container.querySelector('#wrStage');
     
-    // Ottieni layer equipaggiati ordinati per z-index
+    // Ottieni tutti gli items equipaggiati ordinati per z-index (dal più basso al più alto)
     const equippedItems = Object.entries(this.equipped)
       .map(([cat, id]) => id ? this.items.find(i => i.id === id) : null)
       .filter(Boolean)
-      .sort((a, b) => a.z_index - b.z_index);
+      .sort((a, b) => (a.z_index || 0) - (b.z_index || 0));
     
-    // Controlla se c'è un fullsuit equipaggiato (copre tutto il corpo)
-    const hasFullsuit = equippedItems.some(item => item.category === 'fullsuit');
+    // Controlla se c'è un fullsuit equipaggiato
+    const fullsuitItem = equippedItems.find(item => item.category === 'fullsuit');
+    const hasFullsuit = !!fullsuitItem;
+    
+    // Separa items che coprono il corpo da quelli che vanno sopra
+    const bodyItems = equippedItems.filter(item => 
+      item.category === 'fullsuit' || 
+      item.category === 'top' || 
+      item.category === 'bottom'
+    );
+    const overlayItems = equippedItems.filter(item => 
+      item.category !== 'fullsuit' && 
+      item.category !== 'top' && 
+      item.category !== 'bottom'
+    );
+    
+    // Costruisci i layer in ordine corretto
+    let layersHtml = '';
+    
+    // 1. Base body (z-index 10) - solo se non c'è fullsuit
+    if (!hasFullsuit) {
+      layersHtml += `<img src="${CONFIG.ASSETS_BASE}base_body.png" alt="Base" class="wr-avatar-layer" style="z-index: 10;">`;
+    }
+    
+    // 2. Body items (vestiti) in ordine di z-index
+    bodyItems.forEach(item => {
+      const zIndex = item.category === 'fullsuit' ? 20 : (item.z_index || 30);
+      layersHtml += `<img src="${CONFIG.ASSETS_BASE}${item.image_path}" alt="${item.name}" class="wr-avatar-layer" style="z-index: ${zIndex};">`;
+    });
+    
+    // 3. Overlay items (tavola, accessori, etc.)
+    overlayItems.forEach(item => {
+      const zIndex = item.z_index || 50;
+      // Per il cappello, usa mix-blend-mode per far diventare trasparente il bianco
+      const blendMode = item.id === 'cap' ? 'mix-blend-mode: multiply;' : '';
+      layersHtml += `<img src="${CONFIG.ASSETS_BASE}${item.image_path}" alt="${item.name}" class="wr-avatar-layer" style="z-index: ${zIndex}; ${blendMode}">`;
+    });
     
     stage.innerHTML = `
       <div class="wr-avatar-stack">
         <div class="wr-avatar-inner">
-          <!-- Base Body - solo se non c'è fullsuit -->
-          ${!hasFullsuit ? `
-          <img src="${CONFIG.ASSETS_BASE}base_body.png" 
-               alt="Base" 
-               class="wr-avatar-layer" 
-               style="z-index: 10 !important">
-          ` : ''}
-          
-          <!-- Equipped Layers -->
-          ${equippedItems.map(item => `
-            <img src="${CONFIG.ASSETS_BASE}${item.image_path}" 
-                 alt="${item.name}" 
-                 class="wr-avatar-layer" 
-                 style="z-index: ${item.z_index} !important">
-          `).join('')}
-          
-          <!-- Shadow -->
+          ${layersHtml}
           <div class="wr-avatar-shadow"></div>
         </div>
       </div>
-      
-      <!-- HUD -->
       <div class="wr-hud wr-hud-top">RIDER · 01</div>
       <div class="wr-hud wr-hud-bottom">T-POSE · LIVE PREVIEW</div>
     `;
