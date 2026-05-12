@@ -84,13 +84,28 @@ class AuthModule {
         }
         
         // Se è un utente registrato, usa i dati reali da localStorage per persistenza
-        const username = sessionStorage.getItem('username') || localStorage.getItem('bp_username');
+        const email = sessionStorage.getItem('email') || localStorage.getItem('bp_email') || '';
+        let username = sessionStorage.getItem('username') || localStorage.getItem('bp_username');
         
-        console.log('UTENTE REGISTRATO - Username:', username);
+        // CARICA L'USERNAME PIÙ RECENTE DAL DATABASE UTENTI CONDIVISO
+        if (email && role !== 'guest') {
+            const usersDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+            if (usersDatabase[email] && usersDatabase[email].username) {
+                // Usa l'username dal database se è più recente
+                username = usersDatabase[email].username;
+                console.log('USERNAME AGGIORNATO DAL DATABASE:', username);
+                
+                // Aggiorna anche sessionStorage/localStorage per consistenza
+                sessionStorage.setItem('username', username);
+                localStorage.setItem('bp_username', username);
+            }
+        }
+        
+        console.log('UTENTE REGISTRATO - Username finale:', username);
         
         return {
             username: username,
-            email: sessionStorage.getItem('email') || localStorage.getItem('bp_email') || '',
+            email: email,
             role: role,
             profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
         };
