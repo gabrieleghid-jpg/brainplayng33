@@ -219,9 +219,29 @@
     function saveUsername() {
         const newUsername = document.getElementById('usernameInput').value;
         if (newUsername.trim()) {
+            // Aggiorna sessionStorage e localStorage
             sessionStorage.setItem('username', newUsername);
             localStorage.setItem('bp_username', newUsername);
             document.getElementById('displayUsername').textContent = newUsername;
+            
+            // AGGIORNA ANCHE IL DATABASE UTENTI CONDIVISO
+            const userData = window.AuthModule?.getUserData?.() || {};
+            if (userData.email && userData.role !== 'guest') {
+                // Recupera il database utenti
+                const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+                
+                // Aggiorna l'username per questo utente
+                if (allUsersData[userData.email]) {
+                    allUsersData[userData.email].username = newUsername;
+                    allUsersData[userData.email].lastActive = new Date().toISOString();
+                    
+                    // Salva il database aggiornato
+                    localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
+                    
+                    console.log(`Username aggiornato nel database: ${userData.email} -> ${newUsername}`);
+                }
+            }
+            
             alert('Username aggiornato con successo!');
         }
     }
