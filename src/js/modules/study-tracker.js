@@ -6,8 +6,17 @@ class StudyTrackerModule {
             return;
         }
 
-        // Inizializza dati di studio se non esistono
-        if (!localStorage.getItem('studyData')) {
+        // Ottieni email dell'utente corrente
+        const userData = window.AuthModule.getUserData();
+        const userEmail = userData.email;
+        
+        if (!userEmail || userData.role === 'guest') {
+            return;
+        }
+
+        // Inizializza dati di studio per questo utente se non esistono
+        const studyKey = `studyData_${userEmail}`;
+        if (!localStorage.getItem(studyKey)) {
             const initialData = {
                 totalStudyTime: 0,
                 currentStreak: 0,
@@ -24,7 +33,8 @@ class StudyTrackerModule {
                 siteTimeToday: 0,
                 lastSiteActivity: Date.now()
             };
-            localStorage.setItem('studyData', JSON.stringify(initialData));
+            localStorage.setItem(studyKey, JSON.stringify(initialData));
+            console.log(`StudyTracker: Inizializzati dati per ${userEmail}`);
         }
 
         this.checkDailyReset();
@@ -35,7 +45,9 @@ class StudyTrackerModule {
     }
 
     static addStudySession(duration) {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const userData = window.AuthModule.getUserData();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const now = new Date();
         const today = now.toDateString();
         
@@ -63,14 +75,16 @@ class StudyTrackerModule {
         }
         
         // Salva dati
-        localStorage.setItem('studyData', JSON.stringify(data));
+        localStorage.setItem(studyKey, JSON.stringify(data));
         
         // Aggiorna UI se presente
         this.updateUI();
     }
 
     static getStudyStats() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const userData = window.AuthModule.getUserData();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         return {
             totalHours: (data.totalStudyTime / 3600).toFixed(1) + 'h',
             currentStreak: data.currentStreak + '🔥',
@@ -80,7 +94,9 @@ class StudyTrackerModule {
     }
 
     static checkDailyReset() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const userData = window.AuthModule.getUserData();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const today = new Date().toDateString();
         
         // Se è un nuovo giorno, resetta i dati giornalieri
@@ -90,7 +106,7 @@ class StudyTrackerModule {
             data.dailyMinigames = 0;
             data.lastSessionDuration = 0;
             data.dailyStudyDate = today;
-            localStorage.setItem('studyData', JSON.stringify(data));
+            localStorage.setItem(studyKey, JSON.stringify(data));
             console.log('StudyTracker: Reset giornaliero completato');
         }
     }
@@ -103,16 +119,20 @@ class StudyTrackerModule {
             }, 60000); // Aggiorna ogni minuto
             
             // Inizia subito
-            const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+            const userData = window.AuthModule.getUserData();
+            const studyKey = `studyData_${userData.email}`;
+            const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
             if (!data.lastSiteActivity) {
                 data.lastSiteActivity = Date.now();
-                localStorage.setItem('studyData', JSON.stringify(data));
+                localStorage.setItem(studyKey, JSON.stringify(data));
             }
         }
     }
 
     static updateSiteTime() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const userData = window.AuthModule.getUserData();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const now = Date.now();
         
         if (data.lastSiteActivity) {
@@ -124,7 +144,7 @@ class StudyTrackerModule {
         }
         
         data.lastSiteActivity = now;
-        localStorage.setItem('studyData', JSON.stringify(data));
+        localStorage.setItem(studyKey, JSON.stringify(data));
     }
 
     static startTracking() {
@@ -144,23 +164,26 @@ class StudyTrackerModule {
     }
 
     static updateDailyTime() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+        const userData = window.AuthModule.getUserData();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         
         if (data.sessionStartTime) {
             const now = Date.now();
-            const sessionDuration = Math.floor((now - data.sessionStartTime) / 1000 / 60); // minuti
+            const elapsed = Math.floor((now - data.sessionStartTime) / 1000 / 60); // minuti
             
-            // Accumula il tempo giornaliero invece di sostituirlo
-            const previousTime = data.dailyStudyTime || 0;
-            const timeDifference = sessionDuration - (data.lastSessionDuration || 0);
-            
-            if (timeDifference > 0) {
-                data.dailyStudyTime = previousTime + timeDifference;
-                data.lastSessionDuration = sessionDuration;
-                localStorage.setItem('studyData', JSON.stringify(data));
+            if (elapsed > 0) {
+                data.dailyStudyTime += elapsed;
+                data.totalStudyTime += elapsed;
+                data.lastSessionDuration = elapsed;
+                data.dailySessions++;
+                
+                // Resetta il timer per il prossimo minuto
+                data.sessionStartTime = now;
+                localStorage.setItem(studyKey, JSON.stringify(data));
                 
                 // Aggiorna UI
-                this.updateTodayUI();
+                this.updateUI();
             }
         }
     }
@@ -291,14 +314,30 @@ class StudyTrackerModule {
     }
 
     static updateUI() {
-        const stats = this.getStudyStats();
+        const userData = window.AuthModule.getUserData();
+        
+        if (!userData.email || userData.role === 'guest') {
+            // Per ospiti, mostra 0
+            const studyTimeEl = document.getElementById('statStudyTime');
+            const streakEl = document.getElementById('statStreak');
+            if (studyTimeEl) studyTimeEl.textContent = '0h';
+            if (streakEl) streakEl.textContent = '0🔥';
+            return;
+        }
+        
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         
         // Aggiorna profile.html se presente
         const studyTimeEl = document.getElementById('statStudyTime');
         const streakEl = document.getElementById('statStreak');
         
-        if (studyTimeEl) studyTimeEl.textContent = stats.totalHours;
-        if (streakEl) streakEl.textContent = stats.currentStreak;
+        if (studyTimeEl) {
+            const hours = Math.floor(data.totalStudyTime / 3600);
+            const minutes = Math.floor((data.totalStudyTime % 3600) / 60);
+            studyTimeEl.textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+        }
+        if (streakEl) streakEl.textContent = `${data.currentStreak || 0}🔥`;
         
         // Aggiorna anche la sezione OGGI
         this.updateTodayUI();
