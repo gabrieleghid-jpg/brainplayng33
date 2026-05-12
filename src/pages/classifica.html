@@ -179,9 +179,17 @@
             return [];
         }
         
+        // PRIMA: Sincronizza i dati reali dell'utente corrente
+        if (currentUser.email && currentUser.role !== 'guest' && window.StudyTrackerModule) {
+            console.log('3. Sincronizzazione dati reali utente corrente...');
+            window.StudyTrackerModule.updateUI(); // Forza aggiornamento UI
+            const realStats = window.StudyTrackerModule.getDailyStats();
+            console.log('   - Statistiche reali:', realStats);
+        }
+        
         // PRIMA: Cerca TUTTI gli utenti con dati EXP nel localStorage
         const allUsers = [];
-        console.log('3. Ricerca TUTTI gli utenti con dati EXP...');
+        console.log('4. Ricerca TUTTI gli utenti con dati EXP...');
         
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
