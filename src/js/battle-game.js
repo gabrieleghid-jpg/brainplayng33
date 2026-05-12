@@ -482,6 +482,11 @@ function endBattle(victory) {
         // Marca nodo come completato
         gameState.mapNodes[gameState.currentNode].completed = true;
         
+        // Registra minigioco completato per statistiche utente
+        if (window.StudyTrackerModule) {
+            window.StudyTrackerModule.addMinigameCompleted();
+        }
+        
     } else {
         // Sconfitta
         document.getElementById('defeatScreen').style.display = 'flex';
@@ -629,6 +634,11 @@ function openTreasure() {
 }
 
 function showGameComplete() {
+    // Registra completamento gioco come minigioco bonus
+    if (window.StudyTrackerModule) {
+        window.StudyTrackerModule.addMinigameCompleted();
+    }
+    
     alert("Congratulazioni! Hai completato tutti gli atti!");
     backToHome();
 }
