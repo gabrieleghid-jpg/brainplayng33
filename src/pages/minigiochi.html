@@ -391,6 +391,45 @@
   <script src="../js/modules/credits.js"></script>
   <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/study-tracker.js"></script>
+  <script src="../js/modules/notifications.js"></script>
+  <script>
+    // SISTEMA DI DEBUG GLOBALE PER CATTURARE TUTTI GLI ERRORI
+    console.log('=== DEBUG GLOBALE ATTIVATO ===');
+    
+    // Override di console.error per mostrare tutti gli errori
+    const originalError = console.error;
+    console.error = function(...args) {
+        originalError.apply(console, args);
+        // Mostra errore anche come alert se è critico
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('Error')) {
+            alert(`ERRORE RILEVATO: ${args.join(' ')}`);
+        }
+    };
+    
+    // Override di console.warn per mostrare tutti i warning
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+        originalWarn.apply(console, args);
+        console.log('⚠️ WARNING:', args.join(' '));
+    };
+    
+    // Cattura errori non gestiti
+    window.addEventListener('error', function(event) {
+        console.error('ERRORE GLOBALE:', event.error);
+        alert(`ERRORE NON GESTITO: ${event.error.message}`);
+    });
+    
+    // Cattura promesse non gestite
+    window.addEventListener('unhandledrejection', function(event) {
+        console.error('PROMESSA NON GESTITA:', event.reason);
+        alert(`PROMESSA NON GESTITA: ${event.reason}`);
+    });
+    
+    // Test debug
+    console.log('✅ Sistema debug globale attivato');
+    console.log('📍 Pagina corrente:', window.location.href);
+    console.log('🔧 Console error override attivato');
+  </script>
   <script>
     let currentGame = null;
     let gameScores = { sudoku: 0, wordle: 0, math: 0, memory: 0, tetris: 0 };
@@ -515,25 +554,41 @@
         }
         
         if (window.ExpSystemModule && score > 0) {
-            // EXP base in base al tipo di gioco
-            const expPerGame = {
-                sudoku: 15,
-                wordle: 20,
-                math: 10,
-                memory: 12,
-                tetris: 18
-            };
+            let expGained = 0;
             
-            const expGained = expPerGame[gameType] || 10;
-            console.log(`DEBUG: EXP da assegnare: ${expGained}`);
+            // Sistema EXP basato sul tipo di gioco
+            if (gameType === 'tetris') {
+                // Per Tetris: EXP in base alle linee fatte
+                const tetrisLines = parseInt(document.getElementById('tetrisLines')?.textContent || '0');
+                const tetrisLevel = parseInt(document.getElementById('tetrisLevel')?.textContent || '1');
+                expGained = Math.floor(tetrisLines * 2 * tetrisLevel); // 2 EXP per linea * livello
+                console.log(`DEBUG: EXP Tetris - linee: ${tetrisLines}, livello: ${tetrisLevel}, EXP: ${expGained}`);
+            } else {
+                // Per altri giochi: EXP fisso
+                const expPerGame = {
+                    sudoku: 15,
+                    wordle: 20,
+                    math: 25,  // Aumentato da 10 a 25 per rendere più rewarding
+                    memory: 12
+                };
+                expGained = expPerGame[gameType] || 10;
+                console.log(`DEBUG: EXP ${gameType} - fisso: ${expGained}`);
+            }
+            
+            console.log(`DEBUG: EXP totale da assegnare: ${expGained}`);
             
             const result = window.ExpSystemModule.addExp(expGained);
             console.log(`DEBUG: Risultato addExp:`, result);
             
-            // Mostra notifica EXP
+            // Mostra notifica EXP dettagliata
             if (window.NotificationsModule) {
-                window.NotificationsModule.showSuccess(`+${expGained} EXP per ${gameNames[gameType]}!`);
-                console.log(`DEBUG: Notifica EXP inviata`);
+                let message = `+${expGained} EXP per ${gameNames[gameType]}!`;
+                if (gameType === 'tetris') {
+                    const tetrisLines = parseInt(document.getElementById('tetrisLines')?.textContent || '0');
+                    message = `+${expGained} EXP per Tetris (${tetrisLines} linee)!`;
+                }
+                window.NotificationsModule.showSuccess(message);
+                console.log(`DEBUG: Notifica EXP inviata: ${message}`);
             } else {
                 console.log(`DEBUG: NotificationsModule non disponibile`);
             }
