@@ -108,7 +108,7 @@
 
   <div class="page-shell">
     <main class="main-content" style="max-width: 1000px; margin: 0 auto; padding: 4rem 2rem;">
-      <header style="text-align: center; margin-bottom: 4rem;">
+      <header class="text-center" style="margin-bottom: 3rem;">
         <h1 class="text-stroke-ink" style="font-size: 4rem; margin: 0;">🏆 Classifica</h1>
         <p style="font-size: 1.2rem; opacity: 0.8; margin-top: 1rem;">Confrontati con gli altri avventurieri e scala la vetta!</p>
       </header>
@@ -119,6 +119,7 @@
           <button class="tab-btn" data-period="month" style="font-size: 1rem;">📆 Questo Mese</button>
           <button class="tab-btn" data-period="all" style="font-size: 1rem;">🏆 Sempre</button>
           <button class="toon-btn" onclick="debugLocalStorage()" style="background: #ef4444; color: white; font-size: 0.8rem;">🔍 DEBUG LOCALSTORAGE</button>
+          <button class="toon-btn" onclick="debugAdvanced()" style="background: #f59e0b; color: white; font-size: 0.8rem;">🚀 DEBUG AVANZATO</button>
         </div>
 
         <div id="leaderboardGrid" style="display: flex; flex-direction: column; gap: 1.2rem;">
@@ -178,47 +179,38 @@
             return [];
         }
         
-        // MOSTRA TUTTO IL LOCALSTORAGE
-        console.log('3. Tutto il localStorage:');
+        // PRIMA: Cerca TUTTI gli utenti con dati EXP nel localStorage
+        const allUsers = [];
+        console.log('3. Ricerca TUTTI gli utenti con dati EXP...');
+        
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            const value = localStorage.getItem(key);
-            console.log(`   ${key}:`, value);
-        }
-        
-        // Recupera dati di tutti gli utenti registrati dal database condiviso
-        const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
-        console.log('4. Database utenti:', allUsersData);
-        console.log('5. Chiavi database:', Object.keys(allUsersData));
-        
-        const allUsers = [];
-        
-        // Aggiungi dati per ogni utente registrato
-        Object.keys(allUsersData).forEach(email => {
-            const userData = allUsersData[email];
-            console.log(`6. Analisi utente ${email}:`, userData);
-            
-            if (userData.email && userData.role !== 'guest') {
-                // Recupera EXP per questo utente
-                const userExpKey = `expData_${email}`;
-                const expData = JSON.parse(localStorage.getItem(userExpKey) || '{}');
+            if (key && key.startsWith('expData_')) {
+                const email = key.replace('expData_', '');
+                console.log(`   Trovato EXP per: ${email}`);
                 
-                // Recupera dati di studio per questo utente
+                // Recupera dati EXP
+                const expData = JSON.parse(localStorage.getItem(key) || '{}');
+                const totalExp = expData.totalExp || 0;
+                
+                // Recupera dati di studio
                 const studyDataKey = `studyData_${email}`;
                 const studyData = JSON.parse(localStorage.getItem(studyDataKey) || '{}');
                 
-                console.log(`7. Utente ${email}:`);
-                console.log('   - Chiave EXP:', userExpKey);
-                console.log('   - Dati EXP:', expData);
-                console.log('   - Chiave studio:', studyDataKey);
-                console.log('   - Dati studio:', studyData);
+                // Recupera dati utente dal database
+                const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+                const userData = allUsersData[email] || {
+                    email: email,
+                    username: email.split('@')[0],
+                    role: 'user'
+                };
                 
-                // Calcola statistiche basate su EXP reali
-                const totalExp = expData.totalExp || 0;
+                console.log(`   - Dati EXP:`, expData);
+                console.log(`   - Dati utente:`, userData);
                 
                 allUsers.push({
-                    email: userData.email,
-                    name: userData.username || userData.email.split('@')[0],
+                    email: email,
+                    name: userData.username || email.split('@')[0],
                     points: totalExp,
                     studyHours: Math.floor(totalExp / 50), // 1 ora ogni 50 EXP
                     sessions: Math.floor(totalExp / 100), // 1 sessione ogni 100 EXP
@@ -230,7 +222,7 @@
                     lastActive: userData.lastActive || new Date().toISOString()
                 });
             }
-        });
+        }
         
         console.log('8. Classifica finale:', allUsers);
         console.log('9. Numero utenti in classifica:', allUsers.length);
@@ -348,6 +340,53 @@
         renderLeaderboard(currentPeriod);
     }
 
+    // Funzione di debug avanzato per test completo
+    function debugAdvanced() {
+        console.log('=== DEBUG AVANZATO SISTEMA MULTI-UTENTE ===');
+        
+        // 1. Mostra TUTTO il localStorage
+        console.log('1. TUTTO IL LOCALSTORAGE:');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            console.log(`   ${key}:`, value);
+        }
+        
+        // 2. Mostra tutto sessionStorage
+        console.log('2. TUTTO IL SESSIONSTORAGE:');
+        for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            const value = sessionStorage.getItem(key);
+            console.log(`   ${key}:`, value);
+        }
+        
+        // 3. Mostra database utenti
+        const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        console.log('3. DATABASE UTENTI:', allUsersData);
+        
+        // 4. Cerca esplicitamente l'utente con 50 EXP
+        console.log('4. RICERCA UTENTE CON 50 EXP:');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('expData_')) {
+                const expData = JSON.parse(localStorage.getItem(key) || '{}');
+                console.log(`   ${key}:`, expData);
+                if (expData.totalExp === 50) {
+                    console.log('   *** TROVATO UTENTE CON 50 EXP! ***');
+                }
+            }
+        }
+        
+        // 5. Forza sincronizzazione completa
+        forceAddAllUsersToDatabase();
+        forceSyncEXPData();
+        
+        // 6. Ricarica classifica
+        renderLeaderboard(currentPeriod);
+        
+        alert('DEBUG AVANZATO COMPLETATO! Controlla la console per dettagli.');
+    }
+
     // Funzione per aggiungere forzatamente tutti gli utenti al database
     function forceAddAllUsersToDatabase() {
         console.log('=== FORZATURA AGGIUNTA UTENTI ===');
@@ -363,17 +402,44 @@
         
         console.log('Chiavi EXP trovate:', allExpKeys);
         
-        // Per ogni chiave EXP, estrai l'email e aggiungi al database
-        allExpKeys.forEach(expKey => {
-            const email = expKey.replace('expData_', '');
+        // Cerca anche tutti i dati di studio
+        const allStudyKeys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('studyData_')) {
+                allStudyKeys.push(key);
+            }
+        }
+        
+        console.log('Chiavi studio trovate:', allStudyKeys);
+        
+        // Unisci tutte le email trovate
+        const allEmails = new Set();
+        allExpKeys.forEach(key => allEmails.add(key.replace('expData_', '')));
+        allStudyKeys.forEach(key => allEmails.add(key.replace('studyData_', '')));
+        
+        console.log('Tutte le email trovate:', Array.from(allEmails));
+        
+        // Per ogni email trovata, aggiungi al database
+        const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        
+        allEmails.forEach(email => {
             console.log(`Processando utente: ${email}`);
             
-            // Aggiungi utente al database se non c'è
-            const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
             if (!allUsersData[email]) {
-                // Estrai dati utente da sessionStorage o localStorage
-                const username = sessionStorage.getItem('username') || email.split('@')[0];
-                const role = sessionStorage.getItem('role') || 'user';
+                // Estrai dati utente da vari fonti
+                let username = email.split('@')[0];
+                let role = 'user';
+                
+                // Prova a prendere da bp_username
+                const bpUsername = localStorage.getItem(`bp_username_${email}`);
+                if (bpUsername) username = bpUsername;
+                
+                // Prova a prendere da sessionStorage (se utente corrente)
+                const sessionEmail = sessionStorage.getItem('email');
+                if (sessionEmail === email && sessionStorage.getItem('username')) {
+                    username = sessionStorage.getItem('username');
+                }
                 
                 allUsersData[email] = {
                     email: email,
@@ -382,10 +448,15 @@
                     lastActive: new Date().toISOString()
                 };
                 
-                localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
-                console.log(`Utente aggiunto al database: ${email}`);
+                console.log(`NUOVO utente aggiunto: ${email} -> ${username}`);
+            } else {
+                console.log(`Utente esistente: ${email} -> ${allUsersData[email].username}`);
             }
         });
+        
+        // Salva il database aggiornato
+        localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
+        console.log('Database utenti finale:', allUsersData);
     }
 
     // Funzione per sincronizzare forzatamente i dati EXP
