@@ -118,8 +118,12 @@
           <button class="tab-btn active" data-period="week" style="font-size: 1rem;">📅 Questa Settimana</button>
           <button class="tab-btn" data-period="month" style="font-size: 1rem;">📆 Questo Mese</button>
           <button class="tab-btn" data-period="all" style="font-size: 1rem;">🏆 Sempre</button>
+<<<<<<< HEAD
+                  </div>
+=======
           <a href="home.html" class="toon-btn" style="background: var(--study); color: white; font-size: 0.8rem;">🏠 Torna alla Home</a>
         </div>
+>>>>>>> d4929e11bc34052776589ed1c4b0adb9986e71c7
 
         <div id="leaderboardGrid" style="display: flex; flex-direction: column; gap: 1.2rem;">
           <!-- La classifica verrà popolata dinamicamente -->
@@ -165,9 +169,9 @@
     const filterButtons = document.querySelectorAll('.filter-btn');
     let currentPeriod = 'week';
 
-    // Sistema classifica basato su dati reali
+    // Sistema classifica basato su TUTTI gli utenti con dati di attività
     function getRealUsersData() {
-        console.log('=== DEBUG COMPLETO CLASSIFICA ===');
+        console.log('=== DEBUG COMPLETO CLASSIFICA TUTTI UTENTI ===');
         
         // Controlla se l'utente corrente è un ospite
         const currentUser = window.AuthModule?.getUserData?.() || {};
@@ -178,6 +182,99 @@
             return [];
         }
         
+<<<<<<< HEAD
+        const allUsers = [];
+        const processedEmails = new Set();
+        
+        // 1. CERCA TUTTI I DATI EXP NEL LOCALSTORAGE - QUESTA È LA FONTE PRINCIPALE
+        console.log('3. Ricerca dati EXP nel localStorage...');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            
+            // Cerca chiavi che contengono dati EXP per utenti
+            if (key && key.startsWith('expData_')) {
+                const email = key.replace('expData_', '');
+                console.log(`4. Trovata chiave EXP: ${key} -> email: ${email}`);
+                
+                if (email && email.includes('@') && !processedEmails.has(email)) {
+                    processedEmails.add(email);
+                    
+                    // Recupera dati EXP
+                    const expData = JSON.parse(localStorage.getItem(key) || '{}');
+                    console.log(`5. Dati EXP per ${email}:`, expData);
+                    
+                    // Recupera dati di studio
+                    const studyDataKey = `studyData_${email}`;
+                    const studyData = JSON.parse(localStorage.getItem(studyDataKey) || '{}');
+                    
+                    // Recupera username da varie fonti
+                    let username = email.split('@')[0]; // Default
+                    
+                    // Prova a prendere username dai dati EXP
+                    if (expData.username) {
+                        username = expData.username;
+                    }
+                    
+                    // Prova a prendere dal database utenti
+                    const sharedDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+                    if (sharedDatabase[email] && sharedDatabase[email].username) {
+                        username = sharedDatabase[email].username;
+                    }
+                    
+                    // Prova a prendere dagli account registrati
+                    const accounts = JSON.parse(localStorage.getItem('bp_accounts') || '{}');
+                    if (accounts[email] && accounts[email].username) {
+                        username = accounts[email].username;
+                    }
+                    
+                    const totalExp = expData.totalExp || 0;
+                    
+                    allUsers.push({
+                        email: email,
+                        name: username,
+                        points: totalExp,
+                        studyHours: Math.floor(totalExp / 50),
+                        sessions: Math.floor(totalExp / 100),
+                        streak: studyData.currentStreak || 1,
+                        level: expData.level || 1,
+                        siteTimeMinutes: studyData.siteTimeToday || 0,
+                        minigamesCompleted: studyData.dailyMinigames || 0,
+                        schemiCompleted: studyData.dailySchemi || 0,
+                        lastActive: expData.lastUpdated || new Date().toISOString(),
+                        isNewUser: totalExp === 0,
+                        hasNoActivity: studyData.siteTimeToday === 0 && studyData.dailyMinigames === 0,
+                        source: 'exp_data'
+                    });
+                    
+                    console.log(`6. Utente aggiunto dai dati EXP: ${email} (${username}) - ${totalExp} punti`);
+                }
+            }
+        }
+        
+        // 2. Aggiungi account registrati che potrebbero non avere dati EXP
+        console.log('7. Ricerca account registrati senza dati EXP...');
+        const accounts = JSON.parse(localStorage.getItem('bp_accounts') || '{}');
+        Object.keys(accounts).forEach(email => {
+            if (!processedEmails.has(email) && email.includes('@')) {
+                const account = accounts[email];
+                processedEmails.add(email);
+                
+                allUsers.push({
+                    email: email,
+                    name: account.username || email.split('@')[0],
+                    points: 0, // Nessun EXP ancora
+                    studyHours: 0,
+                    sessions: 0,
+                    streak: 1,
+                    level: 1,
+                    siteTimeMinutes: 0,
+                    minigamesCompleted: 0,
+                    schemiCompleted: 0,
+                    lastActive: new Date().toISOString(),
+                    isNewUser: true,
+                    hasNoActivity: true,
+                    source: 'registered_no_exp'
+=======
         // PRIMA: Sincronizza i dati reali dell'utente corrente
         if (currentUser.email && currentUser.role !== 'guest' && window.StudyTrackerModule) {
             console.log('3. Sincronizzazione dati reali utente corrente...');
@@ -227,12 +324,47 @@
                     minigamesCompleted: studyData.dailyMinigames || 0,
                     schemiCompleted: studyData.dailySchemi || 0,
                     lastActive: userData.lastActive || new Date().toISOString()
+>>>>>>> d4929e11bc34052776589ed1c4b0adb9986e71c7
                 });
+                
+                console.log(`8. Utente registrato senza EXP aggiunto: ${email} (${account.username})`);
             }
         }
         
-        console.log('8. Classifica finale:', allUsers);
-        console.log('9. Numero utenti in classifica:', allUsers.length);
+        // 3. Aggiungi utenti dal database condiviso che non sono stati processati
+        console.log('9. Ricerca database condiviso rimanenti...');
+        const sharedDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        Object.keys(sharedDatabase).forEach(email => {
+            if (!processedEmails.has(email) && email.includes('@')) {
+                const userData = sharedDatabase[email];
+                if (userData.role !== 'guest') {
+                    processedEmails.add(email);
+                    
+                    allUsers.push({
+                        email: email,
+                        name: userData.username || email.split('@')[0],
+                        points: 0,
+                        studyHours: 0,
+                        sessions: 0,
+                        streak: userData.streak || 1,
+                        level: 1,
+                        siteTimeMinutes: 0,
+                        minigamesCompleted: 0,
+                        schemiCompleted: 0,
+                        lastActive: userData.lastActive || new Date().toISOString(),
+                        isNewUser: true,
+                        hasNoActivity: true,
+                        source: 'shared_database'
+                    });
+                    
+                    console.log(`10. Utente database condiviso aggiunto: ${email} (${userData.username})`);
+                }
+            }
+        });
+        
+        console.log('11. Classifica finale TUTTI UTENTI:', allUsers);
+        console.log('12. Numero totale utenti:', allUsers.length);
+        console.log('13. Utenti processati:', Array.from(processedEmails));
         
                 
         // Ordina per EXP decrescente
@@ -299,6 +431,8 @@
                   <span style="font-size: 0.8rem; opacity: 0.7;">⏱️ ${user.siteTimeMinutes || 0}min</span>
                   <span style="font-size: 0.8rem; opacity: 0.7;">🎮 ${user.minigamesCompleted || 0}</span>
                   <span style="font-size: 0.8rem; opacity: 0.7;">🗺️ ${user.schemiCompleted || 0}</span>
+                  ${user.isNewUser ? '<span style="font-size: 0.7rem; background: #10b981; color: white; padding: 2px 6px; border-radius: 4px;">🌱 Nuovo</span>' : ''}
+                  ${user.hasNoActivity && !user.isNewUser ? '<span style="font-size: 0.7rem; background: #f59e0b; color: white; padding: 2px 6px; border-radius: 4px;">😴 Inattivo</span>' : ''}
                 </div>
               </div>
             </div>
@@ -398,17 +532,83 @@
     function forceAddAllUsersToDatabase() {
         console.log('=== FORZATURA AGGIUNTA UTENTI ===');
         
-        // Cerca tutti i dati EXP nel localStorage
-        const allExpKeys = [];
+        // Cerca TUTTI i dati utente nel localStorage, non solo EXP
+        const allUserKeys = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key && key.startsWith('expData_')) {
-                allExpKeys.push(key);
+            // Cerca chiavi che potrebbero contenere email di utenti
+            if (key && (key.startsWith('expData_') || key.startsWith('studyData_') || key.includes('user') || key.includes('auth'))) {
+                allUserKeys.push(key);
             }
         }
         
-        console.log('Chiavi EXP trovate:', allExpKeys);
+        console.log('Chiavi utente trovate:', allUserKeys);
         
+<<<<<<< HEAD
+        // Estrai email da tutte le chiavi possibili
+        const foundEmails = new Set();
+        allUserKeys.forEach(key => {
+            // Estrai email da chiavi tipo expData_email@domain.com
+            const emailMatch = key.match(/expData_(.+)/) || key.match(/studyData_(.+)/);
+            if (emailMatch && emailMatch[1]) {
+                const email = emailMatch[1];
+                if (email.includes('@')) {
+                    foundEmails.add(email);
+                }
+            }
+        });
+        
+        // Aggiungi anche email dal database utenti esistente
+        const existingUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        Object.keys(existingUsersData).forEach(email => {
+            if (email.includes('@')) {
+                foundEmails.add(email);
+            }
+        });
+        
+        console.log('Email trovate:', Array.from(foundEmails));
+        
+        // Per ogni email trovata, aggiungi al database
+        foundEmails.forEach(email => {
+            console.log(`Processando utente: ${email}`);
+            
+            // Aggiungi utente al database solo se ha un'email valida e non è guest
+            if (email && email.trim() !== '' && email.includes('@')) {
+                const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+                if (!allUsersData[email]) {
+                    // Estrai dati utente da varie fonti
+                    let username = email.split('@')[0]; // Default
+                    
+                    // Prova a ottenere username da dati EXP
+                    const expKey = `expData_${email}`;
+                    const expData = JSON.parse(localStorage.getItem(expKey) || '{}');
+                    if (expData.username) {
+                        username = expData.username;
+                    }
+                    
+                    // Prova a ottenere da sessionStorage
+                    const sessionUsername = sessionStorage.getItem('username');
+                    if (sessionUsername && sessionStorage.getItem('email') === email) {
+                        username = sessionUsername;
+                    }
+                    
+                    const role = 'user'; // Default a user, non guest
+                    
+                    allUsersData[email] = {
+                        email: email,
+                        username: username,
+                        role: role,
+                        lastActive: new Date().toISOString(),
+                        // Aggiungi flag per identificare utenti nuovi
+                        isNewUser: true
+                    };
+                    
+                    localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
+                    console.log(`Utente aggiunto al database: ${email} (${username})`);
+                }
+            } else {
+                console.log(`Email non valida saltata: ${email}`);
+=======
         // Cerca anche tutti i dati di studio
         const allStudyKeys = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -458,6 +658,7 @@
                 console.log(`NUOVO utente aggiunto: ${email} -> ${username}`);
             } else {
                 console.log(`Utente esistente: ${email} -> ${allUsersData[email].username}`);
+>>>>>>> d4929e11bc34052776589ed1c4b0adb9986e71c7
             }
         });
         
@@ -466,6 +667,8 @@
         console.log('Database utenti finale:', allUsersData);
     }
 
+    
+    
     // Funzione per sincronizzare forzatamente i dati EXP
     function forceSyncEXPData() {
         const currentUser = window.AuthModule?.getUserData?.() || {};
