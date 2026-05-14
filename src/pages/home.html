@@ -57,8 +57,8 @@
     <main class="main-content" style="max-width: 1200px; margin: 0 auto; padding: 4rem 2rem;">
       <!-- Hero Section -->
       <section style="text-align: center; margin-bottom: 5rem; animation: float 6s ease-in-out infinite;">
-        <div class="toon-pill" style="background: var(--games-soft); margin-bottom: 1.5rem;">
-          ⚡ Livello 7 · Avventuriero
+        <div id="heroLevel" class="toon-pill" style="background: var(--games-soft); margin-bottom: 1.5rem;">
+          ⚡ Livello 1 · Principiante
         </div>
         <h1 class="main-title" style="font-size: 5rem; margin: 0; line-height: 1;">
           BRAIN<span style="color: var(--accent);">PLAY</span>ING
@@ -345,6 +345,9 @@
             window.ExpSystemModule.init();
             window.ExpSystemModule.updateUI();
           }
+          
+          // Aggiorna anche il livello nella hero section
+          updateHeroLevel();
         }
         
         // Gestione pulsante personalizzazione avatar
@@ -359,6 +362,37 @@
         console.error('Home - AuthModule non trovato!');
       }
     });
+
+    // Funzione per aggiornare il livello nella hero section
+    function updateHeroLevel() {
+      const userData = window.AuthModule.getUserData();
+      if (!userData.email || userData.role === 'guest') return;
+      
+      // Recupera dati EXP dell'utente
+      const expKey = `expData_${userData.email}`;
+      const expData = JSON.parse(localStorage.getItem(expKey) || '{}');
+      const totalExp = expData.totalExp || 0;
+      
+      // Calcola livello (ogni 100 EXP = 1 livello)
+      const level = Math.floor(totalExp / 100) + 1;
+      const progress = totalExp % 100;
+      
+      // Determina titolo basato sul livello
+      let title = 'Principiante';
+      if (level >= 20) title = 'Maestro';
+      else if (level >= 15) title = 'Esperto';
+      else if (level >= 10) title = 'Avanzato';
+      else if (level >= 5) title = 'Intermedio';
+      else if (level >= 3) title = 'Apprendista';
+      
+      // Aggiorna hero section
+      const heroLevelEl = document.getElementById('heroLevel');
+      if (heroLevelEl) {
+        heroLevelEl.textContent = `⚡ Livello ${level} · ${title}`;
+      }
+      
+      console.log(`Hero level aggiornato: Livello ${level} · ${title} (EXP: ${totalExp})`);
+    }
 
     // Rimosse funzioni initCrediti() e initAccessori() locali per evitare conflitti con CreditsModule globali
     

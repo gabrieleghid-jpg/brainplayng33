@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>brainplaying — Gestione Account</title>
+  <link rel="stylesheet" href="../styles/dashboard.css" />
+  <style>
+    .manager-section {
+      background: var(--card);
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      transition: transform 0.2s;
+    }
+    .file-input-wrapper:hover {
+      transform: translateY(-2px);
+    }
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: -9999px;
+    }
+    .account-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .account-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: var(--background);
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+    }
+    .success-message {
+      background: #10b981;
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 700;
+    }
+    .warning-message {
+      background: #f59e0b;
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="main-title" style="font-size: 2rem;">👥 Gestione Account</h1>
+        <div class="header-actions">
+          <div class="credits-display">
+            <span>💰</span>
+            <span id="navCredits">0</span>
+          </div>
+          <a href="profile.html" class="toon-btn" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">
+            Profilo
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content" style="max-width: 1000px; margin: 0 auto; padding: 4rem 2rem;">
+      <div class="manager-section">
+        <h2 style="margin-bottom: 1.5rem;">📤 Esporta Account</h2>
+        <p style="margin-bottom: 1.5rem; opacity: 0.8;">
+          Esporta tutti gli account di questo PC per trasferirli su un altro computer.
+        </p>
+        <button class="toon-btn" onclick="exportAccounts()">
+          📥 Esporta Tutti gli Account
+        </button>
+        <div id="exportStatus"></div>
+      </div>
+
+      <div class="manager-section">
+        <h2 style="margin-bottom: 1.5rem;">📥 Importa Account</h2>
+        <p style="margin-bottom: 1.5rem; opacity: 0.8;">
+          Importa account da un altro PC. I dati verranno uniti con quelli esistenti.
+        </p>
+        <div class="file-input-wrapper">
+          <input type="file" id="importFile" accept=".json" onchange="importAccounts(event)">
+          <span>📤 Scegli File Account</span>
+        </div>
+        <div id="importStatus"></div>
+      </div>
+
+      <div class="manager-section">
+        <h2 style="margin-bottom: 1.5rem;">👥 Account su Questo PC</h2>
+        <div id="accountList" class="account-list">
+          <!-- Lista account popolata dinamicamente -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/modules/auth.js"></script>
+  <script src="../js/modules/credits.js"></script>
+  <script>
+    function exportAccounts() {
+      const statusDiv = document.getElementById('exportStatus');
+      
+      try {
+        // Recupera tutti i dati
+        const exportData = {
+          accounts: {},
+          metadata: {
+            exportDate: new Date().toISOString(),
+            version: '1.0',
+            sourcePC: navigator.userAgent
+          }
+        };
+
+        // Recupera database utenti
+        const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        
+        // Per ogni utente, recupera tutti i dati correlati
+        Object.keys(allUsersData).forEach(email => {
+          const userData = allUsersData[email];
+          
+          if (userData.email && userData.role !== 'guest') {
+            exportData.accounts[email] = {
+              profile: userData,
+              exp: JSON.parse(localStorage.getItem(`expData_${email}`) || '{}'),
+              study: JSON.parse(localStorage.getItem(`studyData_${email}`) || '{}'),
+              avatar: JSON.parse(localStorage.getItem(`avatarConfig_${email}`) || '{}')
+            };
+          }
+        });
+
+        // Crea e scarica il file
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `brainplayng_accounts_${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+        
+        statusDiv.innerHTML = `
+          <div class="success-message">
+            ✅ Esportati ${Object.keys(exportData.accounts).length} account con successo!
+          </div>
+        `;
+        
+        setTimeout(() => {
+          statusDiv.innerHTML = '';
+        }, 5000);
+        
+      } catch (error) {
+        statusDiv.innerHTML = `
+          <div class="warning-message">
+            ❌ Errore nell'esportazione: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    function importAccounts(event) {
+      const file = event.target.files[0];
+      const statusDiv = document.getElementById('importStatus');
+      
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importData = JSON.parse(e.target.result);
+          
+          if (!importData.accounts) {
+            throw new Error('Formato file non valido');
+          }
+          
+          let importedCount = 0;
+          let skippedCount = 0;
+          
+          // Per ogni account importato
+          Object.keys(importData.accounts).forEach(email => {
+            const accountData = importData.accounts[email];
+            
+            // Controlla se l'account esiste già
+            const existingData = localStorage.getItem('brainplayng_users_database');
+            const existingUsers = JSON.parse(existingData || '{}');
+            
+            if (existingUsers[email]) {
+              skippedCount++;
+              return; // Salta account esistente
+            }
+            
+            // Importa dati
+            // 1. Profilo utente
+            const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+            allUsersData[email] = accountData.profile;
+            localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
+            
+            // 2. EXP
+            localStorage.setItem(`expData_${email}`, JSON.stringify(accountData.exp));
+            
+            // 3. Dati studio
+            localStorage.setItem(`studyData_${email}`, JSON.stringify(accountData.study));
+            
+            // 4. Avatar
+            localStorage.setItem(`avatarConfig_${email}`, JSON.stringify(accountData.avatar));
+            
+            importedCount++;
+          });
+          
+          statusDiv.innerHTML = `
+            <div class="success-message">
+              ✅ Importati ${importedCount} account! 
+              ${skippedCount > 0 ? `(${skippedCount} saltati perché esistevano già)` : ''}
+            </div>
+          `;
+          
+          // Aggiorna la lista
+          loadAccountList();
+          
+          setTimeout(() => {
+            statusDiv.innerHTML = '';
+          }, 5000);
+          
+        } catch (error) {
+          statusDiv.innerHTML = `
+            <div class="warning-message">
+              ❌ Errore nell'importazione: ${error.message}
+            </div>
+          `;
+        }
+      };
+      
+      reader.readAsText(file);
+      
+      // Reset input
+      event.target.value = '';
+    }
+
+    function loadAccountList() {
+      const listDiv = document.getElementById('accountList');
+      const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+      
+      if (Object.keys(allUsersData).length === 0) {
+        listDiv.innerHTML = '<p style="opacity: 0.6;">Nessun account trovato su questo PC.</p>';
+        return;
+      }
+      
+      let html = '';
+      Object.keys(allUsersData).forEach(email => {
+        const userData = allUsersData[email];
+        if (userData.email && userData.role !== 'guest') {
+          const expData = JSON.parse(localStorage.getItem(`expData_${email}`) || '{}');
+          const totalExp = expData.totalExp || 0;
+          
+          html += `
+            <div class="account-item">
+              <div style="font-size: 1.5rem;">👤</div>
+              <div>
+                <div style="font-weight: 700;">${userData.username || email.split('@')[0]}</div>
+                <div style="font-size: 0.9rem; opacity: 0.7;">${email}</div>
+                <div style="font-size: 0.8rem; color: var(--accent);">⭐ ${totalExp} EXP</div>
+              </div>
+              <button class="toon-btn" style="font-size: 0.8rem;" onclick="deleteAccount('${email}')">
+                🗑️
+              </button>
+            </div>
+          `;
+        }
+      });
+      
+      listDiv.innerHTML = html;
+    }
+
+    function deleteAccount(email) {
+      if (!confirm(`Sei sicuro di voler eliminare l'account ${email}?`)) {
+        return;
+      }
+      
+      // Rimuovi da database utenti
+      const allUsersData = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+      delete allUsersData[email];
+      localStorage.setItem('brainplayng_users_database', JSON.stringify(allUsersData));
+      
+      // Rimuovi dati correlati
+      localStorage.removeItem(`expData_${email}`);
+      localStorage.removeItem(`studyData_${email}`);
+      localStorage.removeItem(`avatarConfig_${email}`);
+      
+      loadAccountList();
+    }
+
+    // Carica lista all'avvio
+    loadAccountList();
+  </script>
+</body>
+</html>
