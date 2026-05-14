@@ -122,7 +122,7 @@
       <!-- Statistiche Rapide -->
       <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; width: 100%;">
         <div class="toon-card" style="background: var(--study-soft); display: flex; align-items: center; gap: 1.5rem;">
-          <div style="width: 80px; height: 80px; background: white; border: 3px solid var(--ink); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;" class="animate-float-slow">
+          <div id="homeProfileAvatar" style="width: 80px; height: 80px; background: white; border: 3px solid var(--ink); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; background-size: cover; background-position: center;" class="animate-float-slow">
             🦊
           </div>
           <div style="text-align: left; flex: 1;">
@@ -308,6 +308,7 @@
             navAvatar.textContent = getInitials(user.username);
           }
         }
+        renderAvatarAccessori();
         
         // Gestione EXP e modalità guest
         const guestNotice = document.getElementById('guestNotice');
@@ -646,36 +647,50 @@
       shopContent.innerHTML = shopHTML;
     }
     
-    // Renderizza accessori sull'avatar (integrati nell'avatar)
+    // Card statistiche home: foto profilo ha priorità sulla volpe + accessori
     function renderAvatarAccessori() {
-      const avatarElement = document.querySelector('.animate-float-slow');
+      const avatarElement = document.getElementById('homeProfileAvatar');
       if (!avatarElement) return;
-      
+
+      const userData = window.AuthModule?.getUserData?.() || {};
+      const profileImage =
+        userData.profileImage ||
+        sessionStorage.getItem('profileImage') ||
+        localStorage.getItem('bp_profileImage') ||
+        '';
+
+      if (profileImage) {
+        avatarElement.style.backgroundImage = `url(${profileImage})`;
+        avatarElement.style.backgroundSize = 'cover';
+        avatarElement.style.backgroundPosition = 'center';
+        avatarElement.textContent = '';
+        return;
+      }
+
+      avatarElement.style.backgroundImage = '';
       const accessoriEquipaggiati = getAccessoriEquipaggiati();
-      let avatarContent = '🦊'; // Avatar base
-      
-      // Integra gli accessori direttamente nell'avatar
+      let avatarContent = '🦊';
+
       accessoriEquipaggiati.forEach(accessorioId => {
         const accessorio = accessoriDisponibili.find(a => a.id === accessorioId);
         if (accessorio) {
-          switch(accessorio.categoria) {
+          switch (accessorio.categoria) {
             case 'testa':
-              avatarContent = '🎩🦊'; // Cappello + volpe
+              avatarContent = '🎩🦊';
               break;
             case 'occhi':
-              avatarContent = '🕶️🦊'; // Occhiali + volpe
+              avatarContent = '🕶️🦊';
               break;
             case 'collo':
-              avatarContent = '🧣🦊'; // Sciarpa + volpe
+              avatarContent = '🧣🦊';
               break;
             case 'accessorio':
-              avatarContent = '🦊⌚'; // Volpe + orologio
+              avatarContent = '🦊⌚';
               break;
           }
         }
       });
-      
-      // Aggiorna l'avatar con gli accessori integrati
+
       avatarElement.textContent = avatarContent;
     }
     
@@ -785,6 +800,7 @@
           navAvatar.textContent = getInitials(user.username);
         }
       }
+      renderAvatarAccessori();
     }
 
     function updateGuestMode() {

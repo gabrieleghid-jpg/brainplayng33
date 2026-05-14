@@ -79,7 +79,7 @@ class AuthModule {
                 username: 'Sir Foxy',
                 email: '',
                 role: 'guest',
-                profileImage: ''
+                profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
             };
         }
         

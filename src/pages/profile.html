@@ -32,6 +32,13 @@
       box-shadow: 0 6px 0 var(--ink);
       position: relative;
       overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .avatar-display-large.has-photo {
+      font-size: 0;
+      color: transparent;
     }
 
     .stat-row {
@@ -121,9 +128,14 @@
         <!-- Sidebar: Avatar & Stats -->
         <div style="display: flex; flex-direction: column; gap: 2rem;">
           <div class="toon-card avatar-card" style="border-top: 10px solid var(--accent);">
-            <div class="avatar-display-large" id="profileAvatar">
-              🦊
+            <div class="avatar-display-large" id="profileAvatar" role="img" aria-label="Avatar profilo">🦊</div>
+            <input type="file" id="profilePhotoInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+            <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem;">
+              <button type="button" class="toon-btn" style="width: 100%;" id="profilePhotoChooseBtn">📷 Imposta foto profilo</button>
+              <button type="button" class="toon-btn" style="width: 100%; background: var(--background); font-size: 0.9rem;" id="profilePhotoRemoveBtn">🦊 Torna alla volpe</button>
             </div>
+            <p id="profilePhotoHint" style="font-size: 0.75rem; opacity: 0.65; margin: 0 0 1rem;">JPG, PNG, WebP o GIF · max ~1 MB consigliato</p>
+            <p id="profilePhotoStatus" style="font-size: 0.85rem; font-weight: 700; min-height: 1.2em; margin: 0 0 1rem;"></p>
             <h2 id="displayUsername" style="margin: 0; font-family: 'Fredoka'; font-size: 2rem;">Studente</h2>
             <p style="opacity: 0.6; margin-bottom: 2rem;">Livello 7 Avventuriero</p>
             
@@ -190,6 +202,111 @@
   <script src="../js/modules/credits.js"></script>
   <script src="../js/modules/study-tracker.js"></script>
   <script>
+    const PROFILE_PHOTO_MAX_EDGE = 512;
+    const PROFILE_PHOTO_MAX_BYTES = 900000;
+
+    function resizeImageFileToJpegDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          let w = img.naturalWidth;
+          let h = img.naturalHeight;
+          const scale = Math.min(1, PROFILE_PHOTO_MAX_EDGE / Math.max(w, h));
+          w = Math.round(w * scale);
+          h = Math.round(h * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          let q = 0.88;
+          let dataUrl = canvas.toDataURL('image/jpeg', q);
+          while (dataUrl.length > PROFILE_PHOTO_MAX_BYTES && q > 0.45) {
+            q -= 0.07;
+            dataUrl = canvas.toDataURL('image/jpeg', q);
+          }
+          if (dataUrl.length > PROFILE_PHOTO_MAX_BYTES * 1.2) {
+            reject(new Error('Immagine troppo grande: prova un file più piccolo.'));
+            return;
+          }
+          resolve(dataUrl);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error('Impossibile leggere l\'immagine.'));
+        };
+        img.src = url;
+      });
+    }
+
+    function getStoredProfileImage() {
+      const u = window.AuthModule?.getUserData?.() || {};
+      return u.profileImage || sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '';
+    }
+
+    function renderProfileAvatar() {
+      const el = document.getElementById('profileAvatar');
+      if (!el) return;
+      const src = getStoredProfileImage();
+      if (src) {
+        el.classList.add('has-photo');
+        el.style.backgroundImage = `url(${src})`;
+        el.textContent = '';
+        el.setAttribute('aria-label', 'Foto profilo');
+      } else {
+        el.classList.remove('has-photo');
+        el.style.backgroundImage = '';
+        el.textContent = '🦊';
+        el.setAttribute('aria-label', 'Avatar profilo');
+      }
+    }
+
+    function persistProfilePhoto(dataUrl) {
+      sessionStorage.setItem('profileImage', dataUrl);
+      localStorage.setItem('bp_profileImage', dataUrl);
+      const userData = window.AuthModule?.getUserData?.() || {};
+      if (userData.email && userData.role !== 'guest' && window.AuthModule?.saveRegisteredUser) {
+        const db = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        const prev = db[userData.email] || {};
+        window.AuthModule.saveRegisteredUser({
+          email: userData.email,
+          username: prev.username || userData.username,
+          role: prev.role || userData.role,
+          profileImage: dataUrl,
+          registeredAt: prev.registeredAt,
+          streak: prev.streak
+        });
+      }
+    }
+
+    function clearProfilePhoto() {
+      sessionStorage.removeItem('profileImage');
+      localStorage.removeItem('bp_profileImage');
+      const userData = window.AuthModule?.getUserData?.() || {};
+      if (userData.email && userData.role !== 'guest' && window.AuthModule?.saveRegisteredUser) {
+        const db = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+        const prev = db[userData.email] || {};
+        window.AuthModule.saveRegisteredUser({
+          email: userData.email,
+          username: prev.username || userData.username,
+          role: prev.role || userData.role,
+          profileImage: '',
+          registeredAt: prev.registeredAt,
+          streak: prev.streak
+        });
+      }
+      renderProfileAvatar();
+    }
+
+    function setProfilePhotoStatus(msg, isError) {
+      const s = document.getElementById('profilePhotoStatus');
+      if (!s) return;
+      s.textContent = msg || '';
+      s.style.color = isError ? '#b91c1c' : 'var(--accent)';
+    }
+
     // Inizializzazione
     document.addEventListener('DOMContentLoaded', () => {
         if (window.CreditsModule) {
@@ -204,6 +321,28 @@
         document.getElementById('displayUsername').textContent = username;
         document.getElementById('usernameInput').value = username;
         document.getElementById('displayEmail').textContent = email;
+        renderProfileAvatar();
+
+        const photoInput = document.getElementById('profilePhotoInput');
+        document.getElementById('profilePhotoChooseBtn')?.addEventListener('click', () => photoInput?.click());
+        document.getElementById('profilePhotoRemoveBtn')?.addEventListener('click', () => {
+          clearProfilePhoto();
+          setProfilePhotoStatus('Ripristinata la volpe predefinita.');
+        });
+        photoInput?.addEventListener('change', async (e) => {
+          const file = e.target.files && e.target.files[0];
+          e.target.value = '';
+          if (!file) return;
+          setProfilePhotoStatus('Elaborazione…');
+          try {
+            const dataUrl = await resizeImageFileToJpegDataUrl(file);
+            persistProfilePhoto(dataUrl);
+            renderProfileAvatar();
+            setProfilePhotoStatus('Foto profilo salvata.');
+          } catch (err) {
+            setProfilePhotoStatus(err.message || 'Errore caricamento.', true);
+          }
+        });
         
         // Inizializza StudyTracker per utenti reali
         if (userData.role !== 'guest') {
