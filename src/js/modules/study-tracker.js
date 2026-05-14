@@ -1,5 +1,21 @@
 // Study Tracker Module
 class StudyTrackerModule {
+    static _siteListenersBound = false;
+
+    /** Giorno locale YYYY-MM-DD (mezzanotte → mezzanotte) */
+    static calendarDayLocal(d = new Date()) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    static parseStoredCalendarDay(raw) {
+        if (raw == null || raw === '') return null;
+        const s = String(raw).trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        const t = Date.parse(s);
+        if (!Number.isNaN(t)) return StudyTrackerModule.calendarDayLocal(new Date(t));
+        return null;
+    }
+
     static init() {
         // Controlla se l'utente è autenticato
         if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
@@ -25,12 +41,14 @@ class StudyTrackerModule {
                 achievements: [],
                 dailyStudyTime: 0,
                 dailyStudyDate: new Date().toDateString(),
+                dailyCalendar: StudyTrackerModule.calendarDayLocal(),
                 dailySessions: 0,
                 sessionStartTime: null,
                 dailyMinigames: 0,
                 lastSessionDuration: 0,
                 dailySchemi: 0,
                 siteTimeToday: 0,
+                siteSecondsToday: 0,
                 lastSiteActivity: Date.now()
             };
             localStorage.setItem(studyKey, JSON.stringify(initialData));
@@ -38,19 +56,45 @@ class StudyTrackerModule {
         }
 
         this.checkDailyReset();
-        
-        // Inizia tracking automatico del tempo sul sito
+
+        this._bindSitePresenceListeners();
+
+        // Inizia tracking automatico del tempo sul sito (tab visibile)
         this.startSiteTracking();
         console.log('StudyTracker inizializzato - tracking sito attivo');
     }
 
+    static _bindSitePresenceListeners() {
+        if (StudyTrackerModule._siteListenersBound) return;
+        StudyTrackerModule._siteListenersBound = true;
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                StudyTrackerModule.checkDailyReset();
+                const userData = window.AuthModule?.getUserData?.() || {};
+                if (userData.email && userData.role !== 'guest') {
+                    const studyKey = `studyData_${userData.email}`;
+                    const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+                    data.lastSiteActivity = Date.now();
+                    localStorage.setItem(studyKey, JSON.stringify(data));
+                }
+                StudyTrackerModule.updateTodayUI();
+            }
+        });
+    }
+
     static addStudySession(duration) {
         const userData = window.AuthModule.getUserData();
+        if (!userData.email || userData.role === 'guest') return;
+
+        this.checkDailyReset();
         const studyKey = `studyData_${userData.email}`;
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const now = new Date();
         const today = now.toDateString();
-        
+
+        if (!Array.isArray(data.studySessions)) data.studySessions = [];
+
         // Aggiungi sessione
         data.studySessions.push({
             date: today,
@@ -95,94 +139,133 @@ class StudyTrackerModule {
 
     static checkDailyReset() {
         const userData = window.AuthModule.getUserData();
+        if (!userData.email || userData.role === 'guest') return;
+
         const studyKey = `studyData_${userData.email}`;
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
-        const today = new Date().toDateString();
-        
-        // Se è un nuovo giorno, resetta i dati giornalieri
-        if (data.dailyStudyDate !== today) {
+        const today = StudyTrackerModule.calendarDayLocal();
+
+        let storedDay =
+            StudyTrackerModule.parseStoredCalendarDay(data.dailyCalendar) ||
+            StudyTrackerModule.parseStoredCalendarDay(data.dailyStudyDate);
+
+        if (!storedDay) {
+            data.dailyCalendar = today;
+            data.dailyStudyDate = new Date().toDateString();
+            if (data.siteSecondsToday == null) data.siteSecondsToday = 0;
+            localStorage.setItem(studyKey, JSON.stringify(data));
+            return;
+        }
+
+        if (storedDay !== today) {
             data.dailyStudyTime = 0;
             data.dailySessions = 0;
             data.dailyMinigames = 0;
+            data.dailySchemi = 0;
             data.lastSessionDuration = 0;
-            data.dailyStudyDate = today;
+            data.dailyStudyDate = new Date().toDateString();
+            data.dailyCalendar = today;
+            data.sessionStartTime = null;
+            data.siteTimeToday = 0;
+            data.siteSecondsToday = 0;
             localStorage.setItem(studyKey, JSON.stringify(data));
             console.log('StudyTracker: Reset giornaliero completato');
+        } else {
+            let changed = false;
+            if (data.dailyCalendar !== storedDay) {
+                data.dailyCalendar = storedDay;
+                changed = true;
+            }
+            if ((Number(data.siteSecondsToday) || 0) === 0 && Number(data.siteTimeToday) > 0) {
+                data.siteSecondsToday = (Number(data.siteTimeToday) || 0) * 60;
+                data.siteTimeToday = 0;
+                changed = true;
+            }
+            if (changed) {
+                localStorage.setItem(studyKey, JSON.stringify(data));
+            }
         }
     }
 
     static startSiteTracking() {
-        // Inizia a tracciare il tempo totale sul sito
-        if (!this.siteTrackingInterval) {
-            this.siteTrackingInterval = setInterval(() => {
-                this.updateSiteTime();
-            }, 60000); // Aggiorna ogni minuto
-            
-            // Inizia subito
-            const userData = window.AuthModule.getUserData();
-            const studyKey = `studyData_${userData.email}`;
-            const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
-            if (!data.lastSiteActivity) {
-                data.lastSiteActivity = Date.now();
-                localStorage.setItem(studyKey, JSON.stringify(data));
-            }
+        if (this.siteTrackingInterval) {
+            clearInterval(this.siteTrackingInterval);
+            this.siteTrackingInterval = null;
         }
+
+        this.siteTrackingInterval = setInterval(() => {
+            this.updateSiteTime();
+        }, 15000);
+
+        const userData = window.AuthModule.getUserData();
+        if (!userData.email || userData.role === 'guest') return;
+
+        this.checkDailyReset();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        data.lastSiteActivity = Date.now();
+        localStorage.setItem(studyKey, JSON.stringify(data));
     }
 
     static updateSiteTime() {
         const userData = window.AuthModule.getUserData();
+        if (!userData.email || userData.role === 'guest') return;
+
+        this.checkDailyReset();
+
         const studyKey = `studyData_${userData.email}`;
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const now = Date.now();
-        
-        if (data.lastSiteActivity) {
-            const timeDiff = Math.floor((now - data.lastSiteActivity) / 1000 / 60); // minuti
-            
-            if (timeDiff > 0 && timeDiff < 5) { // Solo se l'utente è attivo (meno di 5 minuti di inattività)
-                data.siteTimeToday = (data.siteTimeToday || 0) + 1;
-            }
+
+        if (document.visibilityState === 'hidden') {
+            data.lastSiteActivity = now;
+            localStorage.setItem(studyKey, JSON.stringify(data));
+            return;
         }
-        
+
+        data.siteSecondsToday = (Number(data.siteSecondsToday) || 0) + 15;
         data.lastSiteActivity = now;
         localStorage.setItem(studyKey, JSON.stringify(data));
+        this.updateTodayUI();
     }
 
     static startTracking() {
-        // Inizia a tracciare il tempo di studio
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (!userData.email || userData.role === 'guest') return;
+
+        this.checkDailyReset();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        data.sessionStartTime = Date.now();
+        localStorage.setItem(studyKey, JSON.stringify(data));
+
         if (!this.trackingInterval) {
             this.trackingInterval = setInterval(() => {
                 this.updateDailyTime();
-            }, 60000); // Aggiorna ogni minuto
-            
-            // Inizia subito se non stiamo già tracciando
-            const data = JSON.parse(localStorage.getItem('studyData') || '{}');
-            if (!data.sessionStartTime) {
-                data.sessionStartTime = Date.now();
-                localStorage.setItem('studyData', JSON.stringify(data));
-            }
+            }, 60000);
         }
     }
 
     static updateDailyTime() {
-        const userData = window.AuthModule.getUserData();
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (!userData.email || userData.role === 'guest') return;
+
         const studyKey = `studyData_${userData.email}`;
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
-        
+
         if (data.sessionStartTime) {
             const now = Date.now();
-            const elapsed = Math.floor((now - data.sessionStartTime) / 1000 / 60); // minuti
-            
-            if (elapsed > 0) {
-                data.dailyStudyTime += elapsed;
-                data.totalStudyTime += elapsed;
-                data.lastSessionDuration = elapsed;
-                data.dailySessions++;
-                
-                // Resetta il timer per il prossimo minuto
+            const elapsedMin = Math.floor((now - data.sessionStartTime) / 60000);
+
+            if (elapsedMin > 0) {
+                data.dailyStudyTime = (data.dailyStudyTime || 0) + elapsedMin;
+                data.totalStudyTime = (data.totalStudyTime || 0) + elapsedMin * 60;
+                data.lastSessionDuration = elapsedMin;
+                data.dailySessions = (data.dailySessions || 0) + 1;
+
                 data.sessionStartTime = now;
                 localStorage.setItem(studyKey, JSON.stringify(data));
-                
-                // Aggiorna UI
+
                 this.updateUI();
             }
         }
@@ -193,30 +276,33 @@ class StudyTrackerModule {
             clearInterval(this.trackingInterval);
             this.trackingInterval = null;
         }
-        
-        // Salva il tempo finale della sessione ma non resettare il tempo accumulato
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
+
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (!userData.email || userData.role === 'guest') return;
+
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+
         if (data.sessionStartTime) {
             const now = Date.now();
-            const sessionDuration = Math.floor((now - data.sessionStartTime) / 1000 / 60);
-            
-            // Aggiungi il tempo della sessione corrente al totale giornaliero
-            const timeDifference = sessionDuration - (data.lastSessionDuration || 0);
-            if (timeDifference > 0) {
-                data.dailyStudyTime = (data.dailyStudyTime || 0) + timeDifference;
-                data.lastSessionDuration = 0; // Reset per prossima sessione
+            const remainderMin = Math.floor((now - data.sessionStartTime) / 60000);
+            if (remainderMin > 0) {
+                data.dailyStudyTime = (data.dailyStudyTime || 0) + remainderMin;
+                data.totalStudyTime = (data.totalStudyTime || 0) + remainderMin * 60;
+                data.dailySessions = (data.dailySessions || 0) + 1;
             }
+            data.sessionStartTime = null;
+            data.lastSessionDuration = 0;
+            localStorage.setItem(studyKey, JSON.stringify(data));
+            this.updateUI();
         }
-        
-        // Resetta solo il tempo di inizio sessione, non il tempo accumulato
-        data.sessionStartTime = null;
-        localStorage.setItem('studyData', JSON.stringify(data));
     }
 
     static addMinigameCompleted() {
-        // Usa chiave specifica per utente come gli EXP
         const userData = window.AuthModule?.getUserData?.() || {};
-        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
+        if (!userData.email || userData.role === 'guest') return;
+
+        const studyKey = `studyData_${userData.email}`;
         
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const today = new Date().toDateString();
@@ -243,9 +329,10 @@ class StudyTrackerModule {
     }
 
     static addSchemaCompleted() {
-        // Usa chiave specifica per utente come gli EXP
         const userData = window.AuthModule?.getUserData?.() || {};
-        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
+        if (!userData.email || userData.role === 'guest') return;
+
+        const studyKey = `studyData_${userData.email}`;
         
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
         const today = new Date().toDateString();
@@ -272,13 +359,23 @@ class StudyTrackerModule {
     }
 
     static getDailyStats() {
-        // Usa chiave specifica per utente come gli EXP
         const userData = window.AuthModule?.getUserData?.() || {};
-        const studyKey = userData.email ? `studyData_${userData.email}` : 'studyData';
+        if (!userData.email || userData.role === 'guest') {
+            return {
+                siteTimeMinutes: 0,
+                minigamesCompleted: 0,
+                schemiCompleted: 0,
+                currentStreak: 0,
+                lastActiveDate: null
+            };
+        }
+
+        const studyKey = `studyData_${userData.email}`;
         
         const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        const siteSecs = Number(data.siteSecondsToday) || 0;
         return {
-            siteTimeMinutes: data.siteTimeToday || 0,
+            siteTimeMinutes: Math.round(siteSecs / 60),
             minigamesCompleted: data.dailyMinigames || 0,
             schemiCompleted: data.dailySchemi || 0,
             currentStreak: data.currentStreak || 0,
@@ -287,41 +384,60 @@ class StudyTrackerModule {
     }
 
     static getTodayStats() {
-        const data = JSON.parse(localStorage.getItem('studyData') || '{}');
-        this.checkDailyReset(); // Assicura che i dati siano del giorno corrente
-        
+        const userData = window.AuthModule?.getUserData?.() || {};
+        if (!userData.email || userData.role === 'guest') {
+            return { studyMinutes: 0, sessions: 0, minigames: 0, goal: 0 };
+        }
+
+        this.checkDailyReset();
+        const studyKey = `studyData_${userData.email}`;
+        const data = JSON.parse(localStorage.getItem(studyKey) || '{}');
+        const today = new Date().toDateString();
+
+        const sessionSecs = (data.studySessions || [])
+            .filter((s) => s.date === today)
+            .reduce((acc, s) => acc + (Number(s.duration) || 0), 0);
+        const fromSessionsMin = Math.floor(sessionSecs / 60);
+
+        const timerMin = Number(data.dailyStudyTime) || 0;
+        const siteSecs = Number(data.siteSecondsToday) || 0;
+        const siteMin = Math.round(siteSecs / 60);
+        const studyMinutes = fromSessionsMin + timerMin + siteMin;
+
+        const GOAL_MINUTES = 60;
+        const goal = Math.min(100, Math.round((studyMinutes / GOAL_MINUTES) * 100));
+
         return {
-            studyMinutes: data.dailyStudyTime,
-            sessions: data.dailySessions,
+            studyMinutes,
+            sessions: data.dailySessions || 0,
             minigames: data.dailyMinigames || 0,
-            goal: Math.min(100, Math.round((data.dailyStudyTime / 60) * 100)) // Goal basato su 60 minuti
+            goal
         };
     }
 
     static updateTodayUI() {
         const stats = this.getTodayStats();
-        
-        // Aggiorna la sezione OGGI nella home
+
         const studyMinutesEl = document.getElementById('todayStudyMinutes');
         const sessionsEl = document.getElementById('todaySessions');
         const goalEl = document.getElementById('todayGoal');
         const minigamesEl = document.getElementById('todayMinigames');
-        
+
         if (studyMinutesEl) studyMinutesEl.textContent = `${stats.studyMinutes}m`;
-        if (sessionsEl) sessionsEl.textContent = stats.sessions;
+        if (sessionsEl) sessionsEl.textContent = String(stats.sessions);
         if (goalEl) goalEl.textContent = `${stats.goal}%`;
-        if (minigamesEl) minigamesEl.textContent = stats.minigames;
+        if (minigamesEl) minigamesEl.textContent = String(stats.minigames);
     }
 
     static updateUI() {
         const userData = window.AuthModule.getUserData();
-        
+
         if (!userData.email || userData.role === 'guest') {
-            // Per ospiti, mostra 0
             const studyTimeEl = document.getElementById('statStudyTime');
             const streakEl = document.getElementById('statStreak');
             if (studyTimeEl) studyTimeEl.textContent = '0h';
             if (streakEl) streakEl.textContent = '0🔥';
+            this.updateTodayUI();
             return;
         }
         

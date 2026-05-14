@@ -763,6 +763,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/modules/auth.js"></script>
+  <script src="../js/modules/study-tracker.js"></script>
   <script src="../js/modules/credits.js"></script>
   <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/notifications.js"></script>
@@ -803,6 +804,10 @@
 
     if (!checkAuthentication()) {
       window.location.href = 'index.html';
+    }
+
+    if (window.StudyTrackerModule) {
+      window.StudyTrackerModule.init();
     }
 
     if (typeof mermaid !== 'undefined') {
