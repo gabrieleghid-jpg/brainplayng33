@@ -56,6 +56,12 @@ class ExpSystemModule {
             };
         }
         
+        // Applica moltiplicatore streak
+        let finalAmount = amount;
+        if (window.DailySystemModule) {
+            finalAmount = window.DailySystemModule.getModifiedExp(amount);
+        }
+        
         // Usa chiave specifica per l'email dell'utente
         const userExpKey = userData.email ? `expData_${userData.email}` : 'expData';
         const data = JSON.parse(localStorage.getItem(userExpKey) || '{}');
@@ -63,8 +69,8 @@ class ExpSystemModule {
         const currentExp = data.currentExp || 0;
         const totalExp = data.totalExp || 0;
         
-        const newTotalExp = totalExp + amount;
-        const newCurrentExp = currentExp + amount;
+        const newTotalExp = totalExp + finalAmount;
+        const newCurrentExp = currentExp + finalAmount;
         
         // Calcola nuovo livello
         let newLevel = currentLevel;

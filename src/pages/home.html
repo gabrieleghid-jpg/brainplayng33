@@ -57,8 +57,13 @@
     <main class="main-content" style="max-width: 1200px; margin: 0 auto; padding: 4rem 2rem;">
       <!-- Hero Section -->
       <section style="text-align: center; margin-bottom: 5rem; animation: float 6s ease-in-out infinite;">
-        <div id="heroLevel" class="toon-pill" style="background: var(--games-soft); margin-bottom: 1.5rem;">
-          ⚡ Livello 1 · Principiante
+        <div style="display: flex; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
+          <div id="heroLevel" class="toon-pill" style="background: var(--games-soft);">
+            ⚡ Livello 1 · Principiante
+          </div>
+          <div id="heroStreak" class="toon-pill" style="background: rgba(59, 130, 246, 0.1); border-color: var(--accent);">
+            🔥 Streak: 0 giorni
+          </div>
         </div>
         <h1 class="main-title" style="font-size: 5rem; margin: 0; line-height: 1;">
           BRAIN<span style="color: var(--accent);">PLAY</span>ING
@@ -225,6 +230,7 @@
   <script src="../js/modules/exp-system.js"></script>
   <script src="../js/modules/study-tracker.js"></script>
   <script src="../js/modules/notifications.js"></script>
+  <script src="../js/modules/daily-system.js"></script>
   <script src="../js/animated-avatar.js"></script>
   <script>
     // Definizione accessori disponibili con categorie
@@ -274,6 +280,19 @@
         window.StudyTrackerModule.init();
         window.StudyTrackerModule.updateUI();
         console.log('StudyTracker inizializzato');
+      }
+      
+      // Inizializza DailySystemModule
+      if (window.DailySystemModule) {
+        window.DailySystemModule.init();
+        console.log('DailySystemModule inizializzato in home');
+        
+        // Aggiorna display streak nell'hero
+        const heroStreak = document.getElementById('heroStreak');
+        if (heroStreak) {
+          const streak = window.DailySystemModule.getStreak();
+          heroStreak.textContent = `🔥 Streak: ${streak} giorni`;
+        }
       }
       
       // Carica dati utente e aggiorna UI
