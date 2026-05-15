@@ -75,11 +75,12 @@ class AuthModule {
         // Se è un guest, usa "Sir Foxy"
         if (role === 'guest') {
             console.log('UTENTE RILEVATO COME GUEST - Sir Foxy');
+            const profileImage = sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '';
             return {
                 username: 'Sir Foxy',
                 email: '',
                 role: 'guest',
-                profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
+                profileImage: profileImage
             };
         }
         
@@ -103,11 +104,23 @@ class AuthModule {
         
         console.log('UTENTE REGISTRATO - Username finale:', username);
         
+        let profileImage = sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || '';
+        
+        // Check users database for profileImage if available
+        if (email && role !== 'guest') {
+            const usersDatabase = JSON.parse(localStorage.getItem('brainplayng_users_database') || '{}');
+            if (usersDatabase[email] && usersDatabase[email].profileImage) {
+                if (!profileImage) {
+                    profileImage = usersDatabase[email].profileImage;
+                }
+            }
+        }
+        
         return {
             username: username,
             email: email,
             role: role,
-            profileImage: sessionStorage.getItem('profileImage') || localStorage.getItem('bp_profileImage') || ''
+            profileImage: profileImage
         };
     }
 

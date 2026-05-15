@@ -181,7 +181,6 @@
             <input type="file" id="profilePhotoInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
             <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem;">
               <button type="button" class="toon-btn" style="width: 100%;" id="profilePhotoChooseBtn">📷 Imposta foto profilo</button>
-              <button type="button" class="toon-btn" style="width: 100%; background: var(--background); font-size: 0.9rem;" id="profilePhotoRemoveBtn">🦊 Torna alla volpe</button>
             </div>
             <p id="profilePhotoHint" style="font-size: 0.75rem; opacity: 0.65; margin: 0 0 1rem;">JPG, PNG, WebP o GIF · max ~1 MB consigliato</p>
             <p id="profilePhotoStatus" style="font-size: 0.85rem; font-weight: 700; min-height: 1.2em; margin: 0 0 1rem;"></p>
@@ -222,7 +221,8 @@
               <div class="info-value" id="displayEmail">ospite@brainplaying.it</div>
             </div>
 
-            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 3px dashed var(--ink);">
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 3px dashed var(--ink); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <a href="home.html" class="toon-btn" style="background: var(--study); color: white;">🏠 Torna alla Home</a>
               <button class="toon-btn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444;" onclick="logout()">🚪 Disconnetti</button>
             </div>
           </div>
@@ -384,10 +384,6 @@
 
         const photoInput = document.getElementById('profilePhotoInput');
         document.getElementById('profilePhotoChooseBtn')?.addEventListener('click', () => photoInput?.click());
-        document.getElementById('profilePhotoRemoveBtn')?.addEventListener('click', () => {
-          clearProfilePhoto();
-          setProfilePhotoStatus('Ripristinata la volpe predefinita.');
-        });
         photoInput?.addEventListener('change', async (e) => {
           const file = e.target.files && e.target.files[0];
           e.target.value = '';

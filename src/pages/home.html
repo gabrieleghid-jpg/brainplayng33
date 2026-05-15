@@ -654,11 +654,7 @@
       if (!avatarElement) return;
 
       const userData = window.AuthModule?.getUserData?.() || {};
-      const profileImage =
-        userData.profileImage ||
-        sessionStorage.getItem('profileImage') ||
-        localStorage.getItem('bp_profileImage') ||
-        '';
+      const profileImage = userData.profileImage || '';
 
       if (profileImage) {
         avatarElement.style.backgroundImage = `url(${profileImage})`;
