@@ -575,17 +575,106 @@
 
     .schema-mermaid-mount {
       overflow-x: auto;
-      background: #fff;
+      overflow-y: auto;
+      background: linear-gradient(180deg, #fefefe 0%, #f8fafc 100%);
       border: 3px solid var(--ink);
-      border-radius: 16px;
-      padding: 1rem;
-      min-height: 100px;
-      box-shadow: inset 0 4px 0 rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 2.5rem 1.5rem;
+      min-height: 400px;
+      max-height: 80vh;
+      box-shadow: 0 6px 0 var(--ink);
     }
 
-    .schema-mermaid-mount .mermaid {
+    /* Custom Arrow Schema Styles */
+    .arrow-schema {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .arrow-schema-level {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+      padding: 0.5rem 0;
+    }
+
+    .arrow-schema-node {
+      padding: 0.8rem 1.4rem;
+      border-radius: 16px;
+      font-weight: 700;
+      text-align: center;
+      max-width: 220px;
+      min-width: 100px;
+      line-height: 1.3;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .arrow-schema-node:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .arrow-schema-node.level-0 {
+      background: linear-gradient(135deg, #FF8C00, #FF6B35);
+      color: #fff;
+      border: 3px solid #e65100;
+      font-size: 1.2rem;
+      padding: 1.1rem 2rem;
+      max-width: 320px;
+      box-shadow: 0 5px 0 #c43e00, 0 8px 20px rgba(255,107,53,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .arrow-schema-node.level-1 {
+      background: linear-gradient(135deg, #0077BE, #005a8c);
+      color: #fff;
+      border: 3px solid #004a75;
+      font-size: 1rem;
+      box-shadow: 0 4px 0 #003d5c, 0 6px 15px rgba(0,119,190,0.25);
+    }
+
+    .arrow-schema-node.level-2 {
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      color: #fff;
+      border: 3px solid #2f855a;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 0 #276749, 0 6px 12px rgba(72,187,120,0.2);
+    }
+
+    .arrow-schema-node.level-3 {
+      background: #fff;
+      color: #2d3748;
+      border: 3px solid #a0aec0;
+      font-size: 0.85rem;
+      box-shadow: 0 3px 0 #718096;
+    }
+
+    .arrow-connector {
       display: flex;
       justify-content: center;
+      align-items: center;
+      padding: 0.3rem 0;
+    }
+
+    .arrow-connector svg {
+      display: block;
+    }
+
+    .arrow-branch-line {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0.2rem 0;
+    }
+
+    .arrow-branch-line svg {
+      display: block;
+      overflow: visible;
     }
 
     .schema-mermaid-error {
@@ -737,12 +826,10 @@
           </div>
 
           <div id="schema" class="tab-content">
-            <h3 style="text-align: center; margin-bottom: 1.5rem; font-size: 1.3rem;">🔀 Schema a Frecce</h3>
-            <div id="schemaArrowDiagram" class="schema-mermaid-mount" style="min-height: 300px; padding: 2rem; background: #fff; border: 3px solid var(--ink); border-radius: 20px; box-shadow: inset 0 4px 0 rgba(0,0,0,0.05); overflow-x: auto;">
+            <h3 style="text-align: center; margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 900; color: var(--foreground);">🔀 Schema a Frecce</h3>
+            <p style="text-align: center; font-size: 0.95rem; opacity: 0.7; margin-bottom: 1.5rem;">Visualizzazione gerarchica dell'argomento con collegamenti logici</p>
+            <div id="schemaArrowDiagram" class="schema-mermaid-mount" style="min-height: 450px;">
               <!-- Mermaid flowchart rendered here -->
-            </div>
-            <div id="schemaTreeFallback" style="margin-top: 2rem;">
-              <div class="schema-text" id="schemaContainer" style="font-size: 1.1rem; padding: 2rem;"></div>
             </div>
           </div>
 
@@ -820,7 +907,36 @@
     if (typeof mermaid !== 'undefined') {
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'neutral',
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#FF8C00',
+          primaryTextColor: '#ffffff',
+          primaryBorderColor: '#FF4500',
+          secondaryColor: '#0077BE',
+          secondaryTextColor: '#ffffff',
+          secondaryBorderColor: '#005a8c',
+          tertiaryColor: '#68d391',
+          tertiaryTextColor: '#1a202c',
+          tertiaryBorderColor: '#38a169',
+          lineColor: '#0077BE',
+          textColor: '#1a202c',
+          mainBkg: '#FF8C00',
+          nodeBorder: '#FF4500',
+          clusterBkg: '#f0f9ff',
+          clusterBorder: '#0077BE',
+          titleColor: '#1a202c',
+          edgeLabelBackground: '#ffffff',
+          fontSize: '16px',
+          fontFamily: '"Fredoka", "Segoe UI", system-ui, sans-serif'
+        },
+        flowchart: {
+          htmlLabels: true,
+          curve: 'basis',
+          nodeSpacing: 60,
+          rankSpacing: 80,
+          padding: 20,
+          useMaxWidth: true
+        },
         securityLevel: 'loose'
       });
     }
@@ -833,7 +949,6 @@
     const imagePreview = document.getElementById('imagePreview');
     const resultsSection = document.getElementById('resultsSection');
     const backendNotice = document.getElementById('backendNotice');
-    const schemaContainer = document.getElementById('schemaContainer');
     const flashcardContainer = document.getElementById('flashcardContainer');
     const riassuntoContainer = document.getElementById('riassuntoContainer');
     const quizContainer = document.getElementById('quizContainer');
@@ -1198,27 +1313,47 @@
       return s || 'Nodo';
     }
 
-    function schemaTreeToMermaid(nodes, maxNodes = 28) {
-      const lines = ['flowchart TD'];
+    function schemaTreeToMermaid(nodes, maxNodes = 18) {
+      const lines = ['flowchart LR'];
+      const styles = [];
       let count = 0;
       const queue = [];
       for (const n of nodes) {
-        queue.push({ node: n, parentId: null });
+        queue.push({ node: n, parentId: null, depth: 0 });
       }
       while (queue.length && count < maxNodes) {
-        const { node, parentId } = queue.shift();
+        const { node, parentId, depth } = queue.shift();
         const id = `n${count}`;
         count += 1;
         const label = sanitizeMermaidLabel(node.title);
-        lines.push(`    ${id}["${label}"]`);
+        
+        // Use different node shapes per depth
+        if (depth === 0) {
+          lines.push(`    ${id}(["${label}"])`);
+          styles.push(`style ${id} fill:#FF8C00,stroke:#FF4500,stroke-width:3px,color:#fff,font-weight:bold`);
+        } else if (depth === 1) {
+          lines.push(`    ${id}["${label}"]`);
+          styles.push(`style ${id} fill:#0077BE,stroke:#004a75,stroke-width:2px,color:#fff`);
+        } else if (depth === 2) {
+          lines.push(`    ${id}["${label}"]`);
+          styles.push(`style ${id} fill:#68d391,stroke:#38a169,stroke-width:2px,color:#1a202c`);
+        } else {
+          lines.push(`    ${id}["${label}"]`);
+          styles.push(`style ${id} fill:#fff,stroke:#cbd5e0,stroke-width:2px,color:#1a202c`);
+        }
+        
         if (parentId !== null) {
           lines.push(`    ${parentId} --> ${id}`);
         }
         for (const child of node.children || []) {
           if (count >= maxNodes) break;
-          queue.push({ node: child, parentId: id });
+          queue.push({ node: child, parentId: id, depth: depth + 1 });
         }
       }
+      
+      // Add styles at the end
+      lines.push(...styles);
+      
       return lines.join('\n');
     }
 
@@ -1232,14 +1367,14 @@
     function getMermaidDiagramSource(results) {
       const raw = stripMermaidFences(results?.mermaid || '').trim();
       if (raw) {
-        return normalizeMermaidCode(raw);
+        return normalizeMermaidCode(raw).replace(/^flowchart\s+TD/i, 'flowchart LR');
       }
       const tree = parseSchemaToTree(results?.schema || '');
-      return tree.length ? schemaTreeToMermaid(tree) : 'flowchart TD\n    empty["Nessuno schema"]';
+      return tree.length ? schemaTreeToMermaid(tree) : 'flowchart LR\n    empty["Nessuno schema"]';
     }
 
     async function refreshSchemaMermaidDiagram() {
-      const mount = document.getElementById('schemaMermaidMount');
+      const mount = document.getElementById('schemaArrowDiagram');
       if (!mount || !analysisResults) return;
       if (typeof mermaid === 'undefined') {
         mount.innerHTML = '<p class="schema-mermaid-error">Diagramma non disponibile (libreria Mermaid non caricata).</p>';
@@ -1256,7 +1391,7 @@
       } catch (err) {
         console.warn('Mermaid: rendering AI fallito, uso fallback da SCHEMA.', err);
         const fallback = schemaTreeToMermaid(parseSchemaToTree(analysisResults.schema || ''));
-        code = fallback || 'flowchart TD\n    empty["Schema vuoto"]';
+        code = fallback || 'flowchart LR\n    empty["Schema vuoto"]';
         pre.textContent = normalizeMermaidCode(code);
         try {
           await mermaid.run({ nodes: [pre] });
@@ -1680,39 +1815,101 @@
       const mount = document.getElementById('schemaArrowDiagram');
       if (!mount) return;
       
-      if (typeof mermaid === 'undefined') {
-        // Fallback: mostra lo schema testuale a frecce
-        const schemaText = results?.schema || '';
-        mount.innerHTML = `<pre style="font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; line-height: 2; white-space: pre-wrap;">${escapeHtml(schemaText)}</pre>`;
+      const schemaText = results?.schema || '';
+      if (!schemaText.trim()) {
+        mount.innerHTML = '<p style="text-align:center; opacity:0.6; padding: 3rem;">Nessuno schema disponibile.</p>';
         return;
       }
       
-      // Get Mermaid code from AI response or generate from schema tree
-      let code = getMermaidDiagramSource(results);
+      const tree = parseSchemaToTree(schemaText);
+      if (!tree.length) {
+        mount.innerHTML = '<p style="text-align:center; opacity:0.6; padding: 3rem;">Nessuno schema disponibile.</p>';
+        return;
+      }
       
-      mount.innerHTML = '';
-      const pre = document.createElement('pre');
-      pre.className = 'mermaid';
-      pre.textContent = code;
-      mount.appendChild(pre);
+      mount.innerHTML = renderCustomArrowSchema(tree);
+    }
+
+    function renderCustomArrowSchema(tree) {
+      const root = tree[0];
+      if (!root) return '';
       
-      try {
-        await mermaid.run({ nodes: [pre] });
-      } catch (err) {
-        console.warn('Mermaid: rendering AI fallito, uso fallback da SCHEMA.', err);
-        // Try generating from schema tree
-        const fallback = schemaTreeToMermaid(parseSchemaToTree(results?.schema || ''));
-        const normalizedFallback = normalizeMermaidCode(fallback || 'flowchart TD\n    empty["Schema vuoto"]');
-        pre.textContent = normalizedFallback;
-        try {
-          await mermaid.run({ nodes: [pre] });
-        } catch (err2) {
-          console.warn('Mermaid fallback fallito, mostra testo.', err2);
-          // Ultimate fallback: show schema text with arrows
-          const schemaText = results?.schema || 'Nessuno schema disponibile';
-          mount.innerHTML = `<pre style="font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; line-height: 2; white-space: pre-wrap;">${escapeHtml(schemaText)}</pre>`;
+      let html = '<div class="arrow-schema">';
+      
+      // Root node
+      html += `<div class="arrow-schema-level">
+        <div class="arrow-schema-node level-0">${escapeHtml(root.title)}</div>
+      </div>`;
+      
+      // Render children recursively level by level
+      if (root.children && root.children.length > 0) {
+        html += renderArrowLevel(root.children, 1);
+      }
+      
+      html += '</div>';
+      return html;
+    }
+
+    function renderArrowLevel(nodes, depth) {
+      if (!nodes || !nodes.length || depth > 3) return '';
+      
+      const levelClass = `level-${Math.min(depth, 3)}`;
+      const arrowColor = depth === 1 ? '#FF8C00' : depth === 2 ? '#0077BE' : '#48bb78';
+      
+      let html = '';
+      
+      // Draw branching arrows from parent
+      const arrowCount = nodes.length;
+      html += `<div class="arrow-connector">
+        <svg width="${Math.max(60, arrowCount * 80)}" height="35" viewBox="0 0 ${Math.max(60, arrowCount * 80)} 35">
+          <line x1="${Math.max(60, arrowCount * 80) / 2}" y1="0" x2="${Math.max(60, arrowCount * 80) / 2}" y2="18" stroke="${arrowColor}" stroke-width="3"/>`;
+      
+      if (arrowCount > 1) {
+        // Horizontal line connecting branches
+        const totalWidth = Math.max(60, arrowCount * 80);
+        const startX = totalWidth / arrowCount / 2;
+        const endX = totalWidth - startX;
+        html += `<line x1="${startX}" y1="18" x2="${endX}" y2="18" stroke="${arrowColor}" stroke-width="3"/>`;
+        
+        // Vertical lines down to each child
+        for (let i = 0; i < arrowCount; i++) {
+          const x = startX + (endX - startX) * i / (arrowCount - 1);
+          html += `<line x1="${x}" y1="18" x2="${x}" y2="35" stroke="${arrowColor}" stroke-width="2.5"/>`;
+          html += `<polygon points="${x-5},30 ${x+5},30 ${x},35" fill="${arrowColor}"/>`;
+        }
+      } else {
+        // Single arrow down
+        const cx = Math.max(60, arrowCount * 80) / 2;
+        html += `<line x1="${cx}" y1="18" x2="${cx}" y2="35" stroke="${arrowColor}" stroke-width="3"/>`;
+        html += `<polygon points="${cx-5},30 ${cx+5},30 ${cx},35" fill="${arrowColor}"/>`;
+      }
+      
+      html += `</svg></div>`;
+      
+      // Nodes at this level
+      html += `<div class="arrow-schema-level">`;
+      for (const node of nodes) {
+        html += `<div class="arrow-schema-node ${levelClass}">${escapeHtml(node.title)}</div>`;
+      }
+      html += `</div>`;
+      
+      // Render sub-levels for each node that has children
+      for (const node of nodes) {
+        if (node.children && node.children.length > 0) {
+          // Small connector showing which parent it belongs to
+          html += `<div class="arrow-connector" style="margin-top: 0.3rem;">
+            <svg width="40" height="20">
+              <line x1="20" y1="0" x2="20" y2="15" stroke="${depth === 1 ? '#0077BE' : '#48bb78'}" stroke-width="2.5" stroke-dasharray="4,3"/>
+              <polygon points="15,13 25,13 20,18" fill="${depth === 1 ? '#0077BE' : '#48bb78'}"/>
+            </svg>
+          </div>`;
+          html += `<div style="background: rgba(0,0,0,0.02); border-radius: 16px; padding: 0.8rem; margin: 0.3rem 0 0.8rem; border: 1px dashed rgba(0,0,0,0.1);">`;
+          html += renderArrowLevel(node.children, depth + 1);
+          html += `</div>`;
         }
       }
+      
+      return html;
     }
 
     function displayResults(results) {
@@ -1733,17 +1930,8 @@
           : '<div class="flashcard-item"><div class="flashcard-content">Nessuna flashcard disponibile.</div></div>';
       }
 
-      if (schemaContainer) {
-        // Render tree view in the fallback container
-        const tree = parseSchemaToTree(results.schema);
-        schemaContainer.innerHTML = tree.length 
-          ? `<div class="schema-flow">${renderSchemaList(tree, keywordMap)}</div>`
-          : '<div class="flow-box">Nessuno schema disponibile.</div>';
-        bindSchemaToggleEvents();
-        
-        // Render Mermaid arrow diagram
-        renderArrowDiagram(results);
-      }
+      // Render Mermaid arrow diagram in the schema tab
+      renderArrowDiagram(results);
 
       if (riassuntoContainer) {
         riassuntoContainer.innerHTML = `

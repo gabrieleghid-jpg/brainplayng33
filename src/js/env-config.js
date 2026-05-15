@@ -18,7 +18,7 @@ const ENV = {
 
   // URL del backend locale (o produzione)
   // Lascia vuoto se usi il proxy di frontend-server.js
-  BACKEND_URL: '',
+  BACKEND_URL: 'http://localhost:3001',
 
   // Impostazioni app
   APP_NAME: 'BrainPlayng',
