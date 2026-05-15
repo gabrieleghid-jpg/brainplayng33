@@ -3,96 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WindRider Avatar - BrainPlay</title>
+    <title>brainplaying — Personalizza Avatar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/dashboard.css">
     <style>
-        * {
+        .avatar-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .avatar-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .avatar-header h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--ink);
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
-        
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: #0f172a;
-            overflow-x: hidden;
+
+        .avatar-header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
         }
-        
-        /* Back Button - Stile BrainPlay */
-        .bp-back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: linear-gradient(135deg, #FF8C00 0%, #FF6B35 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
-        
-        .bp-back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
-        }
-        
-        #avatarContainer {
-            min-height: 100vh;
-        }
-        
-        /* Responsive per mobile */
-        @media (max-width: 768px) {
-            .bp-back-btn {
-                top: 10px;
-                left: 10px;
-                padding: 10px 16px;
-                font-size: 0.85rem;
+
+        @media (max-width: 1024px) {
+            .avatar-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Bottone Torna Indietro -->
-    <a href="home.html" class="bp-back-btn">
-        ← Torna alla Home
-    </a>
-    
-    <!-- Container Avatar -->
-    <div id="avatarContainer"></div>
+    <!-- Top Nav -->
+    <header class="nav" style="position: sticky; top: 0; z-index: 1000; background: rgba(253, 250, 244, 0.8); backdrop-filter: blur(10px); border-bottom: 3px solid var(--ink); padding: 1rem 2rem;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <a href="home.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--foreground);">
+                <span class="text-3xl animate-float-slow" style="font-size: 2rem;">🧠</span>
+                <h2 class="text-stroke-ink" style="margin: 0; font-size: 1.5rem; letter-spacing: 2px;">brainplaying</h2>
+            </a>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="toon-pill" style="background: rgba(236, 201, 75, 0.2); border-color: var(--coin);">
+                    <span style="font-size: 1.2rem;">🪙</span>
+                    <span id="navCredits">0</span>
+                </div>
+                <a href="profile.html" class="toon-btn" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">
+                    Profilo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-shell">
+        <main class="main-content">
+            <div class="avatar-wrapper">
+                <div class="avatar-header">
+                    <h1>🎨 Personalizza Avatar</h1>
+                    <p>Crea il tuo look unico!</p>
+                </div>
+
+                <!-- Container Avatar -->
+                <div id="avatarContainer"></div>
+            </div>
+        </main>
+    </div>
 
     <!-- Script WindRider -->
+    <script src="../js/env-config.js"></script>
+    <script src="../js/modules/auth.js"></script>
+    <script src="../js/modules/credits.js"></script>
     <script src="../js/windrider-avatar.js"></script>
-    
+
     <script>
-        // Verifica autenticazione BrainPlay
         document.addEventListener('DOMContentLoaded', () => {
-            const isAuth = sessionStorage.getItem('authenticated') === 'true' || 
-                          localStorage.getItem('bp_authenticated') === 'true';
-            
-            if (!isAuth) {
+            if (!window.AuthModule || !window.AuthModule.checkAuthentication()) {
                 window.location.href = 'index.html';
                 return;
             }
-            
-            // Inizializza WindRider Avatar
+
+            if (window.CreditsModule) {
+                window.CreditsModule.updateCreditDisplay();
+            }
+
             const avatar = new WindRiderAvatar('avatarContainer');
-            
-            // Integrazione con crediti BrainPlay (opzionale)
-            const syncCredits = () => {
-                // Se vuoi sincronizzare i crediti con il sistema BrainPlay
-                // qui puoi aggiungere la logica
-            };
         });
     </script>
 </body>
