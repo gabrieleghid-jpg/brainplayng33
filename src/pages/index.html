@@ -259,11 +259,18 @@
         <div class="password-reset-panel" id="passwordResetPanel">
           <div class="input-group">
             <label>Tua Email</label>
-            <input type="email" id="reset-email" placeholder="Email registrata" />
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="reset-email" placeholder="Email registrata" />
+            </div>
           </div>
           <div class="input-group">
             <label>Nuova Password</label>
-            <input type="password" id="reset-password" placeholder="Minimo 8 caratteri" />
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="reset-password" placeholder="Minimo 8 caratteri" />
+              <button class="toggle-password" type="button">👁️</button>
+            </div>
           </div>
           <button class="toon-btn" id="btn-reset-password" style="background: var(--xp);">Recupera Password</button>
         </div>

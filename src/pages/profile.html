@@ -89,6 +89,55 @@
       font-weight: 600;
     }
 
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 30px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 0 var(--ink);
+    }
+
+    .modal-card h3 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      margin: 0 0 1rem;
+    }
+
+    .modal-card p {
+      margin: 0 0 2rem;
+      opacity: 0.8;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .modal-buttons .toon-btn {
+      min-width: 120px;
+    }
+
     @media (max-width: 900px) {
       .profile-grid {
         grid-template-columns: 1fr;
@@ -138,8 +187,6 @@
             <p id="profilePhotoStatus" style="font-size: 0.85rem; font-weight: 700; min-height: 1.2em; margin: 0 0 1rem;"></p>
             <h2 id="displayUsername" style="margin: 0; font-family: 'Fredoka'; font-size: 2rem;">Studente</h2>
             <p style="opacity: 0.6; margin-bottom: 2rem;">Livello 7 Avventuriero</p>
-            
-            <button class="toon-btn" style="width: 100%;" onclick="window.location.href='avatar-game.html'">✨ Personalizza Avatar</button>
           </div>
 
           <div class="toon-card" style="padding: 2rem;">
@@ -196,6 +243,18 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Modal Logout -->
+  <div class="modal-overlay" id="logoutModal">
+    <div class="modal-card">
+      <h3>🚪 Disconnessione</h3>
+      <p>Sei sicuro di voler uscire?</p>
+      <div class="modal-buttons">
+        <button class="toon-btn" id="cancelLogoutBtn" style="background: var(--background); color: var(--foreground);">Annulla</button>
+        <button class="toon-btn" id="confirmLogoutBtn" style="background: #fee2e2; color: #ef4444; border-color: #ef4444;">Esci</button>
+      </div>
+    </div>
   </div>
 
   <script src="../js/modules/auth.js"></script>
@@ -353,6 +412,27 @@
             document.getElementById('statStudyTime').textContent = '0h';
             document.getElementById('statStreak').textContent = '0🔥';
         }
+
+        // Modal logout
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+        const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
+        cancelLogoutBtn.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+
+        confirmLogoutBtn.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+            window.AuthModule.logout();
+        });
+
+        // Chiudi modal cliccando fuori
+        logoutModal.addEventListener('click', (e) => {
+            if (e.target === logoutModal) {
+                logoutModal.classList.remove('active');
+            }
+        });
     });
 
     function saveUsername() {
@@ -386,9 +466,7 @@
     }
 
     function logout() {
-        if (confirm('Sei sicuro di voler uscire?')) {
-            window.AuthModule.logout();
-        }
+        document.getElementById('logoutModal').classList.add('active');
     }
   </script>
 </body>

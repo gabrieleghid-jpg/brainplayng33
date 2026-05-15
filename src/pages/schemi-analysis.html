@@ -727,6 +727,7 @@
           <div style="display: flex; gap: 0.75rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;">
             <button class="tab-btn active" data-tab="flashcards" style="font-size: 1rem;">🎴 Flashcards</button>
             <button class="tab-btn" data-tab="riassunto" style="font-size: 1rem;">📝 Riassunto</button>
+            <button class="tab-btn" data-tab="schema" style="font-size: 1rem;">🔀 Schema a Frecce</button>
             <button class="tab-btn" data-tab="quiz" style="font-size: 1rem;">❓ Domande</button>
             <a href="home.html" class="toon-btn" style="background: var(--study); color: white; font-size: 0.8rem;">🏠 Torna alla Home</a>
           </div>
@@ -736,7 +737,13 @@
           </div>
 
           <div id="schema" class="tab-content">
-            <div class="schema-text" id="schemaContainer" style="font-size: 1.1rem; padding: 2rem;"></div>
+            <h3 style="text-align: center; margin-bottom: 1.5rem; font-size: 1.3rem;">🔀 Schema a Frecce</h3>
+            <div id="schemaArrowDiagram" class="schema-mermaid-mount" style="min-height: 300px; padding: 2rem; background: #fff; border: 3px solid var(--ink); border-radius: 20px; box-shadow: inset 0 4px 0 rgba(0,0,0,0.05); overflow-x: auto;">
+              <!-- Mermaid flowchart rendered here -->
+            </div>
+            <div id="schemaTreeFallback" style="margin-top: 2rem;">
+              <div class="schema-text" id="schemaContainer" style="font-size: 1.1rem; padding: 2rem;"></div>
+            </div>
           </div>
 
           <div id="riassunto" class="tab-content">
@@ -1669,6 +1676,45 @@
       });
     }
 
+    async function renderArrowDiagram(results) {
+      const mount = document.getElementById('schemaArrowDiagram');
+      if (!mount) return;
+      
+      if (typeof mermaid === 'undefined') {
+        // Fallback: mostra lo schema testuale a frecce
+        const schemaText = results?.schema || '';
+        mount.innerHTML = `<pre style="font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; line-height: 2; white-space: pre-wrap;">${escapeHtml(schemaText)}</pre>`;
+        return;
+      }
+      
+      // Get Mermaid code from AI response or generate from schema tree
+      let code = getMermaidDiagramSource(results);
+      
+      mount.innerHTML = '';
+      const pre = document.createElement('pre');
+      pre.className = 'mermaid';
+      pre.textContent = code;
+      mount.appendChild(pre);
+      
+      try {
+        await mermaid.run({ nodes: [pre] });
+      } catch (err) {
+        console.warn('Mermaid: rendering AI fallito, uso fallback da SCHEMA.', err);
+        // Try generating from schema tree
+        const fallback = schemaTreeToMermaid(parseSchemaToTree(results?.schema || ''));
+        const normalizedFallback = normalizeMermaidCode(fallback || 'flowchart TD\n    empty["Schema vuoto"]');
+        pre.textContent = normalizedFallback;
+        try {
+          await mermaid.run({ nodes: [pre] });
+        } catch (err2) {
+          console.warn('Mermaid fallback fallito, mostra testo.', err2);
+          // Ultimate fallback: show schema text with arrows
+          const schemaText = results?.schema || 'Nessuno schema disponibile';
+          mount.innerHTML = `<pre style="font-family: 'Segoe UI', system-ui, sans-serif; font-size: 1rem; line-height: 2; white-space: pre-wrap;">${escapeHtml(schemaText)}</pre>`;
+        }
+      }
+    }
+
     function displayResults(results) {
       const keywordMap = getKeywordMap(results);
 
@@ -1688,37 +1734,15 @@
       }
 
       if (schemaContainer) {
+        // Render tree view in the fallback container
         const tree = parseSchemaToTree(results.schema);
-        schemaContainer.innerHTML = `
-          <div class="schema-viewport" id="schemaViewport">
-            <div class="schema-content" id="schemaContent">
-              <div class="schema-flow">
-                ${tree.length ? renderSchemaNodes(tree, keywordMap) : '<div class="flow-box">Nessuno schema disponibile.</div>'}
-              </div>
-              ${schemaMermaidSectionHtml()}
-            </div>
-            <div class="schema-controls">
-              <button class="zoom-btn" id="zoomOutBtn" title="Zoom indietro">−</button>
-              <div class="zoom-level" id="zoomLevel">100%</div>
-              <button class="zoom-btn" id="zoomInBtn" title="Zoom avanti">+</button>
-              <button class="zoom-btn" id="zoomResetBtn" title="Reset zoom">⟲</button>
-            </div>
-            <div class="schema-search">
-              <input type="text" class="search-input" id="schemaSearchInput" placeholder="Cerca nel schema...">
-              <button class="search-btn" id="schemaSearchBtn">Cerca</button>
-            </div>
-            <div class="export-controls">
-              <button class="export-btn" id="exportImageBtn">📷 Immagine</button>
-              <button class="export-btn" id="exportSvgBtn">📄 SVG</button>
-            </div>
-          </div>
-        `;
+        schemaContainer.innerHTML = tree.length 
+          ? `<div class="schema-flow">${renderSchemaList(tree, keywordMap)}</div>`
+          : '<div class="flow-box">Nessuno schema disponibile.</div>';
         bindSchemaToggleEvents();
-        bindZoomControls();
-        bindDragControls();
-        bindSearchControls();
-        bindExportControls();
-        void refreshSchemaMermaidDiagram();
+        
+        // Render Mermaid arrow diagram
+        renderArrowDiagram(results);
       }
 
       if (riassuntoContainer) {
@@ -1771,9 +1795,9 @@
       btn.addEventListener('click', () => {
         const targetTab = btn.dataset.tab;
         activateTab(targetTab, true);
-        if (targetTab === 'schema') {
+        if (targetTab === 'schema' && analysisResults) {
           requestAnimationFrame(() => {
-            void refreshSchemaMermaidDiagram();
+            renderArrowDiagram(analysisResults);
           });
         }
       });
@@ -1825,14 +1849,14 @@
         'RIASSUNTO BREVE',
         getShortSummary(analysisResults.riassunto),
         '',
-        'DOMANDE',
-        ...(analysisResults?.quiz?.domande || []).map((q, i) => `${i + 1}. ${q.domanda}`),
+        'FLASHCARDS',
+        ...(analysisResults?.flashcard || []).map((f, i) => `${i + 1}. D: ${f.domanda} | R: ${f.risposta}`),
         '',
-        'SCHEMA',
+        'SCHEMA A FRECCE',
         analysisResults.schema || '',
         '',
-        'MERMAID',
-        getMermaidDiagramSource(analysisResults)
+        'DOMANDE',
+        ...(analysisResults?.quiz?.domande || []).map((q, i) => `${i + 1}. ${q.domanda}\n   Opzioni: ${(q.opzioni || []).join(' | ')}\n   Risposta corretta: ${q.opzioni?.[q.risposta_corretta] || '?'}`),
       ].join('\n');
       const blob = new Blob([payload], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
