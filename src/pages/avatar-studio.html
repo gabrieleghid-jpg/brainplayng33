@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avatar Studio - BrainPlay</title>
-    <link rel="stylesheet" href="../styles/dashboard.css">
-    <link rel="stylesheet" href="../styles/avatar-game.css">
-    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/avatar-game.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
 </head>
 <body>
     <!-- Header Component -->
@@ -41,17 +41,17 @@
     <div id="footer-container"></div>
 
     <!-- Scripts -->
-    <script src="../js/env-config.js"></script>
-    <script src="../js/modules/auth.js"></script>
-    <script src="../js/modules/credits.js"></script>
-    <script src="../js/modules/notifications.js"></script>
-    <script src="../js/utils/utils.js"></script>
-    <script src="../js/modules/avatar-renderer.js"></script>
-    <script src="../js/modules/avatar-storage.js"></script>
-    <script src="../js/modules/avatar-storage.js"></script>
-    <script src="../js/animated-avatar.js"></script>
-    <script src="../js/theme-manager.js"></script>
-    <script src="../js/sidebar.js"></script>
+    <script src="/js/env-config.js"></script>
+    <script src="/js/modules/auth.js"></script>
+    <script src="/js/modules/credits.js"></script>
+    <script src="/js/modules/notifications.js"></script>
+    <script src="/js/utils/utils.js"></script>
+    <script src="/js/modules/avatar-renderer.js"></script>
+    <script src="/js/modules/avatar-storage.js"></script>
+    <script src="/js/modules/avatar-storage.js"></script>
+    <script src="/js/animated-avatar.js"></script>
+    <script src="/js/theme-manager.js"></script>
+    <script src="/js/sidebar.js"></script>
 
     <script>
         // Avatar Studio Controller
@@ -74,31 +74,31 @@
             async loadComponents() {
                 try {
                     // Load header
-                    const headerResponse = await fetch('../components/header.html');
+                    const headerResponse = await fetch('/components/header.html');
                     const headerHtml = await headerResponse.text();
                     document.getElementById('header-container').innerHTML = headerHtml;
                     document.getElementById('pageTitle').textContent = 'Avatar Studio - BrainPlay';
 
                     // Load sidebar
-                    const sidebarResponse = await fetch('../components/sidebar.html');
+                    const sidebarResponse = await fetch('/components/sidebar.html');
                     const sidebarHtml = await sidebarResponse.text();
                     document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
                     // Load avatar components
-                    const previewResponse = await fetch('../components/avatar-preview.html');
+                    const previewResponse = await fetch('/components/avatar-preview.html');
                     const previewHtml = await previewResponse.text();
                     document.getElementById('avatar-preview-container').innerHTML = previewHtml;
 
-                    const controlsResponse = await fetch('../components/avatar-controls.html');
+                    const controlsResponse = await fetch('/components/avatar-controls.html');
                     const controlsHtml = await controlsResponse.text();
                     document.getElementById('avatar-controls-container').innerHTML = controlsHtml;
 
-                    const galleryResponse = await fetch('../components/avatar-gallery.html');
+                    const galleryResponse = await fetch('/components/avatar-gallery.html');
                     const galleryHtml = await galleryResponse.text();
                     document.getElementById('avatar-gallery-container').innerHTML = galleryHtml;
 
                     // Load footer
-                    const footerResponse = await fetch('../components/footer.html');
+                    const footerResponse = await fetch('/components/footer.html');
                     const footerHtml = await footerResponse.text();
                     document.getElementById('footer-container').innerHTML = footerHtml;
 

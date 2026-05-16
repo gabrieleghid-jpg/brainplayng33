@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Negozio - BrainPlay</title>
-    <link rel="stylesheet" href="../styles/dashboard.css">
-    <link rel="stylesheet" href="../styles/avatar-game.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/avatar-game.css">
     <style>
         :root {
             --shop-primary: #7c3aed;
@@ -502,9 +502,9 @@
 
     <div id="footer-container"></div>
 
-    <script src="../js/modules/credits.js"></script>
-    <script src="../js/modules/notifications.js"></script>
-    <script src="../js/modules/shop.js"></script>
+    <script src="/js/modules/credits.js"></script>
+    <script src="/js/modules/notifications.js"></script>
+    <script src="/js/modules/shop.js"></script>
     <script>
         // Shop Page Controller
         class ShopController {
@@ -525,7 +525,7 @@
                 try {
                     // Load footer if exists
                     try {
-                        const footerResponse = await fetch('../components/footer.html');
+                        const footerResponse = await fetch('/components/footer.html');
                         const footerHtml = await footerResponse.text();
                         if (document.getElementById('footer-container')) {
                             document.getElementById('footer-container').innerHTML = footerHtml;

@@ -11,7 +11,7 @@ const CONFIG = {
     OWNED: 'wr_guest_owned',
     CREDITS: 'wr_guest_credits'
   },
-  ASSETS_BASE: '../assets/avatar/',
+  ASSETS_BASE: '/assets/avatar/',
   DEFAULT_CREDITS: 500
 };
 
