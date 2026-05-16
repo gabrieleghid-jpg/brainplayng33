@@ -16,9 +16,8 @@ const ENV = {
   SUPABASE_URL:      'https://XXXXXXXXXXXXXXXX.supabase.co',   // ← sostituisci
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...', // ← sostituisci
 
-  // URL del backend locale (o produzione)
-  // Lascia vuoto se usi il proxy di frontend-server.js
-  BACKEND_URL: 'http://localhost:3001',
+  // URL del backend (per Vercel usa percorso relativo)
+  BACKEND_URL: '',
 
   // Impostazioni app
   APP_NAME: 'BrainPlayng',

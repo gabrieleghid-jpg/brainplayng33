@@ -864,7 +864,7 @@
   <script>
     // Funzione apiFetch mancante
     async function apiFetch(endpoint, options = {}) {
-      const baseUrl = ENV.BACKEND_URL || 'http://localhost:3010';
+      const baseUrl = ENV.BACKEND_URL || '';
       const url = baseUrl + endpoint;
       
       const defaultOptions = {
