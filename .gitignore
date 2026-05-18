@@ -12,3 +12,13 @@ dist/
 backend/node_modules/
 
 codex-temp/
+
+# File di log
+*.log
+frontend.err.log
+frontend.out.log
+backend.err.log
+backend.out.log
+
+# File duplicati (usiamo api/ invece di backend/)
+backend/
