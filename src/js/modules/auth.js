@@ -12,14 +12,23 @@ class AuthModule {
         return true;
     }
 
-    static logout() {
-        // Pulisci sessionStorage e localStorage
-        sessionStorage.clear();
-        localStorage.removeItem('bp_authenticated');
-        localStorage.removeItem('bp_role');
-        localStorage.removeItem('bp_username');
-        localStorage.removeItem('bp_email');
-        localStorage.removeItem('bp_profileImage');
+    static async logout() {
+        // Logout da Supabase se disponibile
+        if (window.SupabaseAuth) {
+            try {
+                await SupabaseAuth.logout();
+            } catch (err) {
+                console.error('Errore logout Supabase:', err);
+            }
+        } else {
+            // Pulisci comunque sessionStorage e localStorage
+            sessionStorage.clear();
+            localStorage.removeItem('bp_authenticated');
+            localStorage.removeItem('bp_role');
+            localStorage.removeItem('bp_username');
+            localStorage.removeItem('bp_email');
+            localStorage.removeItem('bp_profileImage');
+        }
         
         // Mostra notifica e reindirizza
         if (window.showToast) {

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>brainplaying! — Accedi</title>
+
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+  
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--background);
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+    }
+
+    .toon-card {
+      padding: 3rem;
+      background: white;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo-main {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .form-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.5rem;
+      margin: 0;
+      color: var(--foreground);
+    }
+
+    .form-subtitle {
+      opacity: 0.7;
+      margin-top: 0.5rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--background);
+      padding: 0.5rem;
+      border-radius: 20px;
+      border: 3px solid var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.8rem;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--foreground);
+    }
+
+    .tab-btn.active {
+      background: var(--study);
+      color: white;
+      box-shadow: 0 4px 0 var(--ink);
+      border: 2px solid var(--ink);
+    }
+
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .tab-panel.active {
+      display: flex;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-group label {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1.2rem;
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3.5rem;
+      border: 3px solid var(--ink);
+      border-radius: 15px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 4px 0 var(--ink);
+      transform: translateY(-2px);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .btn-primary {
+      width: 100%;
+      margin-top: 1rem;
+      background: var(--study);
+      font-size: 1.2rem;
+      padding: 1.2rem;
+    }
+
+    .divider {
+      margin: 2rem 0;
+      height: 3px;
+      background: var(--ink);
+      border-radius: 10px;
+      position: relative;
+      opacity: 0.1;
+    }
+
+    .btn-guest {
+      width: 100%;
+      background: white;
+      color: var(--foreground);
+      border: 3px solid var(--ink);
+    }
+
+    .forgot-link {
+      font-size: 0.8rem;
+      color: var(--study);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .password-reset-panel {
+      display: none;
+      background: var(--background);
+      padding: 1.5rem;
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      margin-top: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .password-reset-panel.active {
+      display: flex;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--ink);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="toon-card">
+      <div class="form-header">
+        <span class="logo-main">🧠</span>
+        <h2 class="form-title text-stroke-ink">brainplaying</h2>
+        <p class="form-subtitle">L'avventura dello studio ti aspetta!</p>
+      </div>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="tab-btn active" id="tab-login" type="button" role="tab">Accedi</button>
+        <button class="tab-btn" id="tab-register" type="button" role="tab">Registrati</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="tab-panel active" id="panel-login" role="tabpanel">
+        <div class="input-group">
+          <label for="login-email">Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="login-email" placeholder="nome@esempio.com" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="login-password">
+            Password
+            <button class="forgot-link" id="forgotPasswordButton" type="button">Dimenticata?</button>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" placeholder="••••••••" />
+            <button class="toggle-password" type="button">👁️</button>
+          </div>
+        </div>
+
+        <div class="password-reset-panel" id="passwordResetPanel">
+          <div class="input-group">
+            <label>Tua Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="reset-email" placeholder="Email registrata" />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Nuova Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="reset-password" placeholder="Minimo 8 caratteri" />
+              <button class="toggle-password" type="button">👁️</button>
+            </div>
+          </div>
+          <button class="toon-btn" id="btn-reset-password" style="background: var(--xp);">Recupera Password</button>
+        </div>
+
+        <button class="toon-btn btn-primary" id="btn-login">Inizia l'Avventura! 🚀</button>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div class="tab-panel" id="panel-register" role="tabpanel">
+        <div class="input-group">
+          <label>Nome Utente</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="register-username" placeholder="Come ti chiameremo?" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="register-email" placeholder="La tua email" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="register-password" placeholder="Crea una password" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Conferma</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🛡️</span>
+            <input type="password" id="register-confirm-password" placeholder="Ripeti password" />
+          </div>
+        </div>
+
+        <button class="toon-btn btn-primary" id="btn-register" style="background: var(--xp);">Crea Account ✨</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="toon-btn btn-guest" id="btn-guest">Entra come Ospite 👤</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Moduli -->
+  <script src="/js/env-config.js"></script>
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/modules/supabase-auth.js"></script>
+  <script src="/js/modules/auth.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginTab = document.getElementById('tab-login');
+      const registerTab = document.getElementById('tab-register');
+      const panelLogin = document.getElementById('panel-login');
+      const panelRegister = document.getElementById('panel-register');
+      const toast = document.getElementById('toast');
+      const passwordToggles = document.querySelectorAll('.toggle-password');
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+
+      // Password Toggle
+      passwordToggles.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const input = btn.previousElementSibling;
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+          } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+          }
+        });
+      });
+
+      // Tabs
+      function switchTab(mode) {
+        if (mode === 'login') {
+          loginTab.classList.add('active');
+          registerTab.classList.remove('active');
+          panelLogin.classList.add('active');
+          panelRegister.classList.remove('active');
+        } else {
+          registerTab.classList.add('active');
+          loginTab.classList.remove('active');
+          panelRegister.classList.add('active');
+          panelLogin.classList.remove('active');
+        }
+      }
+
+      loginTab.addEventListener('click', () => switchTab('login'));
+      registerTab.addEventListener('click', () => switchTab('register'));
+
+      // Login con Supabase
+      document.getElementById('btn-login').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value.trim();
+        const pass = document.getElementById('login-password').value.trim();
+
+        if (!email || !pass) {
+          showToast('Inserisci email e password!');
+          return;
+        }
+
+        try {
+          await SupabaseAuth.login(email, pass);
+          showToast('Accesso eseguito! Benvenuto! 🌈');
+          setTimeout(() => window.location.href = 'home.html', 1000);
+        } catch (err) {
+          showToast('Errore: ' + err.message);
+        }
+      });
+
+      // Registrazione con Supabase
+      document.getElementById('btn-register').addEventListener('click', async () => {
+        const user = document.getElementById('register-username').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const pass = document.getElementById('register-password').value.trim();
+        const confirmPass = document.getElementById('register-confirm-password').value.trim();
+
+        if (!user || !email || !pass || !confirmPass) {
+          showToast('Compila tutti i campi');
+          return;
+        }
+
+        if (pass.length < 6) {
+          showToast('Password troppo corta (min 6 caratteri per Supabase)');
+          return;
+        }
+
+        if (pass !== confirmPass) {
+          showToast('Le password non corrispondono!');
+          return;
+        }
+
+        try {
+          await SupabaseAuth.register(email, pass, user);
+          showToast('Registrazione completata! Benvenuto ' + user + '!');
+          setTimeout(() => window.location.href = 'home.html', 1000);
+        } catch (err) {
+          showToast('Errore: ' + err.message);
+        }
+      });
+
+      document.getElementById('btn-guest').addEventListener('click', () => {
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('role', 'guest');
+        sessionStorage.setItem('username', 'Ospite');
+        showToast('Entrato come Ospite! 👤');
+        setTimeout(() => window.location.href = 'home.html', 1000);
+      });
+
+      // Forgot Password con Supabase
+      const forgotBtn = document.getElementById('forgotPasswordButton');
+      const resetPanel = document.getElementById('passwordResetPanel');
+      forgotBtn.addEventListener('click', () => {
+        resetPanel.classList.toggle('active');
+        forgotBtn.textContent = resetPanel.classList.contains('active') ? 'Chiudi' : 'Dimenticata?';
+      });
+
+      document.getElementById('btn-reset-password').addEventListener('click', async () => {
+        const email = document.getElementById('reset-email').value.trim();
+        
+        if (!email) {
+          showToast('Inserisci la tua email!');
+          return;
+        }
+
+        if (!SupabaseAuth.isConfigured()) {
+          // Fallback per localStorage
+          const STORAGE_ACCOUNTS_KEY = 'bp_accounts';
+          const accounts = JSON.parse(localStorage.getItem(STORAGE_ACCOUNTS_KEY) || '{}');
+          const newPass = document.getElementById('reset-password').value.trim();
+          const account = accounts[email.toLowerCase()];
+          
+          if (!account) {
+            showToast('Email non trovata! 🏜️');
+            return;
+          }
+          
+          account.password = newPass;
+          localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
+          showToast('Password aggiornata! Ora puoi accedere. ✅');
+          resetPanel.classList.remove('active');
+          forgotBtn.textContent = 'Dimenticata?';
+        } else {
+          // Usa Supabase per reset password
+          try {
+            await supabaseClient.auth.resetPasswordForEmail(email);
+            showToast('Email di reset inviata! Controlla la tua casella!');
+            resetPanel.classList.remove('active');
+            forgotBtn.textContent = 'Dimenticata?';
+          } catch (err) {
+            showToast('Errore: ' + err.message);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -3,508 +3,323 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>brainplaying! — Accedi</title>
+  <title>brainplaying — Impara divertendoti!</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles/dashboard.css" />
+  
   <style>
     body {
       margin: 0;
       min-height: 100vh;
+      background: linear-gradient(180deg, #fef3c7 0%, #fce7f3 50%, #dbeafe 100%);
+    }
+
+    .landing-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 4px solid #1e293b;
+      padding: 1.2rem 2.5rem;
+    }
+
+    .landing-hero {
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .logo-main {
+      font-size: 6rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+    }
+
+    .hero-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+      margin: 0 0 1.2rem;
+      color: #1e293b;
+      text-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+    }
+
+    .hero-subtitle {
+      font-size: 1.4rem;
+      opacity: 0.85;
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
       display: flex;
       justify-content: center;
-      align-items: center;
-      background: var(--background);
-      font-family: 'Quicksand', sans-serif;
+      gap: 1.2rem;
+      flex-wrap: wrap;
     }
 
-    .login-container {
-      width: 100%;
-      max-width: 500px;
-      padding: 2rem;
+    .hero-buttons .toon-btn {
+      font-size: 1.15rem;
+      padding: 1.2rem 2.2rem;
+      font-weight: 700;
     }
 
-    .toon-card {
-      padding: 3rem;
-      background: white;
+    .features-section {
+      padding: 5rem 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.7);
+      border-top: 4px solid #1e293b;
+      border-bottom: 4px solid #1e293b;
     }
 
-    .form-header {
+    .features-header {
       text-align: center;
       margin-bottom: 3rem;
     }
 
-    .logo-main {
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.2rem;
+    }
+
+    .feature-card {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #f59e0b, #ec4899, #3b82f6);
+    }
+
+    .feature-icon {
+      font-size: 4rem;
+      margin-bottom: 1.2rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+
+    .feature-card h3 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.7rem;
+      margin: 0 0 0.7rem;
+      color: #1e293b;
+    }
+
+    .feature-card p {
+      opacity: 0.8;
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    .how-section {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .step-card {
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(0,0,0,0.08);
+      position: absolute;
+      top: 0.5rem;
+      left: 1rem;
+    }
+
+    .step-icon {
       font-size: 3rem;
       margin-bottom: 1rem;
-      display: block;
-      animation: float 3s ease-in-out infinite;
     }
 
-    .form-title {
+    .cta-section {
+      padding: 6rem 2rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      border-top: 4px solid #1e293b;
+      margin: 3rem 0;
+    }
+
+    .cta-section h2 {
       font-family: 'Fredoka', sans-serif;
-      font-size: 2.5rem;
-      margin: 0;
-      color: var(--foreground);
+      font-size: 3rem;
+      margin: 0 0 1rem;
     }
 
-    .form-subtitle {
-      opacity: 0.7;
-      margin-top: 0.5rem;
-    }
-
-    .auth-tabs {
-      display: flex;
-      gap: 0.5rem;
-      background: var(--background);
-      padding: 0.5rem;
-      border-radius: 20px;
-      border: 3px solid var(--ink);
-      margin-bottom: 2rem;
-    }
-
-    .tab-btn {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 0.8rem;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 700;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: all 0.2s;
-      color: var(--foreground);
-    }
-
-    .tab-btn.active {
-      background: var(--study);
-      color: white;
-      box-shadow: 0 4px 0 var(--ink);
-      border: 2px solid var(--ink);
-    }
-
-    .tab-panel {
-      display: none;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .tab-panel.active {
-      display: flex;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .input-group label {
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-icon {
-      position: absolute;
-      left: 1.2rem;
-      font-size: 1.2rem;
-      pointer-events: none;
-    }
-
-    input {
-      width: 100%;
-      padding: 1rem 1rem 1rem 3.5rem;
-      border: 3px solid var(--ink);
-      border-radius: 15px;
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      transition: all 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      box-shadow: 0 4px 0 var(--ink);
-      transform: translateY(-2px);
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 1.2rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-
-    .btn-primary {
-      width: 100%;
-      margin-top: 1rem;
-      background: var(--study);
-      font-size: 1.2rem;
-      padding: 1.2rem;
-    }
-
-    .divider {
-      margin: 2rem 0;
-      height: 3px;
-      background: var(--ink);
-      border-radius: 10px;
-      position: relative;
-      opacity: 0.1;
-    }
-
-    .btn-guest {
-      width: 100%;
-      background: white;
-      color: var(--foreground);
-      border: 3px solid var(--ink);
-    }
-
-    .forgot-link {
-      font-size: 0.8rem;
-      color: var(--study);
-      text-decoration: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .password-reset-panel {
-      display: none;
-      background: var(--background);
-      padding: 1.5rem;
-      border: 3px solid var(--ink);
-      border-radius: 20px;
-      margin-top: 1rem;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .password-reset-panel.active {
-      display: flex;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--ink);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 20px;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 700;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
+    .footer {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      opacity: 0.75;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-top: 2px solid rgba(0,0,0,0.1);
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-15px); }
     }
   </style>
 </head>
+
 <body>
-
-  <div class="login-container">
-    <div class="toon-card">
-      <div class="form-header">
-        <span class="logo-main">🧠</span>
-        <h2 class="form-title text-stroke-ink">brainplaying</h2>
-        <p class="form-subtitle">L'avventura dello studio ti aspetta!</p>
+  <!-- Navbar -->
+  <header class="landing-nav">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <span class="logo-main" style="font-size: 2.8rem;">🧠</span>
+        <h2 style="margin: 0; font-family: 'Fredoka', sans-serif; font-size: 1.7rem; font-weight: 900;">brainplaying</h2>
       </div>
-
-      <div class="auth-tabs" role="tablist">
-        <button class="tab-btn active" id="tab-login" type="button" role="tab">Accedi</button>
-        <button class="tab-btn" id="tab-register" type="button" role="tab">Registrati</button>
+      
+      <div style="display: flex; gap: 1rem;">
+        <a href="login.html" class="toon-btn" style="font-weight: 700;">Accedi</a>
+        <a href="login.html" class="toon-btn" style="background: linear-gradient(135deg, #f59e0b, #ec4899); color: white; font-weight: 700;">Inizia Gratis</a>
       </div>
-
-      <!-- LOGIN PANEL -->
-      <div class="tab-panel active" id="panel-login" role="tabpanel">
-        <div class="input-group">
-          <label for="login-email">Email</label>
-          <div class="input-wrapper">
-            <span class="input-icon">✉️</span>
-            <input type="email" id="login-email" placeholder="nome@esempio.com" />
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label for="login-password">
-            Password
-            <button class="forgot-link" id="forgotPasswordButton" type="button">Dimenticata?</button>
-          </label>
-          <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="login-password" placeholder="••••••••" />
-            <button class="toggle-password" type="button">👁️</button>
-          </div>
-        </div>
-
-        <div class="password-reset-panel" id="passwordResetPanel">
-          <div class="input-group">
-            <label>Tua Email</label>
-            <div class="input-wrapper">
-              <span class="input-icon">✉️</span>
-              <input type="email" id="reset-email" placeholder="Email registrata" />
-            </div>
-          </div>
-          <div class="input-group">
-            <label>Nuova Password</label>
-            <div class="input-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" id="reset-password" placeholder="Minimo 8 caratteri" />
-              <button class="toggle-password" type="button">👁️</button>
-            </div>
-          </div>
-          <button class="toon-btn" id="btn-reset-password" style="background: var(--xp);">Recupera Password</button>
-        </div>
-
-        <button class="toon-btn btn-primary" id="btn-login">Inizia l'Avventura! 🚀</button>
-      </div>
-
-      <!-- REGISTER PANEL -->
-      <div class="tab-panel" id="panel-register" role="tabpanel">
-        <div class="input-group">
-          <label>Nome Utente</label>
-          <div class="input-wrapper">
-            <span class="input-icon">👤</span>
-            <input type="text" id="register-username" placeholder="Come ti chiameremo?" />
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label>Email</label>
-          <div class="input-wrapper">
-            <span class="input-icon">✉️</span>
-            <input type="email" id="register-email" placeholder="La tua email" />
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label>Password</label>
-          <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="register-password" placeholder="Crea una password" />
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label>Conferma</label>
-          <div class="input-wrapper">
-            <span class="input-icon">🛡️</span>
-            <input type="password" id="register-confirm-password" placeholder="Ripeti password" />
-          </div>
-        </div>
-
-        <button class="toon-btn btn-primary" id="btn-register" style="background: var(--xp);">Crea Account ✨</button>
-      </div>
-
-      <div class="divider"></div>
-
-      <button class="toon-btn btn-guest" id="btn-guest">Entra come Ospite 👤</button>
     </div>
-  </div>
+  </header>
 
-  <div class="toast" id="toast"></div>
+  <!-- Hero Section -->
+  <section class="landing-hero">
+    <span class="logo-main">🧠</span>
+    <h1 class="hero-title">Im divertendoti!</h1>
+    <p class="hero-subtitle">
+      Studia con l'ausilio dell'IA, gioca con i minigiochi, personalizza il tuo avatar e scala la classifica!
+    </p>
+    
+    <div class="hero-buttons">
+      <a href="login.html" class="toon-btn" style="background: #3b82f6; color: white;">
+        🚀 Scopri Subito
+      </a>
+      <a href="#features" class="toon-btn" style="background: white;">
+        🔍 Vedi le Funzionalità
+      </a>
+    </div>
+  </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginTab = document.getElementById('tab-login');
-      const registerTab = document.getElementById('tab-register');
-      const panelLogin = document.getElementById('panel-login');
-      const panelRegister = document.getElementById('panel-register');
-      const toast = document.getElementById('toast');
-      const passwordToggles = document.querySelectorAll('.toggle-password');
+  <!-- How it works -->
+  <section class="how-section" id="features">
+    <div style="text-align: center;">
+      <h2 class="text-stroke-ink" style="font-size: 2.6rem; margin: 0;">Come funziona?</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="toon-card step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">📝</div>
+        <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin: 0 0 0.5rem;">Registrati</h3>
+        <p style="opacity: 0.8; margin: 0;">Crea il tuo account in meno di un minuto!</p>
+      </div>
+      <div class="toon-card step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">🎨</div>
+        <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin: 0 0 0.5rem;">Personalizza</h3>
+        <p style="opacity: 0.8; margin: 0;">Crea il tuo avatar e inizia la tua avventura!</p>
+      </div>
+      <div class="toon-card step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">📚</div>
+        <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin: 0 0 0.5rem;">Studia</h3>
+        <p style="opacity: 0.8; margin: 0;">Usa gli strumenti intelligenti per studiare meglio!</p>
+      </div>
+      <div class="toon-card step-card">
+        <div class="step-number">4</div>
+        <div class="step-icon">🎮</div>
+        <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.4rem; margin: 0 0 0.5rem;">Gioca</h3>
+        <p style="opacity: 0.8; margin: 0;">Divertiti con i minigiochi e guadagna EXP!</p>
+      </div>
+    </div>
+  </section>
 
-      const STORAGE_ACCOUNTS_KEY = 'bp_accounts';
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="features-header">
+      <h2 class="text-stroke-ink" style="font-size: 2.8rem; margin: 0 0 0.5rem;">Cosa puoi fare?</h2>
+      <p style="opacity: 0.75; font-size: 1.1rem; margin: 0;">Tutti gli strumenti che ti servono per imparare divertendoti!</p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="toon-card feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Genera Schemi</h3>
+        <p>Crea mappe concettuali, schemi a frecce e riassunti automatici con l'intelligenza artificiale!</p>
+      </div>
 
-      function getAccounts() {
-        return JSON.parse(localStorage.getItem(STORAGE_ACCOUNTS_KEY) || '{}');
-      }
+      <div class="toon-card feature-card">
+        <div class="feature-icon">🧩</div>
+        <h3>Minigiochi</h3>
+        <p>Allena la tua mente con Sudoku, Wordle, Memory, Calcolo Veloce e tanti altri giochi!</p>
+      </div>
 
-      function saveAccounts(accounts) {
-        localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
-      }
+      <div class="toon-card feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Sistema Livelli</h3>
+        <p>Guadagna EXP, ottieni titoli epici e sblocca nuovi contenuti salendo di livello!</p>
+      </div>
 
-      function getAccountByEmail(email) {
-        if (!email) return null;
-        const accounts = getAccounts();
-        return accounts[email.toLowerCase()] || null;
-      }
+      <div class="toon-card feature-card">
+        <div class="feature-icon">👤</div>
+        <h3>Avatar Personalizzato</h3>
+        <p>Crea il tuo personaggio unico, vestilo con gli oggetti del negozio e mostralo a tutti!</p>
+      </div>
 
-      function storeAccount(account) {
-        const accounts = getAccounts();
-        accounts[account.email.toLowerCase()] = account;
-        saveAccounts(accounts);
-      }
+      <div class="toon-card feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Classifica Mondiale</h3>
+        <p>Confrontati con altri studenti di tutto il mondo e cerca di arrivare primo!</p>
+      </div>
 
-      function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-      }
+      <div class="toon-card feature-card">
+        <div class="feature-icon">🔥</div>
+        <h3>Streak Giornaliera</h3>
+        <p>Mantieni la serie per moltiplicare i tuoi guadagni di EXP e crediti!</p>
+      </div>
+    </div>
+  </section>
 
-      // Password Toggle
-      passwordToggles.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const input = btn.previousElementSibling;
-          if (input.type === 'password') {
-            input.type = 'text';
-            btn.textContent = '🙈';
-          } else {
-            input.type = 'password';
-            btn.textContent = '👁️';
-          }
-        });
-      });
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="text-stroke-ink" style="font-size: 3rem; margin: 0 0 1rem;">Pronto a iniziare?</h2>
+    <p style="font-size: 1.3rem; opacity: 0.8; max-width: 550px; margin: 0 auto 2.5rem; line-height: 1.6;">
+      Non perdere altro tempo! Registrati gratuitamente e comincia subito la tua avventura di apprendimento!
+    </p>
+    <a href="login.html" class="toon-btn" style="font-size: 1.3rem; padding: 1.3rem 3rem; background: linear-gradient(135deg, #10b981, #3b82f6); color: white;">
+      🎉 Inizia Ora! È Gratuito!
+    </a>
+  </section>
 
-      // Tabs
-      function switchTab(mode) {
-        if (mode === 'login') {
-          loginTab.classList.add('active');
-          registerTab.classList.remove('active');
-          panelLogin.classList.add('active');
-          panelRegister.classList.remove('active');
-        } else {
-          registerTab.classList.add('active');
-          loginTab.classList.remove('active');
-          panelRegister.classList.add('active');
-          panelLogin.classList.remove('active');
-        }
-      }
-
-      loginTab.addEventListener('click', () => switchTab('login'));
-      registerTab.addEventListener('click', () => switchTab('register'));
-
-      // Auth Logic
-      document.getElementById('btn-login').addEventListener('click', () => {
-        const email = document.getElementById('login-email').value.trim();
-        const pass = document.getElementById('login-password').value.trim();
-
-        if (!email || !pass) {
-          showToast('Inserisci email e password!');
-          return;
-        }
-
-        const account = getAccountByEmail(email);
-        if (!account || account.password !== pass) {
-          showToast('Email o password errati! ❌');
-          return;
-        }
-
-        sessionStorage.setItem('authenticated', 'true');
-        sessionStorage.setItem('username', account.username);
-        sessionStorage.setItem('email', account.email);
-        sessionStorage.setItem('role', 'user');
-        localStorage.setItem('bp_authenticated', 'true');
-        localStorage.setItem('bp_username', account.username);
-        localStorage.setItem('bp_email', account.email);
-        localStorage.setItem('bp_role', 'user');
-
-        showToast('Accesso eseguito! Benvenuto ' + account.username + '! 🌈');
-        setTimeout(() => window.location.href = 'home.html', 1000);
-      });
-
-      document.getElementById('btn-register').addEventListener('click', () => {
-        const user = document.getElementById('register-username').value.trim();
-        const email = document.getElementById('register-email').value.trim();
-        const pass = document.getElementById('register-password').value.trim();
-
-        if (!user || !email || !pass) {
-          showToast('Compila tutti i campi');
-          return;
-        }
-
-        if (pass.length < 4) {
-          showToast('Password troppo corta (min 4 caratteri)');
-          return;
-        }
-
-        // Simulazione registrazione
-        const account = getAccountByEmail(email);
-        if (account) {
-          showToast('Email già registrata');
-          return;
-        }
-
-        // Salva account
-        const accounts = getAccounts();
-        accounts[email.toLowerCase()] = { username: user, email, password: pass };
-        saveAccounts(accounts);
-
-        // Imposta sessione
-        sessionStorage.setItem('authenticated', 'true');
-        sessionStorage.setItem('username', user);
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('role', 'user');
-
-        // Salva anche in localStorage per persistenza
-        localStorage.setItem('bp_authenticated', 'true');
-        localStorage.setItem('bp_username', user);
-        localStorage.setItem('bp_email', email);
-        localStorage.setItem('bp_role', 'user');
-
-        // Salva utente nel database condiviso per la classifica
-        if (window.AuthModule && window.AuthModule.saveRegisteredUser) {
-          window.AuthModule.saveRegisteredUser({
-            username: user,
-            email: email,
-            role: 'user',
-            registeredAt: new Date().toISOString()
-          });
-        }
-
-        showToast('Registrazione completata! Benvenuto ' + user);
-        setTimeout(() => window.location.href = 'home.html', 1000);
-      });
-
-      document.getElementById('btn-guest').addEventListener('click', () => {
-        sessionStorage.setItem('authenticated', 'true');
-        sessionStorage.setItem('role', 'guest');
-        sessionStorage.setItem('username', 'Ospite');
-        showToast('Entrato come Ospite! 👤');
-        setTimeout(() => window.location.href = 'home.html', 1000);
-      });
-
-      // Forgot Password
-      const forgotBtn = document.getElementById('forgotPasswordButton');
-      const resetPanel = document.getElementById('passwordResetPanel');
-      forgotBtn.addEventListener('click', () => {
-        resetPanel.classList.toggle('active');
-        forgotBtn.textContent = resetPanel.classList.contains('active') ? 'Chiudi' : 'Dimenticata?';
-      });
-
-      document.getElementById('btn-reset-password').addEventListener('click', () => {
-        const email = document.getElementById('reset-email').value.trim();
-        const newPass = document.getElementById('reset-password').value.trim();
-        const account = getAccountByEmail(email);
-        if (!account) {
-          showToast('Email non trovata! 🏜️');
-          return;
-        }
-        account.password = newPass;
-        storeAccount(account);
-        showToast('Password aggiornata! Ora puoi accedere. ✅');
-        resetPanel.classList.remove('active');
-        forgotBtn.textContent = 'Dimenticata?';
-      });
-    });
-  </script>
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 brainplaying · Tutti i diritti riservati · Creato con ❤️ per studenti di tutto il mondo!</p>
+  </footer>
 </body>
 </html>
