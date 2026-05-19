@@ -977,6 +977,50 @@ body.menu-open::after {
   }
 }
 
+/* Responsive per telefoni piccoli */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .toon-card {
+    padding: 1.2rem;
+  }
+
+  .toon-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .login-container {
+    padding: 1rem;
+  }
+
+  .login-container .toon-card {
+    padding: 2rem 1.5rem;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.5rem !important;
+  }
+
+  .auth-tabs {
+    flex-direction: column;
+  }
+
+  .input-wrapper input {
+    padding: 0.8rem 0.8rem 0.8rem 3rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
